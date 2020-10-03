@@ -6,7 +6,7 @@ import 'package:geolocator/geolocator.dart';
 import 'main.dart';
 import 'dart:async';
 import 'package:circle_list/circle_list.dart';
-import 'select_deparment.dart';
+import 'collect_deparment.dart';
 import 'server_response.dart';
 
 
@@ -35,8 +35,9 @@ import 'server_response.dart';
 } */
 
 class SubmitCoordinat extends StatefulWidget {
-   String selectedCoordinat="";
-   SubmitCoordinat({ Key key,this.selectedCoordinat }):super(key: key );
+   String selectedCoordinat,department;
+   int id;
+   SubmitCoordinat({ Key key,this.id, this.department, this.selectedCoordinat }):super(key: key );
 
 
   @override
@@ -138,7 +139,7 @@ class _HomePageState extends State<SubmitCoordinat> {
             Padding(
               padding: const EdgeInsets.only(right: 0, top:10,bottom: 10),
               child: Text(
-                'Tap on collect to submit coardinates or\n            revert to go one step back',
+                'Tap on submit to submit coardinates or\n                 Cancel to go start back',
                 style: TextStyle(fontWeight: FontWeight.bold),
 
               ),
@@ -157,10 +158,10 @@ class _HomePageState extends State<SubmitCoordinat> {
                   Padding(
                     padding: const EdgeInsets.only(right: 30),
                     child: FlatButton(
-                     // color: Colors.blueAccent,
+                      color: Colors.blueAccent,
                        // color: Colors(Colors ,0x156562),
                      // backgroundColor: Color(0xffFDCF09),
-                      child: Text('CANCLE'),
+                      child: Text('CANCEL'),
                       onPressed: () {
                         //Navigator.pop(context);
                         Navigator.of(context).pop();
@@ -183,7 +184,12 @@ class _HomePageState extends State<SubmitCoordinat> {
                       child: Text("SUBMIT"),
                       color: Colors.blueAccent,
                       onPressed: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => ServerResponse()));
+                        print('submit coor test');
+                        print(widget.id);
+                        print(widget.department);
+                        print(widget.selectedCoordinat);
+                        _sendDataToServer(context);
+                      //  Navigator.push(context, MaterialPageRoute(builder: (context) => ServerResponse()));
                         //_sendDataToServer(context);
                       },
                     ),
@@ -215,7 +221,7 @@ class _HomePageState extends State<SubmitCoordinat> {
         context,
         MaterialPageRoute(
           // builder: (context) => HomePage(text: textToSend,),
-         // builder: (context) => ServerRespons(server: widget.selectedCoordinat),
+          builder: (context) => ServerResponse(id: widget.id , value: widget.department,),
         ));
   }
 

@@ -6,13 +6,14 @@ import 'package:geolocator/geolocator.dart';
 import 'main.dart';
 import 'dart:async';
 import 'package:circle_list/circle_list.dart';
-import 'select_deparment.dart';
+import 'collect_deparment.dart';
 import 'submit_coodinates.dart';
 
 
-class ServerResponse extends StatelessWidget {
-  // String server= "";
-  // ServerResponse({Key key, this.server}):super(key: key );
+/* class ServerResponse extends StatelessWidget {
+   String value;
+   int id;
+   ServerResponse({Key key,this.id, this.value}):super(key: key );
 
 
 
@@ -32,12 +33,16 @@ class ServerResponse extends StatelessWidget {
     // TODO: implement createState
     throw UnimplementedError();
   }
-}
+}  */
 
-class HomePage extends StatefulWidget {
+class ServerResponse extends StatefulWidget {
+  String value;
+  int id;
+  ServerResponse({Key key,this.id, this.value}):super(key: key );
 
-  // String server= "";
-  // HomePage({Key key, this.server}):super(key: key );
+   //  String department = "";
+   // int id;
+   //  ServerResponse({Key key, this.id, this.department}):super(key: key );
   // final String str ;
   // HomePage({ Key key,this.str }):super(key: key );
   //HomePage({ Key key,  this.str }):super(key: key );
@@ -45,9 +50,9 @@ class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
 }
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<ServerResponse> {
   //  String str = "";
-  // _HomePageState({ Key key,this.str }):super(key: key );
+  // ServerResponse({ Key key,this. }):super(key: key );
 
 
 
@@ -70,11 +75,18 @@ class _HomePageState extends State<HomePage> {
           //mainAxisAlignment: MainAxisAlignment.center,
           children: [
 
-          //  Text('$widget.server'),
+            Padding(
+              padding: const EdgeInsets.only(right: 250 ,left: 10),
+              child: Text("Id: "+ widget.id.toString()),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(right: 150,left: 10),
+              child: Text('Value: ' + widget.value),
+            ),
 
 
             Padding(
-              padding: const EdgeInsets.only(top: 20),
+              padding: const EdgeInsets.only(top: 0),
               child: Icon(Icons.check,size: 100,color: Colors.green,),
 
             ),
@@ -82,7 +94,7 @@ class _HomePageState extends State<HomePage> {
             Padding(
               padding: const EdgeInsets.only(right: 15, top:30),
               child: Text(
-                ' Server Response' ,
+                ' Server Response',
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
             ),
@@ -112,12 +124,14 @@ class _HomePageState extends State<HomePage> {
               children: [
                 Expanded( child:
                 Padding(
-                  padding: const EdgeInsets.all(115.0),
+                  padding: const EdgeInsets.all(100.0),
                   child: FlatButton(
                     child: Text("Back"),
                     color: Colors.blueAccent,
                     onPressed: () {
                       print("imran");
+                      print(widget.id);
+                      print(widget.value);
                       Navigator.push(context, MaterialPageRoute(builder: (context) => DropDown()));
 
                     },

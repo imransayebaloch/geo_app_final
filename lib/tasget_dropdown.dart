@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'main.dart';
-import 'package:geo_app_final/select_deparment.dart' as select;
-import 'package:geo_app_final/select_deparment.dart';
+import 'package:geo_app_final/collect_deparment.dart' as select;
+import 'package:geo_app_final/collect_deparment.dart';
 import 'package:geo_app_final/your_location.dart' as location;
 import 'your_location.dart';
 

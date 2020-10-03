@@ -40,7 +40,9 @@ import 'dart:async';
 class HomePage extends StatefulWidget {
 
   String department= "";
-  HomePage({Key key, this.department}):super(key: key );
+  int id;
+  HomePage({Key key ,this.id ,this.department}):super(key: key);
+ // HomePage([this.id]),
     //  String str="" ;
     // HomePage({ Key key,this.str }):super(key: key );
    // HomePage({ Key key,this.str }):super(key: key );
@@ -63,6 +65,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Get Collection'),
+
       ),
       body: Container(
         child:Column(
@@ -84,6 +87,7 @@ class _HomePageState extends State<HomePage> {
                               child: Text('Done'),
                               onPressed: (){
                                 _sendDataToSubmitCoordinate(context);
+
                               //  Navigator.push(context, MaterialPageRoute(builder: (context) => SubmitCoordinat() ) );//str: "hello"
 
                               },
@@ -100,7 +104,7 @@ class _HomePageState extends State<HomePage> {
 
                        Padding(
                          padding: const EdgeInsets.only(right: 160,left: 10),
-                         child: Text('PROJECt: '+ widget.department,
+                         child: Text('PROJECt: ' +  widget.department ,
                              style: TextStyle(fontWeight: FontWeight.bold) ),
                        ),
 
@@ -157,7 +161,7 @@ class _HomePageState extends State<HomePage> {
                        Padding(
                          padding: const EdgeInsets.only(right: 150, top:10),
                          child: Text(
-                           ' $itemcount Coordinates Collected',
+                           ' $itemcount Coordinates Collected ' ,
                            style: TextStyle(fontWeight: FontWeight.bold),
                          ),
                        ),
@@ -227,6 +231,9 @@ class _HomePageState extends State<HomePage> {
                          color: Colors.blueAccent,
                          onPressed: () {
                            setState(()=> itemcount++);
+                           print('hello test');
+                           print(widget.id);
+                           print(widget.department);
                            _getCurrentLocation();
                          },
                        ),
@@ -276,9 +283,19 @@ class _HomePageState extends State<HomePage> {
         context,
         MaterialPageRoute(
           // builder: (context) => HomePage(text: textToSend,),
-          builder: (context) => SubmitCoordinat(selectedCoordinat:  '$itemcount'),
+          builder: (context) => SubmitCoordinat(selectedCoordinat:  '$itemcount' , id: widget.id , department: widget.department),
         ));
   }
 
+ /* void _sendDataTosubmit(BuildContext context) {
+    // String textToSend = textFieldController.text;
+    // String textToSend = imran;
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          // builder: (context) => HomePage(text: textToSend,),
+          builder: (context) => SubmitCoordinat( id: _selectedCompany.id , department: _selectedCompany.name, ),
+        ));
+  } */
 
 }
