@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:geo_app_final/main.dart';
+import 'package:geo_app_final/select_deparment.dart';
 
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
