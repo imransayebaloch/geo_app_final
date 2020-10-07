@@ -74,19 +74,18 @@ class _HomePageState extends State<ServerResponse> {
 
           //mainAxisAlignment: MainAxisAlignment.center,
           children: [
+           Expanded(
+             child: Center(child: Text("Id: "+ widget.id.toString())),
+           ),
+            Expanded( child:
+              Center(child: Text('Value: ' + widget.value)),
 
-            Padding(
-              padding: const EdgeInsets.only(right: 250 ,left: 10),
-              child: Text("Id: "+ widget.id.toString()),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(right: 150,left: 10),
-              child: Text('Value: ' + widget.value),
             ),
 
 
+
             Padding(
-              padding: const EdgeInsets.only(top: 0),
+              padding: const EdgeInsets.only(top: 10),
               child: Icon(Icons.check,size: 100,color: Colors.green,),
 
             ),

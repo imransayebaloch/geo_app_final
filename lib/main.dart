@@ -1,17 +1,23 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geo_app_final/collect_deparment.dart' as select;
 import 'package:geo_app_final/collect_deparment.dart';
 import 'package:geo_app_final/your_location.dart' as location;
 import 'your_location.dart';
-import 'flutter_help.dart';
 import 'tasget_dropdown.dart';
 import 'server_response.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
 
 
 void main()
 => runApp(
     DropDown()
+
+
 
 );
 
@@ -43,6 +49,26 @@ class Company {
     ];
   }
 }
+//===============================
+
+class Company2 {
+  int id;
+  String name;
+
+  Company2(this.id, this.name);
+
+  static List<Company2> getCompanies2() {
+    return <Company2>[
+      Company2(1, 'gwadar'),
+      Company2(2, 'jiwani'),
+      Company2(3, 'pishukan'),
+      Company2(4, 'Balochi'),
+      Company2(5, 'Quetta'),
+    ];
+  }
+}
+
+//=================================
 
 class DropDownState extends State<DropDown> {
 
@@ -53,7 +79,7 @@ class DropDownState extends State<DropDown> {
 
       debugShowCheckedModeBanner: false,
 
-      home: Location(),
+      home:  Location(),
     );
   }
 }
@@ -68,14 +94,16 @@ class Location extends StatefulWidget {
 }
 
 class _LocationState extends State<Location> {
-  //"Hello imran";
+final String url= "https://raw.githubusercontent.com/iamjawad/sample_data/main/qda.json";
+List data;
 
-
-  //SecontDropDown(),
-
-  List<Company> _companies = Company.getCompanies();
+List<Company> _companies = Company.getCompanies();
   List<DropdownMenuItem<Company>> _dropdownMenuItems;
   Company _selectedCompany;
+
+   List<Company2> _companies2 = Company2.getCompanies2();
+  List<DropdownMenuItem<Company2>> _dropdownMenuItems2;
+  Company2 _selectedCompany2;
  // String imran = "d";
 
 
@@ -87,8 +115,28 @@ class _LocationState extends State<Location> {
     _dropdownMenuItems = buildDropdownMenuItems(_companies);
     _selectedCompany = _dropdownMenuItems[0].value;
 
-    super.initState();
+    _dropdownMenuItems2 = buildDropdownMenuItems2(_companies2);
+    _selectedCompany2 = _dropdownMenuItems2[0].value;
 
+    super.initState();
+    this.getJsonData();
+
+  }
+
+  Future<String> getJsonData() async{
+    var response = await http.get(
+      Uri.encodeFull(url),
+      headers: {"Accept":"Application/Json"}
+
+    );
+    print('Response check' + response.body);
+    setState(() {
+
+      var  convertDataToJson = json.decode(response.body);
+      data = convertDataToJson['id'];
+
+    });
+    return "success";
   }
 
   List<DropdownMenuItem<Company>> buildDropdownMenuItems(List companies) {
@@ -103,13 +151,40 @@ class _LocationState extends State<Location> {
     }
     return items;
   }
+//==========================================
 
+  List<DropdownMenuItem<Company2>> buildDropdownMenuItems2(List companies2) {
+    List<DropdownMenuItem<Company2>> items = List();
+    for (Company2 company2 in companies2) {
+      items.add(
+        DropdownMenuItem(
+          value: company2,
+          child: Text(company2.name),
+        ),
+      );
+    }
+    return items;
+  }
+
+  //===========================================
 
   onChangeDropdownItem(Company selectedCompany) {
     setState(() {
       _selectedCompany = selectedCompany;
+
+
     });
   }
+  //=====================================
+
+  onChangeDropdownItem2(Company2 selectedCompany2) {
+    setState(() {
+      _selectedCompany2 = selectedCompany2;
+
+    });
+  }
+  //====================================
+
 
 
   @override
@@ -126,67 +201,69 @@ class _LocationState extends State<Location> {
       child: Center(
           child: Column(
           //  crossAxisAlignment: CrossAxisAlignment.center,
-          //  mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-             // SecondDropDown(),
-
 
               //this is first dropdown
               Padding(
-                padding: const EdgeInsets.only(right: 200,top: 20),
+                padding: const EdgeInsets.only(right: 150,top: 20),
                 child: Text("SELECT PROJECT"),
               ),
-              SizedBox(
-                height: 20.0,
-              ),
+
+
               DropdownButton(
                 value: _selectedCompany,
                 items: _dropdownMenuItems,
                 onChanged: onChangeDropdownItem,
               ),
+           //Text('Selected: ${_selectedCompany.name}' ),
 
-              SizedBox(
-                height: 20.0,
+              Divider(
+                color: Colors.black,
               ),
 
-              Text('Selected: ${_selectedCompany.name}'),
-
-              //secound dropdown is started here
+               Padding(
+                 padding: const EdgeInsets.only(right: 150),
+                 child: Text('SELECT TARGET'),
+               ),
+              DropdownButton(
+                value: _selectedCompany2,
+                items: _dropdownMenuItems2,
+                onChanged: onChangeDropdownItem2,
+              ),
+            //  Text('Selected: ${_selectedCompany2.name}'),
               Divider(
                   color: Colors.black
               ),
 
-                //  OneTow(),
-                 //  SecondDropDown(),
+              // Padding(
+              //   padding: const EdgeInsets.only(top: 60.0),
+              //   child: Divider(
+              //       color: Colors.black
+              //   ),
+              // ),
 
+              Padding(
+                padding: const EdgeInsets.only(right: 10, top:96),
 
+                child: Text(
+                  'Tap on  Start to begin collecting coordinate or\n                 aginst selected project & target',
+                  style: TextStyle(fontWeight: FontWeight.bold),
 
-
-      /*        Padding(
-                padding: const EdgeInsets.only(right: 200,top: 20),
-                child: Text("SELECT PROJECT"),
+                ),
               ),
-              SizedBox(
-                height: 20.0,
-              ),
-              DropdownButton(
-                value: _selectedCompany,
-                items: _dropdownMenuItems,
-                onChanged: onChangeDropdownItem,
-              ),
-
-              SizedBox(
-                height: 20.0,
-              ),
-
-              Text('Selected: ${_selectedCompany.name}'),  */
+              // Padding(
+              //   padding: const EdgeInsets.only(top: 20),
+              //   child: Divider(
+              //       color: Colors.black
+              //   ),
+              // ),
 
               //this is start button container
-
               Container(
 
 
-              margin: const EdgeInsets.only(top: 200.0),
+              margin: const EdgeInsets.only(top: 100.0),
                 child: FlatButton(
                     color: Colors.blue,
                     textColor: Colors.white,
@@ -206,6 +283,8 @@ class _LocationState extends State<Location> {
                     )
                 ),
               )
+
+
             ],
           ),
         ),

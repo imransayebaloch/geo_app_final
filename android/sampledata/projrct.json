@@ -1,0 +1,24 @@
+{
+  "result": [
+    {
+      "id": 1,
+      "name": "QDA"
+    },
+    {
+      "id": 2,
+      "name": "MCQ"
+    },
+    {
+      "id": 3,
+      "name": "EDU"
+    },
+    {
+      "id": 4,
+      "name": "ENV"
+    },
+    {
+      "id": 5,
+      "name": "GIL"
+    }
+  ]
+}
