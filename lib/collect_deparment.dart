@@ -41,20 +41,397 @@ class HomePage extends StatefulWidget {
 
   String department= "";
   int id;
-  HomePage({Key key ,this.id ,this.department}):super(key: key);
- // HomePage([this.id]),
-    //  String str="" ;
-    // HomePage({ Key key,this.str }):super(key: key );
-   // HomePage({ Key key,this.str }):super(key: key );
-   //HomePage({ Key key,  this.str }):super(key: key );
+  String  secondname = "";
+  int secondid;
+  HomePage({Key key ,this.id ,this.department, this.secondid,this.secondname}): super(key: key);
 
   @override
   _HomePageState createState() => _HomePageState();
 }
 class _HomePageState extends State<HomePage> {
 
-            // String  text;
-            // _HomePageState({ Key key,this.str }):super(key: key );
+  Widget potrate(){
+
+    return  Container(
+      child:Column(
+        //mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          // Text(str),
+          Padding(
+            padding: const EdgeInsets.only(top: 10),
+            child: Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 10),
+                  child: Text('Coardinator Collection'),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 110,),
+                  child: FlatButton(
+                    color: Colors.grey,
+                    child: Text('Done'),
+                    onPressed: (){
+                      _sendDataToSubmitCoordinate(context);
+
+                      //  Navigator.push(context, MaterialPageRoute(builder: (context) => SubmitCoordinat() ) );//str: "hello"
+
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+
+          Column(
+            children: [
+
+
+              Padding(
+                padding: const EdgeInsets.only(right: 160,left: 10),
+                child: Text('PROJECt: ' +  widget.department ,
+                    style: TextStyle(fontWeight: FontWeight.bold) ),
+              ),
+
+
+
+              Padding(
+                padding: const EdgeInsets.only(right: 10 ,left: 10),
+                child: Text('TARGET  : '+ widget.secondname,
+                    style: TextStyle(fontWeight: FontWeight.bold) ),
+              ),
+            ],
+          ),
+
+
+          // Column(
+          //   children: [
+          Container(
+            //  color: Colors.amber[600],
+            height: 200,
+            width: 320,
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: Colors.blue,
+              ),
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            //  color: Colors.yellow,
+            child:
+            Expanded(
+              child:
+              ListView(
+                children: <Widget>[
+                  if (_currentPosition != null)
+                    for(int i = 0; i < listOfCoordinates.length; i++)
+                      Center(
+                        child: Text(("Position: ${i + 1} LAT: ${listOfCoordinates[i]
+                            .latitude}, LNG: ${listOfCoordinates[i].longitude}"),style: TextStyle(fontSize: 14),
+                        ),
+                      ),
+                ],
+              ),
+            ),
+          ),
+          //   SizedBox.fromSize()
+          Padding(
+            padding: const EdgeInsets.only(right: 150, top:10),
+            child: Text(
+              ' $itemcount Coordinates Collected ' ,
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ),
+
+          Divider(
+              color: Colors.black
+          ),
+
+          Padding(
+            padding: const EdgeInsets.only(right: 0, top:10,bottom: 10),
+            child: Text(
+              'Tap on collect to record current coardinate or\n                   revert to go one step back',
+              style: TextStyle(fontWeight: FontWeight.bold),
+
+            ),
+          ),
+          Divider(
+              color: Colors.black
+          ),
+
+
+
+          //   ],
+          // ),
+
+          //   ),
+          // ),
+
+
+
+
+
+
+          Padding(
+            padding: const EdgeInsets.only(top: 80,left: 40),
+
+            child: Row(
+              //  mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Expanded(child:
+                Padding(
+                  padding: const EdgeInsets.only(right: 30),
+                  child: FlatButton(
+                    color: Colors.blueAccent,
+
+                    child: Text('Revert'),
+                    onPressed: () {
+                      //Navigator.pop(context);
+                      Navigator.of(context).pop();
+
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => DropDown()));
+                      //_getCurrentLocation();
+                    },
+                  ),
+                ),
+
+                ),
+
+
+                Expanded( child:
+
+
+                Padding(
+                  padding: const EdgeInsets.only(right: 40.0),
+                  child: FlatButton(
+                    child: Text("Collect"),
+                    color: Colors.blueAccent,
+                    onPressed: () {
+                      setState(()=> itemcount++);
+                      print('hello test');
+                      print(widget.id);
+                      print(widget.department);
+                      _getCurrentLocation();
+                    },
+                  ),
+                ),
+
+
+                ),
+
+              ],
+            ),
+          ),
+
+          //expended end here
+
+
+
+        ],
+      ),
+
+    );
+
+
+  }
+
+  Widget landscape(){
+    return   Container(
+     /* child: Row(
+        children: [
+          Container(
+            child: Text('Coardinator Collection'),
+            width: 200,
+            height: 20,
+            color: Colors.green,
+          ),
+          Container(),
+        ],
+      ) */
+      child:Column(
+        //mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          // Text(str),
+          Padding(
+            padding: const EdgeInsets.only(top: 10),
+            child: Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 10),
+                  child: Text('Coardinator Collection'),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 390,),
+                  child: FlatButton(
+                    color: Colors.grey,
+                    child: Text('Done'),
+                    onPressed: (){
+                      _sendDataToSubmitCoordinate(context);
+
+                      //  Navigator.push(context, MaterialPageRoute(builder: (context) => SubmitCoordinat() ) );//str: "hello"
+
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+
+          Column(
+            children: [
+
+
+              Padding(
+                padding: const EdgeInsets.only(right: 440,left: 10),
+                child: Text('PROJECt: ' +  widget.department ,
+                    style: TextStyle(fontWeight: FontWeight.bold) ),
+              ),
+
+
+
+              Padding(
+                padding: const EdgeInsets.only(right: 365 ,left: 10),
+                 child: Text('TARGET  : '+ widget.secondname,
+                     style: TextStyle(fontWeight: FontWeight.bold) ),
+              ),
+            ],
+          ),
+
+
+          // Column(
+          //   children: [
+          Padding(
+            padding: const EdgeInsets.only(right: 290),
+            child: Container(
+              //  color: Colors.amber[600],
+              height: 150,
+              width: 320,
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: Colors.blue,
+                ),
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              //  color: Colors.yellow,
+              child:
+              Expanded(
+                child:
+                ListView(
+                  children: <Widget>[
+                    if (_currentPosition != null)
+                      for(int i = 0; i < listOfCoordinates.length; i++)
+                        Center(
+                          child: Text(("Position: ${i + 1} LAT: ${listOfCoordinates[i]
+                              .latitude}, LNG: ${listOfCoordinates[i].longitude}"),style: TextStyle(fontSize: 14),
+                          ),
+                        ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          //   SizedBox.fromSize()
+          Column(
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(left: 100,top: 0),
+                child: Text(
+                  ' $itemcount Coordinates Collected ' ,
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
+            ],
+          ),
+
+          Divider(
+              color: Colors.black
+          ),
+
+          Padding(
+            padding: const EdgeInsets.only(right: 0, top:10,bottom: 10),
+            child: Text(
+              'Tap on collect to record current coardinate or\n                   revert to go one step back',
+              style: TextStyle(fontWeight: FontWeight.bold),
+
+            ),
+          ),
+          Divider(
+              color: Colors.black
+          ),
+
+
+
+          //   ],
+          // ),
+
+          //   ),
+          // ),
+
+
+
+
+
+
+          Padding(
+            padding: const EdgeInsets.only(top: 80,left: 40),
+
+            child: Row(
+              //  mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Expanded(child:
+                Padding(
+                  padding: const EdgeInsets.only(right: 30),
+                  child: FlatButton(
+                    color: Colors.blueAccent,
+
+                    child: Text('Revert'),
+                    onPressed: () {
+                      //Navigator.pop(context);
+                      Navigator.of(context).pop();
+
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => DropDown()));
+                      //_getCurrentLocation();
+                    },
+                  ),
+                ),
+
+                ),
+
+
+                Expanded( child:
+
+
+                Padding(
+                  padding: const EdgeInsets.only(right: 40.0),
+                  child: FlatButton(
+                    child: Text("Collect"),
+                    color: Colors.blueAccent,
+                    onPressed: () {
+                      setState(()=> itemcount++);
+                      print('hello test');
+                      print(widget.id);
+                      print(widget.department);
+                      _getCurrentLocation();
+                    },
+                  ),
+                ),
+
+
+                ),
+
+              ],
+            ),
+          ),
+
+          //expended end here
+
+
+
+        ],
+      ),
+
+    );;
+  }
 
   Position _currentPosition;
   List<Position> listOfCoordinates = new List();
@@ -67,193 +444,17 @@ class _HomePageState extends State<HomePage> {
         title: Text('Get Collection'),
 
       ),
-      body: Container(
-        child:Column(
-          //mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                   // Text(str),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 10),
-                      child: Row(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(left: 10),
-                            child: Text('Coardinator Collection'),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 110,),
-                            child: FlatButton(
-                              color: Colors.grey,
-                              child: Text('Done'),
-                              onPressed: (){
-                                _sendDataToSubmitCoordinate(context);
+      body: OrientationBuilder(
+        builder: (context, orientation ){
+          if(orientation == Orientation.portrait){
+            return potrate();
 
-                              //  Navigator.push(context, MaterialPageRoute(builder: (context) => SubmitCoordinat() ) );//str: "hello"
+          }else {
+            return landscape();
+          }
+        },
+      )
 
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-
-
-                    Column(
-                   children: [
-
-
-                       Padding(
-                         padding: const EdgeInsets.only(right: 160,left: 10),
-                         child: Text('PROJECt: ' +  widget.department ,
-                             style: TextStyle(fontWeight: FontWeight.bold) ),
-                       ),
-
-
-
-                     Padding(
-                       padding: const EdgeInsets.only(right: 160 ,left: 10),
-                       // child: Text('TARGET  : '+ widget.department,
-                       //     style: TextStyle(fontWeight: FontWeight.bold) ),
-                     ),
-                   ],
-                 ),
-
-
-                  // Column(
-                  //   children: [
-                      Container(
-                      //  color: Colors.amber[600],
-                        height: 200,
-                        width: 320,
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: Colors.blue,
-                          ),
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-
-
-                      //  color: Colors.yellow,
-                        child:
-                        Expanded(
-                          child:
-                          ListView(
-                            children: <Widget>[
-                                if (_currentPosition != null)
-                                  for(int i = 0; i < listOfCoordinates.length; i++)
-                                 Center(
-                                   child: Text(("Position: ${i + 1} LAT: ${listOfCoordinates[i]
-                                       .latitude}, LNG: ${listOfCoordinates[i].longitude}"),style: TextStyle(fontSize: 14),
-
-                                   ),
-                                 ),
-
-                           ],
-                            ),
-                        ),
-
-
-                        ),
-               //   SizedBox.fromSize()
-
-
-
-                       Padding(
-                         padding: const EdgeInsets.only(right: 150, top:10),
-                         child: Text(
-                           ' $itemcount Coordinates Collected ' ,
-                           style: TextStyle(fontWeight: FontWeight.bold),
-                         ),
-                       ),
-
-                    Divider(
-                        color: Colors.black
-                    ),
-
-                    Padding(
-                      padding: const EdgeInsets.only(right: 0, top:10,bottom: 10),
-                      child: Text(
-                        'Tap on collect to record current coardinate or\n                   revert to go one step back',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-
-                      ),
-                    ),
-                    Divider(
-                        color: Colors.black
-                    ),
-
-
-
-                  //   ],
-                  // ),
-
-                 //   ),
-                 // ),
-
-
-
-
-
-
-                    Padding(
-                      padding: const EdgeInsets.only(top: 80,left: 40),
-
-                      child: Row(
-                      //  mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                    Expanded(child:
-                    Padding(
-                      padding: const EdgeInsets.only(right: 30),
-                      child: FlatButton(
-                        color: Colors.blueAccent,
-
-                 child: Text('Revert'),
-                        onPressed: () {
-                          //Navigator.pop(context);
-                          Navigator.of(context).pop();
-
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => DropDown()));
-                          //_getCurrentLocation();
-                        },
-                      ),
-                    ),
-
-                    ),
-
-
-                   Expanded( child:
-
-
-                     Padding(
-                       padding: const EdgeInsets.only(right: 40.0),
-                       child: FlatButton(
-                         child: Text("Collect"),
-                         color: Colors.blueAccent,
-                         onPressed: () {
-                           setState(()=> itemcount++);
-                           print('hello test');
-                           print(widget.id);
-                           print(widget.department);
-                           _getCurrentLocation();
-                         },
-                       ),
-                     ),
-
-
-                   ),
-
-                      ],
-                      ),
-                    ),
-
-               //expended end here
-
-
-
-                  ],
-             ),
-
-    ),
     );
 
   }
@@ -283,7 +484,7 @@ class _HomePageState extends State<HomePage> {
         context,
         MaterialPageRoute(
           // builder: (context) => HomePage(text: textToSend,),
-          builder: (context) => SubmitCoordinat(selectedCoordinat:  '$itemcount' , id: widget.id , department: widget.department),
+          builder: (context) => SubmitCoordinat(selectedCoordinat:  '$itemcount' , id: widget.id , department: widget.department, secondid: widget.secondid, secondname:widget.secondname),
         ));
   }
 

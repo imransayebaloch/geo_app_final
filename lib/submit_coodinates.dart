@@ -35,37 +35,24 @@ import 'server_response.dart';
 } */
 
 class SubmitCoordinat extends StatefulWidget {
-   String selectedCoordinat,department;
-   int id;
-   SubmitCoordinat({ Key key,this.id, this.department, this.selectedCoordinat }):super(key: key );
+   String selectedCoordinat,department, secondname;
+   int id,secondid;
+   SubmitCoordinat({ Key key,this.id, this.department, this.selectedCoordinat,this.secondid,this.secondname }):super(key: key );
 
 
   @override
   _HomePageState createState() => _HomePageState();  //value
 }
 class _HomePageState extends State<SubmitCoordinat> {
-    // String selectedCoordinat="";
-    // _HomePageState({ Key key,this.selectedCoordinat }):super(key: key );
-  // _HomePageState({ Key key,this.str }):super(key: key );
-
-
-
   @override
   Widget build(BuildContext context) {
-
-
-    // str;
-
     return Scaffold(
-
       appBar: AppBar(
         // title: Text("Get location"),
         title: Text('Get Collection'),
       ),
       body: Container(
-
         child:Column(
-
           //mainAxisAlignment: MainAxisAlignment.center,
           children: [
                //Text(str),
@@ -78,12 +65,9 @@ class _HomePageState extends State<SubmitCoordinat> {
                     padding: const EdgeInsets.only(left: 100,),
                     child: FlatButton(
                       color: Colors.grey,
-
-
                       child: Text('Back'),
                       onPressed: (){
                         Navigator.push(context, MaterialPageRoute(builder: (_)=>  DropDown()));
-
                       },
                     ),
                   ),
@@ -91,11 +75,6 @@ class _HomePageState extends State<SubmitCoordinat> {
               ),
             ),
 
-
-
-
-            // Column(
-            //   children: [
             Padding(
               padding: const EdgeInsets.only(top: 20),
               child: Container(
@@ -106,19 +85,10 @@ class _HomePageState extends State<SubmitCoordinat> {
                     child: CircleAvatar(
                       radius: 65,
                    child: Center(child: Text(widget.selectedCoordinat,style: TextStyle(height: 1, fontSize: 60))),
-                   //   backgroundColor: Color(0x82d3c7),
-                     // backgroundImage: AssetImage('images/batman.jpg'),
                     ),
-
                   )
-
-
-
               ),
             ),
-            //   SizedBox.fromSize()
-
-
 
             Padding(
               padding: const EdgeInsets.only(right: 15, top:30),
@@ -171,13 +141,8 @@ class _HomePageState extends State<SubmitCoordinat> {
                       },
                     ),
                   ),
-
                   ),
-
-
                   Expanded( child:
-
-
                   Padding(
                     padding: const EdgeInsets.only(right: 40.0),
                     child: FlatButton(
@@ -194,34 +159,21 @@ class _HomePageState extends State<SubmitCoordinat> {
                       },
                     ),
                   ),
-
-
                   ),
-
                 ],
               ),
             ),
-
-            //expended end here
-
-
-
           ],
         ),
-
       ),
     );
-
   }
 
   void _sendDataToServer (BuildContext context) {
-    // String textToSend = textFieldController.text;
-    // String textToSend = imran;
     Navigator.push(
         context,
         MaterialPageRoute(
-          // builder: (context) => HomePage(text: textToSend,),
-          builder: (context) => ServerResponse(id: widget.id , value: widget.department,),
+          builder: (context) => ServerResponse(id: widget.id , value: widget.department, secondid:widget.secondid, secondname: widget.secondname),
         ));
   }
 
