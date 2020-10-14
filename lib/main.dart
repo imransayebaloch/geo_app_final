@@ -6,8 +6,7 @@ import 'package:geo_app_final/collect_deparment.dart' as select;
 import 'package:geo_app_final/collect_deparment.dart';
 import 'package:geo_app_final/your_location.dart' as location;
 import 'your_location.dart';
-import 'tasget_dropdown.dart';
-import 'server_response.dart';
+//import 'server_response.dart';
 import 'package:http/http.dart' as http;
 import 'function_of_ropDown.dart';
 import 'dart:convert';
@@ -31,7 +30,7 @@ class DropDownState extends State<DropDown> {
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
-      debugShowCheckedModeBanner: false,
+   //   debugShowCheckedModeBanner: false,
       home:  Location(),
     );
   }

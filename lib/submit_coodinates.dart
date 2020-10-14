@@ -36,8 +36,9 @@ import 'server_response.dart';
 
 class SubmitCoordinat extends StatefulWidget {
    String selectedCoordinat,department, secondname;
+   var collectcor = new List();
    int id,secondid;
-   SubmitCoordinat({ Key key,this.id, this.department, this.selectedCoordinat,this.secondid,this.secondname }):super(key: key );
+   SubmitCoordinat({ Key key,this.id, this.department, this.selectedCoordinat,this.secondid,this.secondname,this.collectcor }):super(key: key );
 
 
   @override
@@ -153,6 +154,7 @@ class _HomePageState extends State<SubmitCoordinat> {
                         print(widget.id);
                         print(widget.department);
                         print(widget.selectedCoordinat);
+                        print("hellow my list ${widget.collectcor}");
                         _sendDataToServer(context);
                       //  Navigator.push(context, MaterialPageRoute(builder: (context) => ServerResponse()));
                         //_sendDataToServer(context);
@@ -173,7 +175,7 @@ class _HomePageState extends State<SubmitCoordinat> {
     Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => ServerResponse(id: widget.id , value: widget.department, secondid:widget.secondid, secondname: widget.secondname),
+          builder: (context) => ServerResponse(id: widget.id , value: widget.department, secondid:widget.secondid, secondname: widget.secondname, listOFCor: widget.collectcor),
         ));
   }
 

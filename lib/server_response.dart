@@ -38,7 +38,11 @@ import 'submit_coodinates.dart';
 class ServerResponse extends StatefulWidget {
   String value,secondname;
   int id,secondid;
-  ServerResponse({Key key,this.id, this.value,this.secondid,this.secondname}):super(key: key );
+  var listOFCor = new List();
+ //  List  collectcor = new List();
+  ServerResponse({Key key,this.id, this.value,this.secondid,this.secondname,this.listOFCor }):super(key: key );
+
+
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -67,6 +71,11 @@ class _HomePageState extends State<ServerResponse> {
             Expanded( child:
             Center(child: Text('Value 2: ' + widget.secondname)),
             ),
+
+            // Expanded( child:
+            // Center(child: Text('list : ' + widget.collectcor)),
+            // ),
+
 
             Padding(
               padding: const EdgeInsets.only(top: 10),
@@ -99,17 +108,44 @@ class _HomePageState extends State<ServerResponse> {
             Divider(
                 color: Colors.black
             ),
+        Container(
+          height: 100,
+          width: 280,
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: Colors.green
+            ),
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+       child:
+           Expanded(
+             child:
+             ListView(
+               children: <Widget>[
+                 if (widget.listOFCor != null)
+                   for(int i = 0; i < widget.listOFCor.length; i++)
+                     Center(
+                       child: Text(("Position: ${i + 1} LAT: ${widget.listOFCor[i]
+                           .latitude}, LNG: ${widget.listOFCor[i].longitude}"),style: TextStyle(fontSize: 14),
+                       ),
+                     ),
+               ],
+             ),
+           ),
+    ),
+
 
             Row(
               //  mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Expanded( child:
                 Padding(
-                  padding: const EdgeInsets.all(100.0),
+                  padding: const EdgeInsets.all(40),
                   child: FlatButton(
                     child: Text("Back"),
                     color: Colors.blueAccent,
                     onPressed: () {
+                      print('list cheking ${widget.listOFCor}');
                       Navigator.push(context, MaterialPageRoute(builder: (context) => DropDown()));
                     },
                   ),

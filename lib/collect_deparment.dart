@@ -1,24 +1,14 @@
 import 'dart:math';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:geo_app_final/server_response.dart';
 import 'package:geolocator/geolocator.dart';
 import 'submit_coodinates.dart';
 import 'main.dart';
 import 'dart:async';
-
-
-
-
-
 /* class MyApp extends StatelessWidget {
-
-
-
-
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -38,20 +28,18 @@ import 'dart:async';
 } */
 
 class HomePage extends StatefulWidget {
-
   String department= "";
   int id;
   String  secondname = "";
   int secondid;
   HomePage({Key key ,this.id ,this.department, this.secondid,this.secondname}): super(key: key);
-
   @override
   _HomePageState createState() => _HomePageState();
 }
+
 class _HomePageState extends State<HomePage> {
 
   Widget potrate(){
-
     return  Container(
       child:Column(
         //mainAxisAlignment: MainAxisAlignment.center,
@@ -72,9 +60,7 @@ class _HomePageState extends State<HomePage> {
                     child: Text('Done'),
                     onPressed: (){
                       _sendDataToSubmitCoordinate(context);
-
                       //  Navigator.push(context, MaterialPageRoute(builder: (context) => SubmitCoordinat() ) );//str: "hello"
-
                     },
                   ),
                 ),
@@ -86,14 +72,11 @@ class _HomePageState extends State<HomePage> {
           Column(
             children: [
 
-
               Padding(
                 padding: const EdgeInsets.only(right: 160,left: 10),
                 child: Text('PROJECt: ' +  widget.department ,
                     style: TextStyle(fontWeight: FontWeight.bold) ),
               ),
-
-
 
               Padding(
                 padding: const EdgeInsets.only(right: 10 ,left: 10),
@@ -158,48 +141,28 @@ class _HomePageState extends State<HomePage> {
               color: Colors.black
           ),
 
-
-
-          //   ],
-          // ),
-
-          //   ),
-          // ),
-
-
-
-
-
-
           Padding(
             padding: const EdgeInsets.only(top: 80,left: 40),
-
             child: Row(
               //  mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Expanded(child:
-                Padding(
-                  padding: const EdgeInsets.only(right: 30),
-                  child: FlatButton(
-                    color: Colors.blueAccent,
-
-                    child: Text('Revert'),
-                    onPressed: () {
-                      //Navigator.pop(context);
-                      Navigator.of(context).pop();
-
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => DropDown()));
+                Expanded(
+                  child:
+                  Padding(
+                      padding: const EdgeInsets.only(right: 30),
+                      child: FlatButton(
+                        color: Colors.blueAccent,
+                        child: Text('Revert'),
+                        onPressed: () {
+                          //Navigator.pop(context);
+                          Navigator.of(context).pop();
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => DropDown()));
                       //_getCurrentLocation();
                     },
                   ),
                 ),
-
                 ),
-
-
                 Expanded( child:
-
-
                 Padding(
                   padding: const EdgeInsets.only(right: 40.0),
                   child: FlatButton(
@@ -207,231 +170,24 @@ class _HomePageState extends State<HomePage> {
                     color: Colors.blueAccent,
                     onPressed: () {
                       setState(()=> itemcount++);
-                      print('hello test');
-                      print(widget.id);
-                      print(widget.department);
                       _getCurrentLocation();
+                    //  _sendDataToserverScreen();
                     },
                   ),
                 ),
-
-
                 ),
-
               ],
             ),
           ),
-
           //expended end here
-
-
-
         ],
       ),
-
     );
-
-
   }
 
-  Widget landscape(){
-    return   Container(
-     /* child: Row(
-        children: [
-          Container(
-            child: Text('Coardinator Collection'),
-            width: 200,
-            height: 20,
-            color: Colors.green,
-          ),
-          Container(),
-        ],
-      ) */
-      child:Column(
-        //mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          // Text(str),
-          Padding(
-            padding: const EdgeInsets.only(top: 10),
-            child: Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 10),
-                  child: Text('Coardinator Collection'),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 390,),
-                  child: FlatButton(
-                    color: Colors.grey,
-                    child: Text('Done'),
-                    onPressed: (){
-                      _sendDataToSubmitCoordinate(context);
+ /* Widget landscape(){
 
-                      //  Navigator.push(context, MaterialPageRoute(builder: (context) => SubmitCoordinat() ) );//str: "hello"
-
-                    },
-                  ),
-                ),
-              ],
-            ),
-          ),
-
-
-          Column(
-            children: [
-
-
-              Padding(
-                padding: const EdgeInsets.only(right: 440,left: 10),
-                child: Text('PROJECt: ' +  widget.department ,
-                    style: TextStyle(fontWeight: FontWeight.bold) ),
-              ),
-
-
-
-              Padding(
-                padding: const EdgeInsets.only(right: 365 ,left: 10),
-                 child: Text('TARGET  : '+ widget.secondname,
-                     style: TextStyle(fontWeight: FontWeight.bold) ),
-              ),
-            ],
-          ),
-
-
-          // Column(
-          //   children: [
-          Padding(
-            padding: const EdgeInsets.only(right: 290),
-            child: Container(
-              //  color: Colors.amber[600],
-              height: 150,
-              width: 320,
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: Colors.blue,
-                ),
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              //  color: Colors.yellow,
-              child:
-              Expanded(
-                child:
-                ListView(
-                  children: <Widget>[
-                    if (_currentPosition != null)
-                      for(int i = 0; i < listOfCoordinates.length; i++)
-                        Center(
-                          child: Text(("Position: ${i + 1} LAT: ${listOfCoordinates[i]
-                              .latitude}, LNG: ${listOfCoordinates[i].longitude}"),style: TextStyle(fontSize: 14),
-                          ),
-                        ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          //   SizedBox.fromSize()
-          Column(
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(left: 100,top: 0),
-                child: Text(
-                  ' $itemcount Coordinates Collected ' ,
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-              ),
-            ],
-          ),
-
-          Divider(
-              color: Colors.black
-          ),
-
-          Padding(
-            padding: const EdgeInsets.only(right: 0, top:10,bottom: 10),
-            child: Text(
-              'Tap on collect to record current coardinate or\n                   revert to go one step back',
-              style: TextStyle(fontWeight: FontWeight.bold),
-
-            ),
-          ),
-          Divider(
-              color: Colors.black
-          ),
-
-
-
-          //   ],
-          // ),
-
-          //   ),
-          // ),
-
-
-
-
-
-
-          Padding(
-            padding: const EdgeInsets.only(top: 80,left: 40),
-
-            child: Row(
-              //  mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Expanded(child:
-                Padding(
-                  padding: const EdgeInsets.only(right: 30),
-                  child: FlatButton(
-                    color: Colors.blueAccent,
-
-                    child: Text('Revert'),
-                    onPressed: () {
-                      //Navigator.pop(context);
-                      Navigator.of(context).pop();
-
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => DropDown()));
-                      //_getCurrentLocation();
-                    },
-                  ),
-                ),
-
-                ),
-
-
-                Expanded( child:
-
-
-                Padding(
-                  padding: const EdgeInsets.only(right: 40.0),
-                  child: FlatButton(
-                    child: Text("Collect"),
-                    color: Colors.blueAccent,
-                    onPressed: () {
-                      setState(()=> itemcount++);
-                      print('hello test');
-                      print(widget.id);
-                      print(widget.department);
-                      _getCurrentLocation();
-                    },
-                  ),
-                ),
-
-
-                ),
-
-              ],
-            ),
-          ),
-
-          //expended end here
-
-
-
-        ],
-      ),
-
-    );;
-  }
+  } */
 
   Position _currentPosition;
   List<Position> listOfCoordinates = new List();
@@ -450,7 +206,7 @@ class _HomePageState extends State<HomePage> {
             return potrate();
 
           }else {
-            return landscape();
+            return null;
           }
         },
       )
@@ -469,6 +225,13 @@ class _HomePageState extends State<HomePage> {
         .then((Position position) {
       listOfCoordinates.add(position);
       print("position $position");
+      //print('hello $_currentPosition' + 'jjj');
+    //  print('list print $listOfCoordinates');
+      // var arr = new List();
+      // for(int b=0; b<listOfCoordinates.length; b++) {
+      //   // arr [b] = position;
+      //   print("arry test)" + listOfCoordinates.);
+      // }
       setState(() {
         _currentPosition = position;
       });
@@ -478,25 +241,20 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _sendDataToSubmitCoordinate (BuildContext context) {
-    // String textToSend = textFieldController.text;
-    // String textToSend = imran;
     Navigator.push(
         context,
         MaterialPageRoute(
-          // builder: (context) => HomePage(text: textToSend,),
-          builder: (context) => SubmitCoordinat(selectedCoordinat:  '$itemcount' , id: widget.id , department: widget.department, secondid: widget.secondid, secondname:widget.secondname),
+          builder: (context) => SubmitCoordinat(selectedCoordinat:  '$itemcount' , id: widget.id , department: widget.department, secondid: widget.secondid, secondname:widget.secondname,collectcor: listOfCoordinates),  // collectedList: listOfCoordinates
         ));
   }
 
- /* void _sendDataTosubmit(BuildContext context) {
-    // String textToSend = textFieldController.text;
-    // String textToSend = imran;
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-          // builder: (context) => HomePage(text: textToSend,),
-          builder: (context) => SubmitCoordinat( id: _selectedCompany.id , department: _selectedCompany.name, ),
-        ));
-  } */
+
+  // void _sendDataToserverScreen (BuildContext context ) {
+  //   Navigator.push(
+  //       context,
+  //       MaterialPageRoute(
+  //         builder: (context) => ServerResponse( collectcor: listOfCoordinates),  // collectedList: listOfCoordinates
+  //       ));
+  // }
 
 }
