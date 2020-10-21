@@ -116,6 +116,8 @@ class _LocationState extends State<Location> {
 
                   );
                 }),
+
+
             SizedBox(height: 5.0),
             _currentUser != null
                 ? Text("Name: " +

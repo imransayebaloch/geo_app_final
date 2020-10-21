@@ -8,6 +8,10 @@ import 'dart:async';
 import 'package:circle_list/circle_list.dart';
 import 'collect_deparment.dart';
 import 'server_response.dart';
+import 'collectionModel.dart';
+import 'Users_data.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 
 /* class SubmitCoordinates extends StatelessWidget {
@@ -45,6 +49,72 @@ class SubmitCoordinat extends StatefulWidget {
   _HomePageState createState() => _HomePageState();  //value
 }
 class _HomePageState extends State<SubmitCoordinat> {
+
+
+  final uri = 'https://raw.githubusercontent.com/iamjawad/sample_data/main/projects_data.json';
+  Users _currentUser;
+  Future<List<Users>> _fetchUsers() async {
+    var response = await http.get(uri);
+
+    if (response.statusCode == 200) {
+      final items = json.decode(response.body).cast<Map<String, dynamic>>();
+      List<Users> listOfQuestion = items.map<Users>((json) {
+        return Users.fromJson(json);
+      }).toList();
+
+      return listOfQuestion;
+    } else {
+      throw Exception('Failed to load internet');
+    }
+  }
+
+
+ /* final String quistionUri = 'https://raw.githubusercontent.com/iamjawad/sample_data/main/projects_data.json';
+  List data;
+
+  @override
+  void initState(){
+    super.initState();
+    this.getJsonData();
+  }
+
+  Future<String> getJsonData() async {
+    var response = await http.get(
+      Uri.encodeFull(quistionUri),
+      headers: {"Accept":"application/json"}
+    );
+    print(response.body);
+
+    setState(() {
+      var JSON;
+      var convertDataToJson = JSON.decode(response.body);
+      data = convertDataToJson['name'];
+    });
+    return "Success";
+  }    */
+ // Users _currentUser;
+/*  Future<List<Users>> _fetchUsers() async {
+    var response = await http.get(quistionUri);
+
+    if (response.statusCode == 200) {
+      final items = json.decode(response.body).cast<Map<String, dynamic>>();
+      List<Users> listOfQuestion = items.map<Users>((json) {
+        return Users.fromJson(json);
+      }).toList();
+
+      return listOfQuestion;
+    } else {
+      throw Exception('Failed to load internet');
+    }
+  }         */
+
+
+
+
+  //List<CollectionModel> items;
+  List<CollectionModel> items =  List<CollectionModel>.generate(5, (i) => CollectionModel("Question $i"));
+   List data = new List();
+  //int  _controllers ;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -115,12 +185,94 @@ class _HomePageState extends State<SubmitCoordinat> {
 
               ),
             ),
+
+
+            Expanded(
+              child: FlatButton(
+                child: Text('Question test'),
+                color: Colors.green,
+                onPressed: (){
+                  print('W  $_fetchUsers()');
+                },
+              )
+
+
+
+          /*    FutureBuilder<List<Users>>(
+                  future: _fetchUsers(),
+                  builder: (BuildContext context,
+                      AsyncSnapshot<List<Users>> snapshot) {
+                    if (!snapshot.hasData) return CircularProgressIndicator();
+                    return
+                      ListView.builder(
+                        // itemCount: data == null ? 0 :data.length ,
+                        itemCount: data.length,
+                        itemBuilder: (context, index) {
+                          //  _controllers.add(new TextEditingController());
+
+                          return ListTile(
+                            title: Text('wah'),
+                            //  title: Text(data[index]['name']),
+                            // subtitle: TextField(
+                            //     //controller: data[index].fieldContorller,
+                            //     decoration: const InputDecoration(
+                            //       hintText: 'Enter your Awnser here',
+                            //     )
+                            // ),
+                          );
+                        },
+                      );
+
+                  }), */
+            ),
+
+
             Divider(
                 color: Colors.black
             ),
+            // past here the quistionar
+
+
+    Expanded(
+      child:Container(
+        height: 300,
+        width: 280,
+        decoration: BoxDecoration(
+          border: Border.all(
+              color: Colors.green
+          ),
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+       // padding: const EdgeInsets.only(right: 20.0,left:20,top: 10,bottom: 10),
+
+        //================================================================
+
+        //============================================================================================
+
+        child: ListView.builder(
+         // itemCount: data == null ? 0 :data.length ,
+          itemCount: items.length,
+          itemBuilder: (context, index) {
+          //  _controllers.add(new TextEditingController());
+
+            return ListTile(
+              title: Text('${items[index].name}'),
+            //  title: Text(data[index]['name']),
+              subtitle: TextField(
+                  controller: items[index].fieldContorller,
+                  decoration: const InputDecoration(
+                    hintText: 'Enter your Awnser here',
+                  )
+              ),
+            );
+          },
+        ),
+      ),),
+
+
 
             Padding(
-              padding: const EdgeInsets.only(top: 100,left: 40),
+              padding: const EdgeInsets.only(top: 1,left: 40),
 
               child: Row(
                 //  mainAxisAlignment: MainAxisAlignment.center,
@@ -150,8 +302,8 @@ class _HomePageState extends State<SubmitCoordinat> {
                       child: Text("SUBMIT"),
                       color: Colors.blueAccent,
                       onPressed: () {
-                        print('submit coor test');
-                        print(widget.id);
+                      //  print('Quistion test  ${items[ind]}');
+                      //  print(listOfQuestion);
                         print(widget.department);
                         print(widget.selectedCoordinat);
                         print("hellow my list ${widget.collectcor}");
