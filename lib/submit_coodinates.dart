@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:http/http.dart';
 import 'main.dart';
 import 'dart:async';
 import 'package:circle_list/circle_list.dart';
@@ -12,6 +13,7 @@ import 'collectionModel.dart';
 import 'Users_data.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'networking.dart';
 
 
 /* class SubmitCoordinates extends StatelessWidget {
@@ -50,8 +52,25 @@ class SubmitCoordinat extends StatefulWidget {
 }
 class _HomePageState extends State<SubmitCoordinat> {
 
+@override
+  void initState() {
+    // TODO: implement initState
 
-  final uri = 'https://raw.githubusercontent.com/iamjawad/sample_data/main/projects_data.json';
+    super.initState();
+
+    getDatatoHelper();
+  }
+  void  getDatatoHelper() async {
+
+    NetworkHelper  networkHelper = NetworkHelper( 'https://raw.githubusercontent.com/imransayebaloch/QDA-question/main/my%20data.json');
+    var Question = await networkHelper.getData();
+       print(Question);
+      return items= Question;
+
+    }
+
+
+ /* final uri = 'https://raw.githubusercontent.com/iamjawad/sample_data/main/projects_data.json';
   Users _currentUser;
   Future<List<Users>> _fetchUsers() async {
     var response = await http.get(uri);
@@ -66,7 +85,7 @@ class _HomePageState extends State<SubmitCoordinat> {
     } else {
       throw Exception('Failed to load internet');
     }
-  }
+  }  */
 
 
  /* final String quistionUri = 'https://raw.githubusercontent.com/iamjawad/sample_data/main/projects_data.json';
@@ -110,10 +129,13 @@ class _HomePageState extends State<SubmitCoordinat> {
 
 
 
-
+  // List<CollectionModel> items =  List<CollectionModel>.generate(5, (i) => CollectionModel('Question $i'));
   //List<CollectionModel> items;
-  List<CollectionModel> items =  List<CollectionModel>.generate(5, (i) => CollectionModel("Question $i"));
-   List data = new List();
+ // List<Users> items ;
+ var items = new List();
+  int i = 0;
+  // List<Users> items =  List<Users>.generate(5, (i) => Users());
+  // List<CollectionModel> Data = new List();
   //int  _controllers ;
   @override
   Widget build(BuildContext context) {
@@ -187,44 +209,20 @@ class _HomePageState extends State<SubmitCoordinat> {
             ),
 
 
-            Expanded(
+         /*   Expanded(
               child: FlatButton(
                 child: Text('Question test'),
                 color: Colors.green,
-                onPressed: (){
-                  print('W  $_fetchUsers()');
-                },
-              )
+                 onPressed: (){
+                   getDatatoHelper();
+                   print('items $items');
+                //   print(_fetchUsers());
+                 },
+              )),*/
 
 
 
-          /*    FutureBuilder<List<Users>>(
-                  future: _fetchUsers(),
-                  builder: (BuildContext context,
-                      AsyncSnapshot<List<Users>> snapshot) {
-                    if (!snapshot.hasData) return CircularProgressIndicator();
-                    return
-                      ListView.builder(
-                        // itemCount: data == null ? 0 :data.length ,
-                        itemCount: data.length,
-                        itemBuilder: (context, index) {
-                          //  _controllers.add(new TextEditingController());
 
-                          return ListTile(
-                            title: Text('wah'),
-                            //  title: Text(data[index]['name']),
-                            // subtitle: TextField(
-                            //     //controller: data[index].fieldContorller,
-                            //     decoration: const InputDecoration(
-                            //       hintText: 'Enter your Awnser here',
-                            //     )
-                            // ),
-                          );
-                        },
-                      );
-
-                  }), */
-            ),
 
 
             Divider(
@@ -245,21 +243,31 @@ class _HomePageState extends State<SubmitCoordinat> {
         ),
        // padding: const EdgeInsets.only(right: 20.0,left:20,top: 10,bottom: 10),
 
-        //================================================================
+        //===============================================================
 
         //============================================================================================
+        /*  child: ListView(
+            children: [
 
+              Text(" ${items[1]['question']}")
+
+
+            ],
+          )*/
         child: ListView.builder(
-         // itemCount: data == null ? 0 :data.length ,
+         // itemCount: Data == null ? 0 :Data.length ,
           itemCount: items.length,
+
           itemBuilder: (context, index) {
-          //  _controllers.add(new TextEditingController());
+            //_controllers.add(new TextEditingController());
 
             return ListTile(
-              title: Text('${items[index].name}'),
-            //  title: Text(data[index]['name']),
+            //  title: Text('${items[index].name}'),
+             // title: Text(Data[index].name),
+
+              title: Text(" ${items[i++]['question']}"),
               subtitle: TextField(
-                  controller: items[index].fieldContorller,
+               //   controller: items[i++].fieldContorller,
                   decoration: const InputDecoration(
                     hintText: 'Enter your Awnser here',
                   )
@@ -267,7 +275,8 @@ class _HomePageState extends State<SubmitCoordinat> {
             );
           },
         ),
-      ),),
+      ),
+    ),
 
 
 

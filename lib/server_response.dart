@@ -47,7 +47,6 @@ class ServerResponse extends StatefulWidget {
   String value,secondname;
   int id,secondid;
   var listOFCor = new List();
- //  List  collectcor = new List();
   ServerResponse({Key key,this.id, this.value,this.secondid,this.secondname,this.listOFCor }):super(key: key );
 
 
@@ -295,15 +294,15 @@ class _HomePageState extends State<ServerResponse> {
                  Padding(
                    padding: const EdgeInsets.only(top: 10,left: 20),
                    child: Expanded(
-
-                     child: FlatButton(
-                       //padding: EdgeInsets.only(top: 0),
-                       child: Text('I am gallery'),
-                       color: Colors.lightGreen,
-                       onPressed: (){
+                     child: IconButton(
+                       icon: Icon(Icons.camera_alt, size: 40, color: Colors.blueAccent,),
+                       tooltip: 'Increase volume by 10%',
+                       onPressed: () {
                          _showChoiceDialog(context);
-                       },
+                         print('Volume button clicked');
+                         },
                      ),
+
                    ),
                  ),
 

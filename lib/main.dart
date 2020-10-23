@@ -72,6 +72,8 @@ class _LocationState extends State<Location> {
       }).toList();
 
       return listOfUsers;
+
+
     } else {
       throw Exception('Failed to load internet');
     }

@@ -59,6 +59,7 @@ class _HomePageState extends State<HomePage> {
                     color: Colors.grey,
                     child: Text('Done'),
                     onPressed: (){
+                    //  print("")
                       _sendDataToSubmitCoordinate(context);
                       //  Navigator.push(context, MaterialPageRoute(builder: (context) => SubmitCoordinat() ) );//str: "hello"
                     },
