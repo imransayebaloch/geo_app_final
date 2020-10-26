@@ -1,0 +1,27 @@
+[
+  {
+    "id": 1,
+    "question": "IS THERE SCOPE TO HAVE MULTIPLE RELEASES?",
+    "type": "Multiple Awnsers"
+  
+  },
+  {
+    "id": 2,
+    "question": "WHAT ARE THE UNDERLYING ASSUMPTIONS?",
+    "type": "Single Awnsers"
+  },
+  {
+    "id": 3,
+    "question": "HOW IS IT GOING TO BE HOSTED?",
+    "type": "Open Awnsers"
+  },{
+    "id": 4,
+    "question": "WHAT ARE THE BUSINESS OBJECTIVES FOR THE MOBILE APP?",
+    "type": "Open Awnsers"
+  }
+  ,{
+    "id": 5,
+    "question": "WHAT DOES SUCCESS LOOK LIKE AT EACH STAGE OF THE PROCESS?",
+    "type": "Open Awnsers"
+  }
+]
