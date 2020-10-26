@@ -99,7 +99,7 @@ class _LocationState extends State<Location> {
                 future: _secondfetchUsers(),
                 builder: (BuildContext context,
                     AsyncSnapshot<List<Users>> snapshot) {
-                  if (!snapshot.hasData) return CircularProgressIndicator();
+                  if (!snapshot.hasData) return CircularProgressIndicator(); //valueColor: AlwaysStoppedAnimation<Color> (Colors.green),
                   return DropdownButton<Users>(
                     items: snapshot.data
                         .map((user) => DropdownMenuItem<Users>(
@@ -114,17 +114,17 @@ class _LocationState extends State<Location> {
                     },
                     isExpanded: false,
                     //value: _currentUser,
-                    hint: Text('Select Project'),
+                    hint:  _currentUser != null
+                        ? Text("" +
+                        _currentUser.name )
+                        : Text("No Project selected"),//Text('Select Project'),
 
                   );
                 }),
 
 
             SizedBox(height: 5.0),
-            _currentUser != null
-                ? Text("Name: " +
-                _currentUser.name )
-                : Text("No Project selected"),
+
 
             //==========================================================================================
 
@@ -136,7 +136,7 @@ class _LocationState extends State<Location> {
             //   child: Text('SELECT TARGET'),
             // ),
 
-            FutureBuilder<List<Users>>(
+           FutureBuilder<List<Users>>(
                 future: _fetchUsers(),
                 builder: (BuildContext context,
                     AsyncSnapshot<List<Users>> snapshot) {
@@ -155,15 +155,20 @@ class _LocationState extends State<Location> {
                     },
                     isExpanded: false,
                     //value: _currentUser,
-                    hint: Text('Select Target'),
+
+                    hint: _secondcurrentUser != null
+                        ? Text("" +
+                        _secondcurrentUser.name )
+                        : Text("No Target selected"),//Text('select Target'+_secondcurrentUser.name),
 
                   );
                 }),
-            SizedBox(height: 20.0),
-            _secondcurrentUser != null
-                ? Text("Name: " +
-                _secondcurrentUser.name )
-                : Text("No Target selected"),
+
+            // SizedBox(height: 20.0),
+            // _secondcurrentUser != null
+            //     ? Text("Name: " +
+            //     _secondcurrentUser.name )
+            //     : Text("No Target selected"),
 
             Divider(
                 color: Colors.black

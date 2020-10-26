@@ -71,19 +71,14 @@ class _HomePageState extends State<HomePage> {
 
 
           Column(
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
 
-              Padding(
-                padding: const EdgeInsets.only(right: 160,left: 10),
-                child: Text('PROJECt: ' +  widget.department ,
-                    style: TextStyle(fontWeight: FontWeight.bold) ),
-              ),
+              Text('PROJECt: ' +  widget.department ,
+                  style: TextStyle(fontWeight: FontWeight.bold) ),
 
-              Padding(
-                padding: const EdgeInsets.only(right: 10 ,left: 10),
-                child: Text('TARGET  : '+ widget.secondname,
-                    style: TextStyle(fontWeight: FontWeight.bold) ),
-              ),
+              Text('TARGET  : '+ widget.secondname,
+                  style: TextStyle(fontWeight: FontWeight.bold) ),
             ],
           ),
 

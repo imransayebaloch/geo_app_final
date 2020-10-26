@@ -1,9 +1,12 @@
+//import 'dart:html';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart';
+import 'package:image_picker/image_picker.dart';
 import 'main.dart';
 import 'dart:async';
 import 'package:circle_list/circle_list.dart';
@@ -14,31 +17,12 @@ import 'Users_data.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'networking.dart';
-
-
-/* class SubmitCoordinates extends StatelessWidget {
-  String str= "";
- // SubmitCoordinates({Key key, this.str}):super(key: key );
+import 'question model.dart';
+import 'dart:io';
 
 
 
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: HomePage(),
-    );
-  }
 
-  @override
-  State<StatefulWidget> createState() {
-    // TODO: implement createState
-    throw UnimplementedError();
-  }
-} */
 
 class SubmitCoordinat extends StatefulWidget {
    String selectedCoordinat,department, secondname;
@@ -52,93 +36,93 @@ class SubmitCoordinat extends StatefulWidget {
 }
 class _HomePageState extends State<SubmitCoordinat> {
 
+  File imageFile;
+
+
+  _openGallery(BuildContext context) async{
+
+    // ignore: deprecated_member_use
+    var picture =  await ImagePicker.pickImage(source: ImageSource.gallery);
+    this.setState(() {
+      imageFile = picture;
+    });
+    Navigator.of(context).pop();
+
+
+  }
+  _openCamera(BuildContext context) async{
+    // ignore: deprecated_member_use
+    var picture = await ImagePicker.pickImage(source: ImageSource.camera);
+    this.setState(() {
+      imageFile = picture;
+    });
+    Navigator.of(context).pop();
+  }
+
+  Widget _DecideImageView(){
+    if( imageFile == null) {
+      return Text('No image selected');
+    }else{ return
+      Image.file( imageFile,width: 80, height: 80);
+    }
+  }
+
+  Future<void> _showChoiceDialog(BuildContext context){
+    return showDialog(context: context, builder: (BuildContext context){
+      return AlertDialog(
+          title: Text('Make a choice'),
+          content: SingleChildScrollView(
+              child: ListBody(
+                children: [
+                  GestureDetector(
+                    child: Text("Gallary"),
+                    onTap: (){
+                      _openGallery(context);
+                    },
+                  ),
+                  Padding(padding: EdgeInsets.all(8.0)),
+                  GestureDetector(
+                    child: Text("Camera"),
+                    onTap: (){
+                      _openCamera(context);
+                    },
+                  )
+                ],
+              )
+          )
+      );
+    }
+    );
+  }
+
+
 @override
   void initState() {
     // TODO: implement initState
 
     super.initState();
 
+    //getDatatoHelper();
+  }
+
+void  getDatatoHelper() async {
+  NetworkHelper  networkHelper = NetworkHelper( 'https://raw.githubusercontent.com/imransayebaloch/QDA-question/main/my%20data.json');
+  var Question = await networkHelper.getData();
+  print(Question);
+  setState(()  {
+  });
+    return items = Question;
+}
+ // List<CollectionModel> itemss = CollectionModel<>
+  var  items =  new List(); //new List();
+  @override
+  Widget build(BuildContext context)  {
+    TextEditingController fieldContorller = TextEditingController();
     getDatatoHelper();
-  }
-  void  getDatatoHelper() async {
-
-    NetworkHelper  networkHelper = NetworkHelper( 'https://raw.githubusercontent.com/imransayebaloch/QDA-question/main/my%20data.json');
-    var Question = await networkHelper.getData();
-       print(Question);
-      return items= Question;
-
-    }
-
-
- /* final uri = 'https://raw.githubusercontent.com/iamjawad/sample_data/main/projects_data.json';
-  Users _currentUser;
-  Future<List<Users>> _fetchUsers() async {
-    var response = await http.get(uri);
-
-    if (response.statusCode == 200) {
-      final items = json.decode(response.body).cast<Map<String, dynamic>>();
-      List<Users> listOfQuestion = items.map<Users>((json) {
-        return Users.fromJson(json);
-      }).toList();
-
-      return listOfQuestion;
-    } else {
-      throw Exception('Failed to load internet');
-    }
-  }  */
-
-
- /* final String quistionUri = 'https://raw.githubusercontent.com/iamjawad/sample_data/main/projects_data.json';
-  List data;
-
-  @override
-  void initState(){
-    super.initState();
-    this.getJsonData();
-  }
-
-  Future<String> getJsonData() async {
-    var response = await http.get(
-      Uri.encodeFull(quistionUri),
-      headers: {"Accept":"application/json"}
-    );
-    print(response.body);
-
-    setState(() {
-      var JSON;
-      var convertDataToJson = JSON.decode(response.body);
-      data = convertDataToJson['name'];
-    });
-    return "Success";
-  }    */
- // Users _currentUser;
-/*  Future<List<Users>> _fetchUsers() async {
-    var response = await http.get(quistionUri);
-
-    if (response.statusCode == 200) {
-      final items = json.decode(response.body).cast<Map<String, dynamic>>();
-      List<Users> listOfQuestion = items.map<Users>((json) {
-        return Users.fromJson(json);
-      }).toList();
-
-      return listOfQuestion;
-    } else {
-      throw Exception('Failed to load internet');
-    }
-  }         */
 
 
 
-  // List<CollectionModel> items =  List<CollectionModel>.generate(5, (i) => CollectionModel('Question $i'));
-  //List<CollectionModel> items;
- // List<Users> items ;
- var items = new List();
-  int i = 0;
-  // List<Users> items =  List<Users>.generate(5, (i) => Users());
-  // List<CollectionModel> Data = new List();
-  //int  _controllers ;
-  @override
-  Widget build(BuildContext context) {
+    int i = 0;
     return Scaffold(
       appBar: AppBar(
         // title: Text("Get location"),
@@ -146,94 +130,80 @@ class _HomePageState extends State<SubmitCoordinat> {
       ),
       body: Container(
         child:Column(
-          //mainAxisAlignment: MainAxisAlignment.center,
+         //  mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-               //Text(str),
-            Padding(
-              padding: const EdgeInsets.only(top: 10,left: 10),
-              child: Row(
-                children: [
-                  Text('SUBMIT COORDINATES',style: TextStyle(fontWeight: FontWeight.bold),),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 100,),
-                    child: FlatButton(
-                      color: Colors.grey,
-                      child: Text('Back'),
-                      onPressed: (){
-                        Navigator.push(context, MaterialPageRoute(builder: (_)=>  DropDown()));
-                      },
-                    ),
+
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Text('SUBMIT COORDINATES',style: TextStyle(fontWeight: FontWeight.bold),),
+                FlatButton(
+                  //color: Colors.grey,
+                  child: Text('Back',style: TextStyle(
+                    decoration: TextDecoration.underline,fontWeight: FontWeight.bold)),
+                  onPressed: (){
+                    Navigator.push(context, MaterialPageRoute(builder: (_)=>  DropDown()));
+                  },
+                ),
+              ],
+            ),
+
+            Container(
+                child:   CircleAvatar(
+                  radius: 70,
+                  backgroundColor: Color(0xffFDCF09),
+                  child: CircleAvatar(
+                    radius: 65,
+                 child: Center(child: Text(widget.selectedCoordinat,style: TextStyle(height: 1, fontSize: 60))),
                   ),
-                ],
-              ),
+                )
+
+
             ),
+          SizedBox(height: 20,),
 
             Padding(
-              padding: const EdgeInsets.only(top: 20),
-              child: Container(
-
-               child:   CircleAvatar(
-                    radius: 70,
-                    backgroundColor: Color(0xffFDCF09),
-                    child: CircleAvatar(
-                      radius: 65,
-                   child: Center(child: Text(widget.selectedCoordinat,style: TextStyle(height: 1, fontSize: 60))),
-                    ),
-                  )
-              ),
+              padding: const EdgeInsets.only(right: 10,left: 40),
+              child: _DecideImageView(),                                // dilog alert function calling here for camra nad gallery
             ),
-
             Padding(
-              padding: const EdgeInsets.only(right: 15, top:30),
-              child: Text(
-                ' Coordinates Collected',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-            ),
-
-            Padding(
-              padding: const EdgeInsets.only(top: 30),
-              child: Divider(
-
-                  color: Colors.black
-              ),
-            ),
-
-            Padding(
-              padding: const EdgeInsets.only(right: 0, top:10,bottom: 10),
-              child: Text(
-                'Tap on submit to submit coardinates or\n                 Cancel to go start back',
-                style: TextStyle(fontWeight: FontWeight.bold),
+              padding: const EdgeInsets.only(top: 10,left: 20),
+              child: Expanded(
+                child: IconButton(
+                  icon: Icon(Icons.camera_alt, size: 40, color: Colors.blueAccent,),
+                  tooltip: 'Increase volume by 10%',
+                  onPressed: () {
+                    _showChoiceDialog(context);
+                    print('Volume button clicked');
+                  },
+                ),
 
               ),
             ),
 
-
-         /*   Expanded(
-              child: FlatButton(
-                child: Text('Question test'),
-                color: Colors.green,
-                 onPressed: (){
-                   getDatatoHelper();
-                   print('items $items');
-                //   print(_fetchUsers());
-                 },
-              )),*/
-
-
-
-
-
-
-            Divider(
-                color: Colors.black
+            Text(
+              ' Coordinates Collected',
+              style: TextStyle(fontWeight: FontWeight.bold),
             ),
+
+            Divider(color: Colors.black),
+
+            Text(
+              'Tap on submit to submit coardinates or\n                 Cancel to go start back',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+
+            Divider(height: 20, color: Colors.black),
             // past here the quistionar
 
+  if(items.isEmpty)
+      CircularProgressIndicator(),
 
     Expanded(
+
       child:Container(
-        height: 300,
+
+        height: 200,
         width: 280,
         decoration: BoxDecoration(
           border: Border.all(
@@ -242,32 +212,22 @@ class _HomePageState extends State<SubmitCoordinat> {
           borderRadius: BorderRadius.circular(10.0),
         ),
        // padding: const EdgeInsets.only(right: 20.0,left:20,top: 10,bottom: 10),
-
-        //===============================================================
-
-        //============================================================================================
-        /*  child: ListView(
-            children: [
-
-              Text(" ${items[1]['question']}")
-
-
-            ],
-          )*/
-        child: ListView.builder(
+        child:  ListView.builder(
          // itemCount: Data == null ? 0 :Data.length ,
           itemCount: items.length,
-
           itemBuilder: (context, index) {
+           // CircularProgressIndicator();
+
             //_controllers.add(new TextEditingController());
+            return
 
-            return ListTile(
-            //  title: Text('${items[index].name}'),
+            ListTile(
+
+              //  title: Text('${items[index].name}'),
              // title: Text(Data[index].name),
-
-              title: Text(" ${items[i++]['question']}"),
+              title: Text("${items[i++]['question']}"),
               subtitle: TextField(
-               //   controller: items[i++].fieldContorller,
+              //    controller: items[i++].fieldContorller,
                   decoration: const InputDecoration(
                     hintText: 'Enter your Awnser here',
                   )
@@ -278,53 +238,47 @@ class _HomePageState extends State<SubmitCoordinat> {
       ),
     ),
 
+            Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                FlatButton(
+                  color: Colors.blueAccent,
+                   // color: Colors(Colors ,0x156562),
+                 // backgroundColor: Color(0xffFDCF09),
+                  child: Text('CANCEL'),
+                  onPressed: () {
+                    //Navigator.pop(context);
+                    Navigator.of(context).pop();
+                    //  Navigator.push(context, MaterialPageRoute(builder: (_)=>  DropDown(),));
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => DropDown()));
+                    //_getCurrentLocation();
+                  },
+                ),
+                //FlatButton.icon(onPressed: null, icon: null, label: null),
+                FlatButton(
+                  child: Text("push"),
+                  color: Colors.blueAccent,
+                  onPressed: () {
+                    print('items ${widget.selectedCoordinat}');
+                    print('dpaertment ${widget.department}');
+                    print('second name ${widget.secondname}');
+                    print('id ${widget.id}');
+                    print('second id ${widget.secondid}');
+                    print('collect coordinats ${widget.collectcor}');
+                    print('image test  $imageFile');
 
-
-            Padding(
-              padding: const EdgeInsets.only(top: 1,left: 40),
-
-              child: Row(
-                //  mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Expanded(child:
-                  Padding(
-                    padding: const EdgeInsets.only(right: 30),
-                    child: FlatButton(
-                      color: Colors.blueAccent,
-                       // color: Colors(Colors ,0x156562),
-                     // backgroundColor: Color(0xffFDCF09),
-                      child: Text('CANCEL'),
-                      onPressed: () {
-                        //Navigator.pop(context);
-                        Navigator.of(context).pop();
-                        //  Navigator.push(context, MaterialPageRoute(builder: (_)=>  DropDown(),));
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => DropDown()));
-                        //_getCurrentLocation();
-                      },
-                    ),
-                  ),
-                  ),
-                  Expanded( child:
-                  Padding(
-                    padding: const EdgeInsets.only(right: 40.0),
-                    child: FlatButton(
-                      child: Text("SUBMIT"),
-                      color: Colors.blueAccent,
-                      onPressed: () {
-                      //  print('Quistion test  ${items[ind]}');
-                      //  print(listOfQuestion);
-                        print(widget.department);
-                        print(widget.selectedCoordinat);
-                        print("hellow my list ${widget.collectcor}");
-                        _sendDataToServer(context);
-                      //  Navigator.push(context, MaterialPageRoute(builder: (context) => ServerResponse()));
-                        //_sendDataToServer(context);
-                      },
-                    ),
-                  ),
-                  ),
-                ],
-              ),
+                  },
+                ),
+                FlatButton(
+                  child: Text("SUBMIT"),
+                  color: Colors.blueAccent,
+                  onPressed: () {
+                    _sendDataToServer(context);
+                  //  Navigator.push(context, MaterialPageRoute(builder: (context) => ServerResponse()));
+                    //_sendDataToServer(context);
+                  },
+                ),
+              ],
             ),
           ],
         ),

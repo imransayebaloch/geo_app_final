@@ -79,34 +79,34 @@ class _HomePageState extends State<ServerResponse> {
     if( imageFile == null) {
       return Text('No image selected');
     }else{ return
-        Image.file( imageFile,width: 80, height: 80);
+      Image.file( imageFile,width: 80, height: 80);
     }
   }
 
   Future<void> _showChoiceDialog(BuildContext context){
     return showDialog(context: context, builder: (BuildContext context){
-        return AlertDialog(
+      return AlertDialog(
           title: Text('Make a choice'),
           content: SingleChildScrollView(
-            child: ListBody(
-              children: [
-                GestureDetector(
-                  child: Text("Gallary"),
-                  onTap: (){
-                    _openGallery(context);
-                  },
-                ),
-            Padding(padding: EdgeInsets.all(8.0)),
-                GestureDetector(
-                  child: Text("Camera"),
-                  onTap: (){
-                    _openCamera(context);
-                  },
-                )
-              ],
-            )
+              child: ListBody(
+                children: [
+                  GestureDetector(
+                    child: Text("Gallary"),
+                    onTap: (){
+                      _openGallery(context);
+                    },
+                  ),
+                  Padding(padding: EdgeInsets.all(8.0)),
+                  GestureDetector(
+                    child: Text("Camera"),
+                    onTap: (){
+                      _openCamera(context);
+                    },
+                  )
+                ],
+              )
           )
-        );
+      );
     }
     );
   }
