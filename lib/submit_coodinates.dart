@@ -1,5 +1,7 @@
 //import 'dart:html';
 
+//import 'dart:html';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -63,7 +65,7 @@ class _HomePageState extends State<SubmitCoordinat> {
     if( imageFile == null) {
       return Text('No image selected');
     }else{ return
-      Image.file( imageFile,width: 80, height: 80);
+      Image.file( imageFile,width: 200, height: 100);
     }
   }
 
@@ -95,14 +97,38 @@ class _HomePageState extends State<SubmitCoordinat> {
     );
   }
 
+  final myController = TextEditingController();
+  final myTest = TextEditingController();
+
+//CollectionModel()
+  @override
+  void dispose() {
+    // Clean up the controller when the widget is removed from the
+    // widget tree.
+    myController.dispose();
+    myTest.dispose();
+    CollectionModel(null).fieldContorller.dispose();
+
+    super.dispose();
+  }
 
 @override
   void initState() {
     // TODO: implement initState
 
     super.initState();
+    myController.addListener(_printLatestValue);
+    myTest.addListener(_printLatestValue);
+    CollectionModel(null).fieldContorller.addListener(_printLatestValue);
 
     //getDatatoHelper();
+  }
+
+  _printLatestValue() {
+    print("Second text field: ${myController.text}");
+    print("my test: ${myTest.text}");
+    print("field controller: ${CollectionModel(null).fieldContorller.text}");
+
   }
 
 void  getDatatoHelper() async {
@@ -113,7 +139,8 @@ void  getDatatoHelper() async {
   });
     return items = Question;
 }
- // List<CollectionModel> itemss = CollectionModel<>
+ // List<CollectionModel> itemss = CollectionModel
+  List<CollectionModel> textEdit =  List<CollectionModel>.generate(5, (i) => CollectionModel("Question $i"));
   var  items =  new List(); //new List();
   @override
   Widget build(BuildContext context)  {
@@ -130,7 +157,8 @@ void  getDatatoHelper() async {
       ),
       body: Container(
         child:Column(
-         //  mainAxisAlignment: MainAxisAlignment.spaceAround,
+          // mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
 
             Row(
@@ -147,8 +175,16 @@ void  getDatatoHelper() async {
                 ),
               ],
             ),
-
+            TextField(
+              //    controller: items[i++].fieldContorller,
+               controller: myController,
+                decoration: const InputDecoration(
+                  hintText: 'Enter your Awnser here',
+                )
+            ),
             Container(
+
+
                 child:   CircleAvatar(
                   radius: 70,
                   backgroundColor: Color(0xffFDCF09),
@@ -161,30 +197,29 @@ void  getDatatoHelper() async {
 
             ),
           SizedBox(height: 20,),
-
-            Padding(
-              padding: const EdgeInsets.only(right: 10,left: 40),
-              child: _DecideImageView(),                                // dilog alert function calling here for camra nad gallery
+            Text(
+              ' Coordinates Collected',
+              style: TextStyle(fontWeight: FontWeight.bold),
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 10,left: 20),
-              child: Expanded(
-                child: IconButton(
+            SizedBox(height: 20,),
+
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+
+                IconButton(
                   icon: Icon(Icons.camera_alt, size: 40, color: Colors.blueAccent,),
-                  tooltip: 'Increase volume by 10%',
+                  tooltip: 'camera ',
                   onPressed: () {
                     _showChoiceDialog(context);
                     print('Volume button clicked');
                   },
                 ),
-
-              ),
+                _DecideImageView(),
+              ],
             ),
 
-            Text(
-              ' Coordinates Collected',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
+
 
             Divider(color: Colors.black),
 
@@ -196,7 +231,7 @@ void  getDatatoHelper() async {
             Divider(height: 20, color: Colors.black),
             // past here the quistionar
 
-  if(items.isEmpty)
+  if(items.isEmpty)               //if there are no data then print the cercular progerss
       CircularProgressIndicator(),
 
     Expanded(
@@ -225,12 +260,15 @@ void  getDatatoHelper() async {
 
               //  title: Text('${items[index].name}'),
              // title: Text(Data[index].name),
-              title: Text("${items[i++]['question']}"),
+              title: Text("${items[index]['question']}"), //here i am showing the question from the server
+
               subtitle: TextField(
-              //    controller: items[i++].fieldContorller,
+                  controller: textEdit[index].fieldContorller,
+              // controller: items[i++].myController,
+             // controller: myTest,
                   decoration: const InputDecoration(
-                    hintText: 'Enter your Awnser here',
-                  )
+              hintText: 'Enter your Awnser here',
+              )
               ),
             );
           },
@@ -259,6 +297,7 @@ void  getDatatoHelper() async {
                   child: Text("push"),
                   color: Colors.blueAccent,
                   onPressed: () {
+                    print(_printLatestValue());
                     print('items ${widget.selectedCoordinat}');
                     print('dpaertment ${widget.department}');
                     print('second name ${widget.secondname}');
@@ -266,6 +305,8 @@ void  getDatatoHelper() async {
                     print('second id ${widget.secondid}');
                     print('collect coordinats ${widget.collectcor}');
                     print('image test  $imageFile');
+                    //print('edit text  ${CollectionModel(null).fieldContorller.text}');
+                    print("controller ${textEdit[].fieldContorller.toString()}");
 
                   },
                 ),
