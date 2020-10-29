@@ -14,12 +14,13 @@
   {
     "id": 3,
     "question": "HOW IS IT GOING TO BE HOSTED?",
-    "type": "Open Awnsers"
+    "type": "Single Awnsers",
+    "option_id": "2"
     
   },{
     "id": 4,
     "question": "WHAT ARE THE BUSINESS OBJECTIVES FOR THE MOBILE APP?",
-    "type": "Open Awnsers"
+    "type": "single"
   }
   ,{
     "id": 5,
