@@ -3,8 +3,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geo_app_final/server_response.dart';
 import 'package:geolocator/geolocator.dart';
+import 'dbmanager.dart';
 import 'submit_coodinates.dart';
 import 'main.dart';
 import 'dart:async';
@@ -30,6 +32,7 @@ import 'dart:async';
 class HomePage extends StatefulWidget {
   String department= "";
   int id;
+
   String  secondname = "";
   int secondid;
   HomePage({Key key ,this.id ,this.department, this.secondid,this.secondname}): super(key: key);
@@ -38,6 +41,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final DbStudentManager dbmanager = new DbStudentManager();
+  LatlngTarget target;
 
   Widget potrate(){
     return  Container(
@@ -60,7 +65,9 @@ class _HomePageState extends State<HomePage> {
                     child: Text('Done'),
                     onPressed: (){
                     //  print("")
+                      _submitTarget(context);
                       _sendDataToSubmitCoordinate(context);
+
                       //  Navigator.push(context, MaterialPageRoute(builder: (context) => SubmitCoordinat() ) );//str: "hello"
                     },
                   ),
@@ -219,8 +226,21 @@ class _HomePageState extends State<HomePage> {
     geolocator
         .getCurrentPosition(desiredAccuracy: LocationAccuracy.best)
         .then((Position position) {
+//if(listOfCoordinates!=null){}
       listOfCoordinates.add(position);
-      print("position $position");
+//      if(listOfCoordinates[listOfCoordinates.length-1].latitude.toString()==position.latitude.toString()){
+//      listOfCoordinates.add(position);
+//      print("position here  $position");
+//      Fluttertoast.showToast(
+//          msg: "Cordinates of this point is already collected please move to next",
+//          toastLength: Toast.LENGTH_SHORT,
+//          gravity: ToastGravity.CENTER,
+//          timeInSecForIosWeb: 1,
+//          backgroundColor: Colors.red,
+//          textColor: Colors.white,
+//          fontSize: 16.0
+//      );}
+
       //print('hello $_currentPosition' + 'jjj');
     //  print('list print $listOfCoordinates');
       // var arr = new List();
@@ -237,11 +257,49 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _sendDataToSubmitCoordinate (BuildContext context) {
+//    print();?
     Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => SubmitCoordinat(selectedCoordinat:  '$itemcount' , id: widget.id , department: widget.department, secondid: widget.secondid, secondname:widget.secondname,collectcor: listOfCoordinates),  // collectedList: listOfCoordinates
         ));
+  }
+
+  void _submitTarget(BuildContext context) {
+    //if(_formKey.currentState.validate()){
+    if (target == null) {
+      for (int i = 0; i < listOfCoordinates.length; i++) {
+        LatlngTarget tv = new   LatlngTarget (
+            assetid: widget.id, lat: listOfCoordinates[i].latitude,lng:listOfCoordinates[i].longitude );//
+
+        dbmanager.insertlocation(tv).then((id) =>
+
+        //.clear(),
+        // _courseController.clear(),
+
+        //  print('Student Added to Db ${id} ${st.course}')
+        print('test cordinate table ${tv.assetid} ')
+          // }
+        );
+      }}
+//    } else {
+////      for (int i = 0; i < listOfUsers.length; i++) {
+//      target.id = _currentUser.id;
+//      target.name = _currentUser.name;
+////      }
+//      dbmanager.updateStudent(target).then((id) =>
+//      {
+//        setState(() {
+////      for (int i = 0; i < listOfUsers.length; i++) {
+//          studlist[updateIndex].id = _currentUser.id;
+//          studlist[updateIndex].name = _currentUser.name;
+////      }
+//        }),
+//        // _nameController.clear(),
+//        // _courseController.clear(),
+//        target = null
+//      });
+//    }
   }
 
 

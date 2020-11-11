@@ -9,6 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart';
 import 'package:image_picker/image_picker.dart';
+import 'dbmanager.dart';
 import 'main.dart';
 import 'dart:async';
 import 'package:circle_list/circle_list.dart';
@@ -19,7 +20,7 @@ import 'Users_data.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'networking.dart';
-import 'question model.dart';
+//import 'question model.dart';
 import 'dart:io';
 
 
@@ -27,18 +28,21 @@ import 'dart:io';
 
 
 class SubmitCoordinat extends StatefulWidget {
-   String selectedCoordinat,department, secondname;
-   var collectcor = new List();
-   int id,secondid;
-   SubmitCoordinat({ Key key,this.id, this.department, this.selectedCoordinat,this.secondid,this.secondname,this.collectcor }):super(key: key );
+  String selectedCoordinat,department, secondname;
+  var collectcor = new List();
+  int id,secondid;
+  SubmitCoordinat({ Key key,this.id, this.department, this.selectedCoordinat,this.secondid,this.secondname,this.collectcor }):super(key: key );
 
 
   @override
   _HomePageState createState() => _HomePageState();  //value
 }
 class _HomePageState extends State<SubmitCoordinat> {
+  final DbStudentManager dbmanager = new DbStudentManager();
+  awnserTarget target;
 
   File imageFile;
+  Users _currentUser;
 
 
   _openGallery(BuildContext context) async{
@@ -112,7 +116,7 @@ class _HomePageState extends State<SubmitCoordinat> {
     super.dispose();
   }
 
-@override
+  @override
   void initState() {
     // TODO: implement initState
 
@@ -131,22 +135,40 @@ class _HomePageState extends State<SubmitCoordinat> {
 
   }
 
-void  getDatatoHelper() async {
-  NetworkHelper  networkHelper = NetworkHelper( 'https://raw.githubusercontent.com/imransayebaloch/QDA-question/main/my%20data.json');
-  var Question = await networkHelper.getData();
-  print(Question);
-  setState(()  {
-  });
+  void  getDatatoHelper() async {
+    NetworkHelper  networkHelper = NetworkHelper( 'https://raw.githubusercontent.com/imransayebaloch/geo_app_final/Saud-tata/question_type.json');
+    var Question = await networkHelper.getData();
+    print(Question);
+    setState(()  {
+    });
     return items = Question;
-}
- // List<CollectionModel> itemss = CollectionModel
+  }
+  void getOptions() async {
+    NetworkHelper  networkHelper = NetworkHelper("https://raw.githubusercontent.com/imransayebaloch/geo_app_final/Saud-tata/Options.json");
+    var options = await networkHelper.getData();
+
+    print("hello");
+    print(options);
+    setState(()  {
+    });
+    return QuestionOptions = options;
+
+  }
+  // List<CollectionModel> itemss = CollectionModel
   List<CollectionModel> textEdit =  List<CollectionModel>.generate(5, (i) => CollectionModel("Question $i"));
-  var  items =  new List(); //new List();
+
+  var  items =  new List();
+  var listAwnsers = new List();
+  var  QuestionOptions =  new List();
+
   @override
   Widget build(BuildContext context)  {
     TextEditingController fieldContorller = TextEditingController();
+    getOptions();
     getDatatoHelper();
-
+//for(var t=0;t<QuestionOptions.length;t++){
+//  print("options${QuestionOptions[t]["options"].toString()}");
+//}
 
 
     int i = 0;
@@ -168,7 +190,7 @@ void  getDatatoHelper() async {
                 FlatButton(
                   //color: Colors.grey,
                   child: Text('Back',style: TextStyle(
-                    decoration: TextDecoration.underline,fontWeight: FontWeight.bold)),
+                      decoration: TextDecoration.underline,fontWeight: FontWeight.bold)),
                   onPressed: (){
                     Navigator.push(context, MaterialPageRoute(builder: (_)=>  DropDown()));
                   },
@@ -177,7 +199,7 @@ void  getDatatoHelper() async {
             ),
             TextField(
               //    controller: items[i++].fieldContorller,
-               controller: myController,
+                controller: myController,
                 decoration: const InputDecoration(
                   hintText: 'Enter your Awnser here',
                 )
@@ -190,13 +212,13 @@ void  getDatatoHelper() async {
                   backgroundColor: Color(0xffFDCF09),
                   child: CircleAvatar(
                     radius: 65,
-                 child: Center(child: Text(widget.selectedCoordinat,style: TextStyle(height: 1, fontSize: 60))),
+                    child: Center(child: Text(widget.selectedCoordinat,style: TextStyle(height: 1, fontSize: 60))),
                   ),
                 )
 
 
             ),
-          SizedBox(height: 20,),
+            SizedBox(height: 20,),
             Text(
               ' Coordinates Collected',
               style: TextStyle(fontWeight: FontWeight.bold),
@@ -231,58 +253,109 @@ void  getDatatoHelper() async {
             Divider(height: 20, color: Colors.black),
             // past here the quistionar
 
-  if(items.isEmpty)               //if there are no data then print the cercular progerss
-      CircularProgressIndicator(),
+            if(items.isEmpty)               //if there are no data then print the cercular progerss
+              CircularProgressIndicator(),
 
-    Expanded(
+            Expanded(
 
-      child:Container(
+              child:Container(
 
-        height: 200,
-        width: 280,
-        decoration: BoxDecoration(
-          border: Border.all(
-              color: Colors.green
-          ),
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-       // padding: const EdgeInsets.only(right: 20.0,left:20,top: 10,bottom: 10),
-        child:  ListView.builder(
-         // itemCount: Data == null ? 0 :Data.length ,
-          itemCount: items.length,
-          itemBuilder: (context, index) {
-           // CircularProgressIndicator();
+                height: 200,
+                width: 280,
+                decoration: BoxDecoration(
+                  border: Border.all(
+                      color: Colors.green
+                  ),
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                // padding: const EdgeInsets.only(right: 20.0,left:20,top: 10,bottom: 10),
+                child:  ListView.builder(
+                  // itemCount: Data == null ? 0 :Data.length ,
+                  itemCount: items.length,
+                  itemBuilder: (context, index) {
+                    // CircularProgressIndicator();
 
-            //_controllers.add(new TextEditingController());
-            return
+                    //_controllers.add(new TextEditingController());
+                    switch(items[index]["type"]){
+                      case "Single Awnsers":
 
-            ListTile(
+//                        make new lists dynamically
+                        var list1 = new List();
+                        for(var i=0;i<QuestionOptions.length;i++) {
+                          if (QuestionOptions[i]["option_id"].contains(items[index]["option_id"]))
+                            list1.add(QuestionOptions[i]["options"]);
+                          print("list options here ${QuestionOptions[i]["options"]}");
+                        }
+                        String dropdownValue
+                        = list1.first;
+//                        listAwnsers= new List();
+//                        listAwnsers.add(dropdownValue);
 
-              //  title: Text('${items[index].name}'),
-             // title: Text(Data[index].name),
-              title: Text("${items[index]['question']}"), //here i am showing the question from the server
+                        return
 
-              subtitle: TextField(
-                  controller: textEdit[index].fieldContorller,
-              // controller: items[i++].myController,
-             // controller: myTest,
-                  decoration: const InputDecoration(
-              hintText: 'Enter your Awnser here',
-              )
+                          ListTile(
+
+                            //  title: Text('${items[index].name}'),
+                            // title: Text(Data[index].name),
+                            title: Text("${items[index]['question']}"), //here i am showing the question from the server
+
+                            subtitle:DropdownButtonFormField<String>(
+                              value:textEdit[index].awnsers=dropdownValue,
+                              icon: Icon(Icons.arrow_downward),
+                              iconSize: 24,
+                              elevation: 16,
+
+                              style: TextStyle(
+                                  color: Colors.deepPurple
+                              ),
+
+                              onChanged: (String newValue){
+                                textEdit[index].awnsers=newValue;
+                                print("awnser123${textEdit[index].awnsers}");
+                                setState(() => dropdownValue = newValue);},
+                              items: [
+                                for (String i in list1) DropdownMenuItem(
+                                  value: i,
+                                  child: Text('$i'),
+                                )
+                              ],
+                            ),
+//                        controller: textEdit[index].fieldContorller,
+                          );
+                      default:
+                        return
+                          ListTile(
+
+                            //  title: Text('${items[index].name}'),
+                            // title: Text(Data[index].name),
+                            title: Text("${items[index]['question']}"), //here i am showing the question from the server
+
+                            subtitle: TextField(
+                                controller: textEdit[index].fieldContorller,
+                                onSubmitted: _controllertoawnser(index),
+//                                onChanged: (),
+//                                onChanged: (text),
+                                // controller: items[i++].myController,
+                                // controller: myTest,
+                                decoration: const InputDecoration(
+                                  hintText: 'Enter your Close Awnser here',
+                                )
+                            ),
+                          );
+//                        print("bla bla");
+                    }
+                  },
+                ),
               ),
-            );
-          },
-        ),
-      ),
-    ),
+            ),
 
             Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 FlatButton(
                   color: Colors.blueAccent,
-                   // color: Colors(Colors ,0x156562),
-                 // backgroundColor: Color(0xffFDCF09),
+                  // color: Colors(Colors ,0x156562),
+                  // backgroundColor: Color(0xffFDCF09),
                   child: Text('CANCEL'),
                   onPressed: () {
                     //Navigator.pop(context);
@@ -306,7 +379,7 @@ void  getDatatoHelper() async {
                     print('collect coordinats ${widget.collectcor}');
                     print('image test  $imageFile');
                     //print('edit text  ${CollectionModel(null).fieldContorller.text}');
-                    print("controller ${textEdit[].fieldContorller.toString()}");
+                    print("controller ${textEdit}");
 
                   },
                 ),
@@ -314,8 +387,10 @@ void  getDatatoHelper() async {
                   child: Text("SUBMIT"),
                   color: Colors.blueAccent,
                   onPressed: () {
+                    _submitTarget(context);
                     _sendDataToServer(context);
-                  //  Navigator.push(context, MaterialPageRoute(builder: (context) => ServerResponse()));
+
+                    //  Navigator.push(context, MaterialPageRoute(builder: (context) => ServerResponse()));
                     //_sendDataToServer(context);
                   },
                 ),
@@ -328,6 +403,12 @@ void  getDatatoHelper() async {
   }
 
   void _sendDataToServer (BuildContext context) {
+    for (int i=0;i<items.length;i++ ){
+
+      print("questions ${items[i]['question']}");
+      print("awnsers1234${textEdit[i].awnsers}");
+      print("awnsers${textEdit[i].fieldContorller.text}");
+    }
     Navigator.push(
         context,
         MaterialPageRoute(
@@ -335,6 +416,28 @@ void  getDatatoHelper() async {
         ));
   }
 
+  _controllertoawnser(int index) {
+    textEdit[index].awnsers=textEdit[index].fieldContorller.text;
+
+  }
+
+  void _submitTarget(BuildContext context) {
+    if (target == null) {
+      for (int i = 0; i < items.length; i++) {
+        awnserTarget st = new awnserTarget (
+            assetid: widget.id, question: items[i]['question'],awnser:textEdit[i].awnsers);//
+
+        dbmanager.insertAwnser(st).then((id) =>
+
+          //.clear(),
+          // _courseController.clear(),
+
+          //  print('Student Added to Db ${id} ${st.course}')
+        print('target test ${st.assetid} ${st.awnser} ')
+          // }
+        );
+      }
+    }
+  }
+
 }
-
-
