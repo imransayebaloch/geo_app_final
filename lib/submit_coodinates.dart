@@ -306,7 +306,7 @@ void  getDatatoHelper() async {
                     print('collect coordinats ${widget.collectcor}');
                     print('image test  $imageFile');
                     //print('edit text  ${CollectionModel(null).fieldContorller.text}');
-                    print("controller ${textEdit[].fieldContorller.toString()}");
+                  //  print("controller ${textEdit[].fieldContorller.toString()}");
 
                   },
                 ),
