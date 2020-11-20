@@ -21,7 +21,13 @@ class DbStudentManager {
           "CREATE TABLE Location(assetid INTEGER , lat TEXT, lng TEXT)",   //,course TEXT
         );
         await db.execute(
-          "CREATE TABLE QuestionAwnsers(assetid INTEGER , question TEXT, awnser TEXT)",   //,course TEXT
+          "CREATE TABLE QuestionAwnsers(assetid INTEGER , question TEXT, awnser TEXT, type TEXT)",   //,course TEXT
+        );
+        await db.execute(
+          "CREATE TABLE Questions(id INTEGER PRIMARY KEY, option_id TEXT , options TEXT)",   //,course TEXT
+        );
+        await db.execute(
+          "CREATE TABLE QuestionsOflline(id INTEGER PRIMARY KEY, question TEXT, type TEXT,option_id text)",   //,course TEXT
         );
       } );
     }
@@ -59,6 +65,16 @@ class DbStudentManager {
     return await _database.insert('QuestionAwnsers', target.toMap());
 
   }
+  Future<int> insertQuestions(QuestionTarget target) async {
+    await openDb();
+    return await _database.insert('Questions', target.toMap());
+
+  }
+  Future<int> insertQuestionsOffline(QuestionOfftarget target) async {
+    await openDb();
+    return await _database.insert('QuestionsOflline', target.toMap());
+
+  }
 
   // this is for project
 
@@ -71,6 +87,14 @@ class DbStudentManager {
     return List.generate(maps.length, (i) {
       return Target(
           id: maps[i]['id'], name: maps[i]['name']);
+    });
+  }
+  Future<List<QuestionOfftarget>> getQuestionOff() async {
+    await openDb();
+    final List<Map<String, dynamic>> maps = await _database.query('QuestionsOflline');
+    return List.generate(maps.length, (i) {
+      return QuestionOfftarget(
+          id: maps[i]['id'], question: maps[i]['question'], type: maps[i]['type'], option_id: maps[i]['option_id']);
     });
   }
   Future<List<ProjectTarget>> getProjectList() async {
@@ -100,7 +124,17 @@ class DbStudentManager {
     print("here get Location $list");
     return List.generate(maps.length, (i) {
       return awnserTarget(
-          assetid: maps[i]['assetid'], question: maps[i]['question'], awnser: maps[i]['awnser']);
+          assetid: maps[i]['assetid'], question: maps[i]['question'], awnser: maps[i]['awnser'], type: maps[i]['type']);
+    });
+  }
+  Future<List<QuestionTarget>>getQuestions() async {
+    await openDb();
+    final List<Map<String, dynamic>> maps = await _database.query('Questions');
+    List<Map> list= await _database.rawQuery('SELECT * FROM Questions');
+    print("here get Location $list");
+    return List.generate(maps.length, (i) {
+      return QuestionTarget(
+          option_id: maps[i]['option_id'], options: maps[i]['options']);
     });
   }
 
@@ -117,6 +151,11 @@ class DbStudentManager {
     await openDb();
     return await _database.update('student', target.toMap(),
         where: "id = ?", whereArgs: [target.id]);
+  }
+  Future<int> updateAwnsers(awnserTarget target) async {
+    await openDb();
+    return await _database.update('QuestionAwnsers', target.toMap(),
+        where: "question = ?", whereArgs: [target.question]);
   }
 /*
   Future<int> updateProject(Project project) async {
@@ -136,12 +175,130 @@ class DbStudentManager {
     //     .rawDelete('DELETE FROM student WHERE id = ?', [id]);
     await _database
         .rawDelete('DELETE FROM student');
-     List<Map> list = await _database.rawQuery('SELECT * FROM student');
+
+     // List<Map> list = await _database.rawQuery('SELECT * FROM student');
     //print('new test $_database');
   //  print('new test $list');
 
 
   }
+  Future<List<Map<String,dynamic>>> query() async {
+    await openDb();
+    // await _database.delete(
+    //     'student',
+    //     where: "id = ?", whereArgs: [id]
+    // );
+
+    // await _database
+    //     .rawDelete('DELETE FROM student WHERE id = ?', [id]);
+    var res  =
+    await _database
+        .rawQuery('SELECT * FROM QuestionsOflline');
+    return res;
+    // return list;
+
+     // List<Map> list = await _database.rawQuery('SELECT * FROM student');
+    //print('new test $_database');
+  //  print('new test $list');
+
+
+  }
+  Future<void> queryQQQ() async {
+    await openDb();
+    // await _database.delete(
+    //     'student',
+    //     where: "id = ?", whereArgs: [id]
+    // );
+
+    // await _database
+    //     .rawDelete('DELETE FROM student WHERE id = ?', [id]);
+    List<Map> res  =
+    await _database
+        .rawQuery('SELECT * FROM QuestionAwnsers');
+    print("question check123 $res");
+    // return list;
+
+     // List<Map> list = await _database.rawQuery('SELECT * FROM student');
+    //print('new test $_database');
+  //  print('new test $list');
+
+
+  }
+  Future<void> queryQQ() async {
+    await openDb();
+    // await _database.delete(
+    //     'student',
+    //     where: "id = ?", whereArgs: [id]
+    // );
+
+    // await _database
+    //     .rawDelete('DELETE FROM student WHERE id = ?', [id]);
+    List<Map> res  =
+    await _database
+        .rawQuery('SELECT * FROM QuestionsOflline');
+    print("questionoff check123 $res");
+    // return list;
+
+     // List<Map> list = await _database.rawQuery('SELECT * FROM student');
+    //print('new test $_database');
+  //  print('new test $list');
+
+
+  }
+  Future<void> queryoption() async {
+    await openDb();
+    // await _database.delete(
+    //     'student',
+    //     where: "id = ?", whereArgs: [id]
+    // );
+
+    // await _database
+    //     .rawDelete('DELETE FROM student WHERE id = ?', [id]);
+    List<Map> res  =
+    await _database
+        .rawQuery('SELECT * FROM Questions');
+    print("questionoption check1234 $res");
+    // return res;
+
+     // List<Map> list = await _database.rawQuery('SELECT * FROM student');
+    //print('new test $_database');
+  //  print('new test $list');
+
+
+  }
+  Future<List<Map<String,dynamic>>> Questions1() async {
+    await openDb();
+    // await _database.delete(
+    //     'student',
+    //     where: "id = ?", whereArgs: [id]
+    // );
+    var res  =
+    await _database
+        .rawQuery('SELECT * FROM Questions');
+    return res;
+
+    // await _database
+    //     .rawDelete('DELETE FROM student WHERE id = ?', [id]);
+
+
+     // List<Map> list = await _database.rawQuery('SELECT * FROM student');
+    //print('new test $_database');
+  //  print('new test $list');
+
+
+  }
+  // Future<void> getQuestions() async {
+  //   await openDb();
+  //   // await _database.delete(
+  //   //     'student',
+  //   //     where: "id = ?", whereArgs: [id]
+  //   // );
+  //  await _database.rawQuery('SELECT * FROM Test');
+  //   //print('new test $_database');
+  // //  print('new test $list');
+  //
+  //
+  // }
 /*
   Future<void> deleteProject(int id) async {
     await openDbProject();
@@ -201,10 +358,11 @@ class awnserTarget {
   int assetid;
   String question;
   String awnser;
+  String type;
   // String course;
-  awnserTarget({@required this.assetid, this.question,this.awnser});
+  awnserTarget({@required this.assetid, this.question,this.awnser,this.type});
   Map<String, dynamic> toMap() {
-    return {'assetid': assetid,'question': question,'awnser':awnser};
+    return {'assetid': assetid,'question': question,'awnser':awnser,'type':type};
   }
 
 // class Project {
@@ -216,4 +374,26 @@ class awnserTarget {
 //     return {'idPro': idPro,'namePro': namePro};
 //   }
 //
+ }
+ class QuestionTarget {
+  int id;
+  String option_id;
+  String options;
+  // String course;
+  QuestionTarget({@required this.id,this.option_id, this.options});
+  Map<String, dynamic> toMap() {
+    return {'id':id,'option_id': option_id,'options': options};
+  }
+
+ }
+ class QuestionOfftarget {
+  int id;
+  String question;
+  String type;
+  String option_id;
+  QuestionOfftarget({@required this.id, this.question,this.type,this.option_id});
+  Map<String, dynamic> toMap() {
+    return {'id': id,'question': question,'type': type,'option_id':option_id};
+  }
+
  }

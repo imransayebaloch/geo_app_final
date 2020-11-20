@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geo_app_final/collect_deparment.dart' as select;
 import 'package:geo_app_final/collect_deparment.dart';
 import 'package:geo_app_final/secoundDbManager.dart';
@@ -63,6 +65,7 @@ class _LocationState extends State<Location> {
   // final _courseController = TextEditingController();
   final _formKey = new GlobalKey<FormState>();
   Target target;
+  List<QuestionOfftarget> QandAlist = new List();
   ProjectTarget ptarget;
 //  Project project, dbProjectValue;
   List<Target> studlist;
@@ -82,7 +85,7 @@ class _LocationState extends State<Location> {
     // _connectivitySubscription =
     //     _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
     // this.getJsonData();
-
+_sendData();
   }
 
   /*
@@ -141,7 +144,6 @@ class _LocationState extends State<Location> {
   Users _secondcurrentUser;
   Future<List<Users>> _secondfetchUsers() async {
     var response = await http.get(seconduri);
-
     if (response.statusCode == 200) {
       final items = json.decode(response.body).cast<Map<String, dynamic>>();
       secoundlistOfUsers = items.map<Users>((json) {
@@ -346,6 +348,8 @@ class _LocationState extends State<Location> {
                 textColor: Colors.white,
                 splashColor: Colors.blueAccent,
                 onPressed: (){
+                  // dbmanager.query();
+                  // print("query questions${dbmanager.query()}");
                   _submitTarget(context);
                   _submitProject(context);
             //  projectmanager.openDbProject();
@@ -514,7 +518,8 @@ class _LocationState extends State<Location> {
         ProjectTarget st = new ProjectTarget (
             id: secoundlistOfUsers[i].id, name: secoundlistOfUsers[i].name);//
 
-        dbmanager.insertProject(st).then((id) =>
+        dbmanager.insertProject(st)
+            .then((id) =>
 
         //.clear(),
         // _courseController.clear(),
@@ -577,6 +582,38 @@ class _LocationState extends State<Location> {
 //        project = null
 //      });
 //    } */
+  }
+
+  Future<void> _sendData() async {
+    print("send data started working");
+    try {
+      final result = await InternetAddress.lookup('google.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        dbmanager.query().then((value) {
+          setState(() {
+            value.forEach((element) {
+              QandAlist.add(QuestionOfftarget(id: element['id'],question: element['question'],type: element['type'],option_id: element['option_id']));
+
+            });
+          });
+        }).catchError((error) {
+          print("items error $error");
+        });
+        if(QandAlist.isNotEmpty){
+        //  dio send data to server
+        }
+      }
+    } on SocketException catch (_) {
+      Fluttertoast.showToast(
+          msg: "No internet Connection Avalible",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0
+      );
+    }
   }
 
  }

@@ -6,9 +6,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:geo_app_final/Question_data.dart';
+import 'package:geo_app_final/question%20model.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:sqflite/sqflite.dart';
 import 'dbmanager.dart';
 import 'main.dart';
 import 'dart:async';
@@ -39,10 +42,17 @@ class SubmitCoordinat extends StatefulWidget {
 }
 class _HomePageState extends State<SubmitCoordinat> {
   final DbStudentManager dbmanager = new DbStudentManager();
-  awnserTarget target;
+  // db
 
+  awnserTarget target;
+  QuestionOfftarget QtargetOff;
+  QuestionTarget Qtarget;
+  List<QuestionOfftarget> QandAlist = new List();
+  List<QuestionTarget> Qlist = new List();
   File imageFile;
+  List type;
   Users _currentUser;
+
 
 
   _openGallery(BuildContext context) async{
@@ -56,6 +66,7 @@ class _HomePageState extends State<SubmitCoordinat> {
 
 
   }
+
   _openCamera(BuildContext context) async{
     // ignore: deprecated_member_use
     var picture = await ImagePicker.pickImage(source: ImageSource.camera);
@@ -74,6 +85,7 @@ class _HomePageState extends State<SubmitCoordinat> {
   }
 
   Future<void> _showChoiceDialog(BuildContext context){
+
     return showDialog(context: context, builder: (BuildContext context){
       return AlertDialog(
           title: Text('Make a choice'),
@@ -91,7 +103,8 @@ class _HomePageState extends State<SubmitCoordinat> {
                     child: Text("Camera"),
                     onTap: (){
                       _openCamera(context);
-                    },
+
+                      },
                   )
                 ],
               )
@@ -121,6 +134,29 @@ class _HomePageState extends State<SubmitCoordinat> {
     // TODO: implement initState
 
     super.initState();
+    getOptions();
+    getDatatoHelper();
+    dbmanager.query().then((value) {
+      setState(() {
+        value.forEach((element) {
+          QandAlist.add(QuestionOfftarget(id: element['id'],question: element['question'],type: element['type'],option_id: element['option_id']));
+
+        });
+      });
+    }).catchError((error) {
+      print("items error $error");
+    });
+    dbmanager.Questions1().then((value) {
+      setState(() {
+        value.forEach((element) {
+          Qlist.add(QuestionTarget(id: element['id'],option_id: element['option_id'],options: element['options']));
+
+        });
+      });
+    }).catchError((error) {
+      print("items error $error");
+    });
+
     myController.addListener(_printLatestValue);
     myTest.addListener(_printLatestValue);
     CollectionModel(null).fieldContorller.addListener(_printLatestValue);
@@ -143,6 +179,22 @@ class _HomePageState extends State<SubmitCoordinat> {
     });
     return items = Question;
   }
+  // final uri = 'https://raw.githubusercontent.com/iamjawad/sample_data/main/projects_data.json';
+  // QuestionC _currentQuestion;
+  // Future<List<QuestionC>> _fetchUsers() async {
+  //   var response = await http.get(uri);
+  //
+  //   if (response.statusCode == 200) {
+  //     final items = json.decode(response.body).cast<Map<String, dynamic>>();
+  //     List<Users> listOfProjects = items.map<Users>((json) {
+  //       return Users.fromJson(json);
+  //     }).toList();
+  //
+  //     return listOfUsers;
+  //   } else {
+  //     throw Exception('Failed to load internet');
+  //   }
+  // }
   void getOptions() async {
     NetworkHelper  networkHelper = NetworkHelper("https://raw.githubusercontent.com/imransayebaloch/geo_app_final/Saud-tata/Options.json");
     var options = await networkHelper.getData();
@@ -161,11 +213,81 @@ class _HomePageState extends State<SubmitCoordinat> {
   var listAwnsers = new List();
   var  QuestionOptions =  new List();
 
+
   @override
   Widget build(BuildContext context)  {
     TextEditingController fieldContorller = TextEditingController();
-    getOptions();
-    getDatatoHelper();
+
+    print("list size here1212${QandAlist.length}");
+    if (QtargetOff==null ) {
+      CircularProgressIndicator();
+      for (int i = 0; i < items.length; i++) {
+        QuestionOfftarget st = new QuestionOfftarget (
+            id: items[i]['id'],
+            question: items[i]['question'],
+
+            // awnser: textEdit[i].awnsers,
+            type: items[i]['type'],
+          option_id: items[i]['option_id']
+        ); //
+
+  dbmanager.insertQuestionsOffline(st).then((id) =>
+
+  //.clear(),
+  // _courseController.clear(),
+
+  //  print('Student Added to Db ${id} ${st.course}')
+  print('target test ${st.id} ${st.question}  ')
+    // }
+  ).catchError((error) {
+         throw i++;
+        });
+
+
+      }
+
+
+    }
+//     else {
+// //      for (int i = 0; i < listOfUsers.length; i++) {
+//
+//         // _nameController.clear(),
+//         // _courseController.clear(),
+//         // target = null;
+//
+//     }
+    if (Qtarget==null ) {
+      CircularProgressIndicator();
+      for (int i = 0; i < QuestionOptions.length; i++) {
+        QuestionTarget st = new QuestionTarget (
+          id:  QuestionOptions[i]["id"],
+            options: QuestionOptions[i]["options"],
+            // awnser: textEdit[i].awnsers,
+            option_id: QuestionOptions[i]["option_id"]); //
+
+        dbmanager.insertQuestions(st).then((id) =>
+
+        //.clear(),
+        // _courseController.clear(),
+
+        //  print('Student Added to Db ${id} ${st.course}')
+        print('Qtarget test ${st.options}')
+          // }
+        ).catchError((error) {
+          i++;
+        });
+      }
+
+
+    }else{
+      // Qtarget=null;
+    }
+
+
+    // List<String> list = dbmanager.query() as List<String>;
+    // print("check size here1234 ${list.length}");
+    print("list size here1212${QandAlist.length}");
+    dbmanager.getAwnsers();
 //for(var t=0;t<QuestionOptions.length;t++){
 //  print("options${QuestionOptions[t]["options"].toString()}");
 //}
@@ -192,6 +314,7 @@ class _HomePageState extends State<SubmitCoordinat> {
                   child: Text('Back',style: TextStyle(
                       decoration: TextDecoration.underline,fontWeight: FontWeight.bold)),
                   onPressed: (){
+                    print("hello type ${QandAlist[1].type.toString()}");
                     Navigator.push(context, MaterialPageRoute(builder: (_)=>  DropDown()));
                   },
                 ),
@@ -253,7 +376,7 @@ class _HomePageState extends State<SubmitCoordinat> {
             Divider(height: 20, color: Colors.black),
             // past here the quistionar
 
-            if(items.isEmpty)               //if there are no data then print the cercular progerss
+            if(QandAlist.isEmpty)               //if there are no data then print the cercular progerss
               CircularProgressIndicator(),
 
             Expanded(
@@ -271,25 +394,37 @@ class _HomePageState extends State<SubmitCoordinat> {
                 // padding: const EdgeInsets.only(right: 20.0,left:20,top: 10,bottom: 10),
                 child:  ListView.builder(
                   // itemCount: Data == null ? 0 :Data.length ,
-                  itemCount: items.length,
+                  itemCount: QandAlist.length,
                   itemBuilder: (context, index) {
                     // CircularProgressIndicator();
 
+                    // print("${items[index]['type']}");
                     //_controllers.add(new TextEditingController());
-                    switch(items[index]["type"]){
+                    switch(QandAlist[index].type){
                       case "Single Awnsers":
 
 //                        make new lists dynamically
                         var list1 = new List();
-                        for(var i=0;i<QuestionOptions.length;i++) {
-                          if (QuestionOptions[i]["option_id"].contains(items[index]["option_id"]))
-                            list1.add(QuestionOptions[i]["options"]);
-                          print("list options here ${QuestionOptions[i]["options"]}");
+                        for(var i=0;i<Qlist.length;i++) {
+                          if (Qlist[i].option_id==QandAlist[index].option_id){
+                            // print("items here123 ${items[index]["option_id"]}");
+                            list1.add(Qlist[i].options);
+                          print("list options here ${Qlist[i].options}");}
+                          // print("object${QandAlist[i].question}");
                         }
+
                         String dropdownValue
                         = list1.first;
 //                        listAwnsers= new List();
 //                        listAwnsers.add(dropdownValue);
+//                         FutureBuilder<List<awnserTarget>>(                     //This one for first dropdown
+//                             future: dbmanager.getAwnsers(),
+//                             builder: (BuildContext context,
+//                                 AsyncSnapshot<List<awnserTarget>> snapshot) {
+//                               if (!snapshot.hasData) return CircularProgressIndicator();
+//                               print("motherfucker ${snapshot.data.tos()}");
+//                               return Text(target.question[index]);
+//                             });
 
                         return
 
@@ -297,7 +432,17 @@ class _HomePageState extends State<SubmitCoordinat> {
 
                             //  title: Text('${items[index].name}'),
                             // title: Text(Data[index].name),
-                            title: Text("${items[index]['question']}"), //here i am showing the question from the server
+
+                            title:Text(QandAlist[index].question)
+                            // FutureBuilder<List<awnserTarget>>(                     //This one for first dropdown
+                            //     future: dbmanager.getAwnsers(),
+                            //     builder: (BuildContext context,
+                            //         AsyncSnapshot<List<awnserTarget>> snapshot) {
+                            //       if (!snapshot.hasData) return CircularProgressIndicator();
+                            //       print("question here check${snapshot.data[index].question}");
+                            //       return Text(snapshot.data[index].question);
+                            //     })
+                            , //here i am showing the question from the server
 
                             subtitle:DropdownButtonFormField<String>(
                               value:textEdit[index].awnsers=dropdownValue,
@@ -328,7 +473,16 @@ class _HomePageState extends State<SubmitCoordinat> {
 
                             //  title: Text('${items[index].name}'),
                             // title: Text(Data[index].name),
-                            title: Text("${items[index]['question']}"), //here i am showing the question from the server
+                            title:Text(QandAlist[index].question)
+                            // FutureBuilder<List<awnserTarget>>(                     //This one for first dropdown
+                            //     future: dbmanager.getAwnsers(),
+                            //     builder: (BuildContext context,
+                            //         AsyncSnapshot<List<awnserTarget>> snapshot) {
+                            //       if (!snapshot.hasData) return CircularProgressIndicator();
+                            //       print("question here check${snapshot.data[index].question}");
+                            //       return Text(snapshot.data[index].question);
+                            //     })
+                            , //here i am showing the question from the server
 
                             subtitle: TextField(
                                 controller: textEdit[index].fieldContorller,
@@ -380,6 +534,10 @@ class _HomePageState extends State<SubmitCoordinat> {
                     print('image test  $imageFile');
                     //print('edit text  ${CollectionModel(null).fieldContorller.text}');
                     print("controller ${textEdit}");
+                    print("type my friend${dbmanager.queryQQQ()}");
+                    print("type my friend${dbmanager.queryQQ()}");
+                    print("type my count${dbmanager.queryoption()}");
+                    print("type my count${dbmanager.query()}");
 
                   },
                 ),
@@ -422,22 +580,38 @@ class _HomePageState extends State<SubmitCoordinat> {
   }
 
   void _submitTarget(BuildContext context) {
-    if (target == null) {
-      for (int i = 0; i < items.length; i++) {
+
+      for (int i = 0; i < QandAlist.length; i++) {
         awnserTarget st = new awnserTarget (
-            assetid: widget.id, question: items[i]['question'],awnser:textEdit[i].awnsers);//
+            assetid: widget.id,
+            question: QandAlist[i].question,
+            awnser: textEdit[i].awnsers,
+            type: QandAlist[i].type); //
 
         dbmanager.insertAwnser(st).then((id) =>
 
-          //.clear(),
-          // _courseController.clear(),
+        //.clear(),
+        // _courseController.clear(),
 
-          //  print('Student Added to Db ${id} ${st.course}')
-        print('target test ${st.assetid} ${st.awnser} ')
+        //  print('Student Added to Db ${id} ${st.course}')
+        print('target test ${st.assetid} ${st.awnser} ${st.question}  ')
           // }
         );
-      }
+
     }
+  }
+  void _getQuestions() {
+    super.initState();
+    dbmanager.query().then((value) {
+      setState(() {
+        value.forEach((element) {
+          // QandAlist.add(awnserTarget(type: element['type']));
+
+        });
+      });
+    }).catchError((error) {
+      print("items error $error");
+    });
   }
 
 }
