@@ -26,6 +26,9 @@ dependencies:
   fluttertoast: ^7.1.1
   flutter_login: ^1.0.14
   shared_preferences: any
+  google_map_location_picker: any      #^4.1.2+1
+  google_maps_flutter:   any
+  location: ^3.0.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -47,6 +50,11 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
+assets:
+  - assets/ #noodle_icon.png
+ # - assets/   #map_style.json
+   #assets:
+    #   - assets/
   # assets:
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
