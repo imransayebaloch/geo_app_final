@@ -1,13 +1,22 @@
+import 'dart:collection';
 import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:geo_app_final/Map/gmap.dart';
 import 'package:geo_app_final/server_response.dart';
 import 'package:geolocator/geolocator.dart';
+import 'DBmanager/dbmanager.dart';
 import 'submit_coodinates.dart';
-import 'main.dart';
+import 'Main/main.dart';
 import 'dart:async';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:geolocator/geolocator.dart';
+
+
+//import 'main3.dart';
 /* class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -30,6 +39,7 @@ import 'dart:async';
 class HomePage extends StatefulWidget {
   String department= "";
   int id;
+
   String  secondname = "";
   int secondid;
   HomePage({Key key ,this.id ,this.department, this.secondid,this.secondname}): super(key: key);
@@ -38,6 +48,41 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+
+  MapType _currentMapType = MapType.normal;
+  //Completer<GoogleMapController> _controller = Completer();
+
+  Set<Marker> _markers = HashSet<Marker>();
+  Set<Polygon> _polygons = HashSet<Polygon>();
+  Set<Polyline> _polylines = HashSet<Polyline>();
+  Set<Circle> _circles = HashSet<Circle>();
+  bool _showMapStyle = false;
+
+  GoogleMapController _mapController;
+  BitmapDescriptor _markerIcon;
+
+
+  final DbStudentManager dbmanager = new DbStudentManager();
+  LatlngTarget target;
+
+
+  void _onMapCreated(GoogleMapController controller) {
+    _mapController = controller;
+
+    setState(() {
+      _markers.add(
+        Marker(
+            markerId: MarkerId("0"),
+            position: LatLng(37.77483, -122.41942),
+            infoWindow: InfoWindow(
+              title: "San Francsico",
+              snippet: "An Interesting city",
+            ),
+            icon: _markerIcon),
+      );
+    });
+  }
+
 
   Widget potrate(){
     return  Container(
@@ -60,7 +105,9 @@ class _HomePageState extends State<HomePage> {
                     child: Text('Done'),
                     onPressed: (){
                     //  print("")
+                      _submitTarget(context);
                       _sendDataToSubmitCoordinate(context);
+
                       //  Navigator.push(context, MaterialPageRoute(builder: (context) => SubmitCoordinat() ) );//str: "hello"
                     },
                   ),
@@ -87,7 +134,7 @@ class _HomePageState extends State<HomePage> {
           //   children: [
           Container(
             //  color: Colors.amber[600],
-            height: 200,
+            height: 80,
             width: 320,
             decoration: BoxDecoration(
               border: Border.all(
@@ -101,11 +148,25 @@ class _HomePageState extends State<HomePage> {
               child:
               ListView(
                 children: <Widget>[
-                  if (_currentPosition != null)
+
+
+                  if (_currentPosition != null  )
                     for(int i = 0; i < listOfCoordinates.length; i++)
-                      Center(
-                        child: Text(("Position: ${i + 1} LAT: ${listOfCoordinates[i]
-                            .latitude}, LNG: ${listOfCoordinates[i].longitude}"),style: TextStyle(fontSize: 14),
+                      GestureDetector(
+                        onHorizontalDragEnd: (endxy){
+                          listOfCoordinates.removeAt(i);
+                          itemcount --;
+                          setState(() {
+                          });
+                        },
+
+
+                        child: Center(
+
+
+                          child: Text(("Position: ${i + 1} LAT: ${listOfCoordinates[i]
+                              .latitude}, LNG: ${listOfCoordinates[i].longitude}"),style: TextStyle(fontSize: 14),
+                           ),
                         ),
                       ),
                 ],
@@ -137,44 +198,74 @@ class _HomePageState extends State<HomePage> {
               color: Colors.black
           ),
 
-          Padding(
-            padding: const EdgeInsets.only(top: 80,left: 40),
-            child: Row(
-              //  mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Expanded(
-                  child:
-                  Padding(
-                      padding: const EdgeInsets.only(right: 30),
-                      child: FlatButton(
-                        color: Colors.blueAccent,
-                        child: Text('Revert'),
-                        onPressed: () {
-                          //Navigator.pop(context);
-                          Navigator.of(context).pop();
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => DropDown()));
-                      //_getCurrentLocation();
-                    },
-                  ),
-                ),
-                ),
-                Expanded( child:
-                Padding(
-                  padding: const EdgeInsets.only(right: 40.0),
-                  child: FlatButton(
-                    child: Text("Collect"),
-                    color: Colors.blueAccent,
-                    onPressed: () {
-                      setState(()=> itemcount++);
-                      _getCurrentLocation();
-                    //  _sendDataToserverScreen();
-                    },
-                  ),
-                ),
-                ),
-              ],
+          Container(
+            height: 220,
+            width: 320,
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: Colors.blue,
+              ),
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+
+          child:  GoogleMap(
+
+              onMapCreated: _onMapCreated,
+              initialCameraPosition: CameraPosition(
+                target: LatLng(37.77483, -122.41942),
+                zoom: 12,
+              ),
+              markers: _markers,
+              polygons: _polygons,
+              polylines: _polylines,
+              circles: _circles,
+              myLocationEnabled: true,
+              myLocationButtonEnabled: true,
             ),
           ),
+
+
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              FloatingActionButton(
+                heroTag: "imran",
+                tooltip: 'setlite',
+                child: Icon(Icons.map),
+                onPressed: () {
+                  // _onMapTypeButtonPressed();
+                  print('map test prssed');
+                  // setState(() {
+                  //  _getCurrentLocation();
+                  //     _showMapStyle = !_showMapStyle;
+                  // });
+
+                 // _toggleMapStyle();
+                },
+              ),
+              SizedBox(height: 10,),
+
+              FloatingActionButton(
+                heroTag: "syed",
+                tooltip: 'map',
+                child: Icon(Icons.add_location),
+                onPressed: () {
+                  _getCurrentLocation();
+                  itemcount ++;
+                  //  _onMapTypeButtonPressed();
+                  //_goToPosition1();
+                 // _onMapTypeButtonPressed();
+
+                  print('setlite test prssed');
+                  setState(() {
+                    //   _showMapStyle = !_showMapStyle;
+                  });
+                  //_toggleMapStyle();
+                },
+              ),
+            ],
+          )
+
           //expended end here
         ],
       ),
@@ -219,15 +310,8 @@ class _HomePageState extends State<HomePage> {
     geolocator
         .getCurrentPosition(desiredAccuracy: LocationAccuracy.best)
         .then((Position position) {
+//if(listOfCoordinates!=null){}
       listOfCoordinates.add(position);
-      print("position $position");
-      //print('hello $_currentPosition' + 'jjj');
-    //  print('list print $listOfCoordinates');
-      // var arr = new List();
-      // for(int b=0; b<listOfCoordinates.length; b++) {
-      //   // arr [b] = position;
-      //   print("arry test)" + listOfCoordinates.);
-      // }
       setState(() {
         _currentPosition = position;
       });
@@ -237,11 +321,49 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _sendDataToSubmitCoordinate (BuildContext context) {
+//    print();?
     Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => SubmitCoordinat(selectedCoordinat:  '$itemcount' , id: widget.id , department: widget.department, secondid: widget.secondid, secondname:widget.secondname,collectcor: listOfCoordinates),  // collectedList: listOfCoordinates
         ));
+  }
+
+  void _submitTarget(BuildContext context) {
+    //if(_formKey.currentState.validate()){
+    if (target == null) {
+      for (int i = 0; i < listOfCoordinates.length; i++) {
+        LatlngTarget tv = new   LatlngTarget (
+            assetid: widget.id, lat: listOfCoordinates[i].latitude,lng:listOfCoordinates[i].longitude );//
+
+        dbmanager.insertlocation(tv).then((id) =>
+
+        //.clear(),
+        // _courseController.clear(),
+
+        //  print('Student Added to Db ${id} ${st.course}')
+        print('test cordinate table ${tv.assetid} ')
+          // }
+        );
+      }}
+//    } else {
+////      for (int i = 0; i < listOfUsers.length; i++) {
+//      target.id = _currentUser.id;
+//      target.name = _currentUser.name;
+////      }
+//      dbmanager.updateStudent(target).then((id) =>
+//      {
+//        setState(() {
+////      for (int i = 0; i < listOfUsers.length; i++) {
+//          studlist[updateIndex].id = _currentUser.id;
+//          studlist[updateIndex].name = _currentUser.name;
+////      }
+//        }),
+//        // _nameController.clear(),
+//        // _courseController.clear(),
+//        target = null
+//      });
+//    }
   }
 
 

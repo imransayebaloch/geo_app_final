@@ -25,6 +25,8 @@ import 'Login_Screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'login_page.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'item_test.dart';
+import 'Mytest/Mytest.dart';
 
 
 void main()
@@ -275,9 +277,9 @@ class _LocationState extends State<Location> {
                 }),
 
 
-/*
-           FutureBuilder<List<Users>>(
-                future: _fetchUsers(),
+
+    /*       FutureBuilder<List<Users>>(
+                future: _secondfetchUsers(),
                 builder: (BuildContext context,
                     AsyncSnapshot<List<Users>> snapshot) {
                   if (!snapshot.hasData) return CircularProgressIndicator();
@@ -302,7 +304,7 @@ class _LocationState extends State<Location> {
                         : Text("No Target selected"),//Text('select Target'+_secondcurrentUser.name),
 
                   );
-                }), */
+                }),*/
 
 
             SizedBox(height: 20.0),
@@ -324,7 +326,7 @@ class _LocationState extends State<Location> {
             ),
 
 
-       /*     Expanded(
+  /*          Expanded(
               child: FutureBuilder<List<Project>>(
                   future: dbmanager.getProjectList(),
                   builder: (BuildContext context,
@@ -356,6 +358,7 @@ class _LocationState extends State<Location> {
             Container(
               margin: const EdgeInsets.only(top: 100.0),
               child: FlatButton(
+                 // heroTag: "btn1",
                   color: Colors.blue,
                   textColor: Colors.white,
                   disabledColor: Colors.grey,
@@ -363,7 +366,10 @@ class _LocationState extends State<Location> {
                   //padding: EdgeInsets.all(8.0),
                   splashColor: Colors.blueAccent,
                   onPressed: (){
-                    if(dbvalueproj.name == null || dbvalueproj.name == null  ){
+
+                    print('ohhhhh presssed ');
+                 // },
+                    if(dbvalueproj == null || dbvalueproj == null  ){
                       Fluttertoast.showToast(
                           msg: 'Select both dropdown',
                           toastLength: Toast.LENGTH_SHORT,
@@ -373,7 +379,9 @@ class _LocationState extends State<Location> {
                           textColor: Colors.white
                       );
                     }else {
+                    //  _senToLogincreen(context);
                       _sendDataToSecondScreen(context);
+
                     }
 //                    print('second user ${_secondcurrentUser.name}');
 
@@ -391,14 +399,28 @@ class _LocationState extends State<Location> {
                 onPressed: (){
                   _submitTarget(context);
                   _submitProject(context);
-            //  projectmanager.openDbProject();
-              //    _submitProject(context);
-               //   dbmanager.getStudentList();
-
-//                  print('project checkced $listOfUsers $secoundlistOfUsers');
                 },
                 child: Text(
                   "DB Test",
+                )
+            ),
+
+           FlatButton(
+                color: Colors.blue,
+                textColor: Colors.white,
+                splashColor: Colors.blueAccent,
+                onPressed: (){
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                       // builder: (context) => SwipeDeleteDemo(), // LoginScreen(),
+
+                          builder: (context) => SignInDemo(),
+
+                      ));
+                },
+                child: Text(
+                  "My Item",
                 )
             ),
 
@@ -464,7 +486,7 @@ class _LocationState extends State<Location> {
         ));
   }
   void _sendDataToLogincreen(BuildContext context) {
-    Navigator.push(
+      Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => MyLogin(),    // LoginScreen(),
