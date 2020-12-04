@@ -3,30 +3,29 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:geo_app_final/collect_deparment.dart' as select;
-import 'package:geo_app_final/collect_deparment.dart';
-import 'package:geo_app_final/secoundDbManager.dart';
+import 'package:geo_app_final/collect_lat_long.dart' as select;
+import 'package:geo_app_final/collect_lat_long.dart';
+//import 'package:geo_app_final/secoundDbManager.dart';
 import 'package:geo_app_final/server_response.dart';
-import 'package:geo_app_final/your_location.dart' as location;
+//import 'package:geo_app_final/your_location.dart' as location;
 import 'package:sqflite/sqflite.dart';
-import 'your_location.dart';
+//import '../your_location.dart';
 //import 'server_response.dart';
 import 'package:http/http.dart' as http;
-import 'function_of_ropDown.dart';
+//import 'function_of_ropDown.dart';
 import 'dart:convert';
-import 'Users_data.dart';
-import 'dbmanager.dart';
+import '../DropDown Model/Dropdown_model.dart';
+import '../DBmanager/dbmanager.dart';
 import 'package:connectivity/connectivity.dart';
-import 'secoundDbManager.dart';
-import 'Project_data.dart';
-import 'Login Form/Login_Form.dart';
+import '../DropDown Model/DropDown_Project_Model.dart';
+import '../Login Form/Login_Form.dart';
 //import 'transition_route_observer.dart';
-import 'Login_Screen.dart';
+import '../Login form/Login_Screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'login_page.dart';
+import '../Login form/login_page.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'item_test.dart';
-import 'Mytest/Mytest.dart';
+import '../Mytest/item_test.dart';
+import '../Mytest/Mytest.dart';
 
 
 void main()
@@ -85,16 +84,27 @@ class _LocationState extends State<Location> {
   Target target;
   ProjectTarget ptarget;
 //  Project project, dbProjectValue;
-  List<Target> studlist;
+  List<Target> targetlist ;
   List<ProjectTarget> projlist;
   int updateIndex, updateIndexPro;
    List<Users> listOfUsers ;
   List<Users> secoundlistOfUsers ;
   Target dbvalue;
   ProjectTarget dbvalueproj;
-
-
   SharedPreferences sharedPreferences;
+//var offline  = new List();
+
+  //Future<List<Target>> offlist ;
+ Future < List<Target>> offlineList ;
+  //           offlist = dbmanager.getStudentList();
+  // }
+
+
+
+
+
+
+
   @override
   void initState() {
 
@@ -102,12 +112,15 @@ class _LocationState extends State<Location> {
     super.initState();
     // _senToLogincreen(context);
      checkLoginStatus();
+
    // initConnectivity();
     // _connectivitySubscription =
     //     _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
     // this.getJsonData();
 
   }
+
+
 
   checkLoginStatus() async {
     sharedPreferences = await SharedPreferences.getInstance();
@@ -150,7 +163,7 @@ class _LocationState extends State<Location> {
     }
   } */
 
-  final uri = 'https://raw.githubusercontent.com/iamjawad/sample_data/main/projects_data.json';
+  final uri = 'https://raw.githubusercontent.com/iamjawad/sample_data/main/qda.json';
   Users _currentUser;
   Future<List<Users>> _fetchUsers() async {
     var response = await http.get(uri);
@@ -167,8 +180,8 @@ class _LocationState extends State<Location> {
     }
   }
 
-  //Second URI  ================================
-  final seconduri = 'https://raw.githubusercontent.com/iamjawad/sample_data/main/qda.json';
+  //Second URI  ================================   https://raw.githubusercontent.com/iamjawad/sample_data/main/projects_data.json
+  final seconduri = 'https://raw.githubusercontent.com/iamjawad/sample_data/main/projects_data.json';
   Users _secondcurrentUser;
   Future<List<Users>> _secondfetchUsers() async {
     var response = await http.get(seconduri);
@@ -188,6 +201,22 @@ class _LocationState extends State<Location> {
       throw Exception('Failed to load internet');
     }
   }
+
+  // Future<List<Target>> _offline() async {
+  //  // var response = await http.get(uri);
+  //
+  //   if (200 == 200) {
+  //   //  final items = json.decode(response.body).cast<Map<String, dynamic>>();
+  //     listOfUsers  = items.map<Target>((json) {
+  //       return Users.fromJson(json);
+  //     }).toList();
+  //
+  //     return listOfUsers;
+  //   } else {
+  //     throw Exception('Failed to load internet');
+  //   }
+  // }
+
 
 
   Widget potrate(){
@@ -278,7 +307,7 @@ class _LocationState extends State<Location> {
 
 
 
-    /*       FutureBuilder<List<Users>>(
+           FutureBuilder<List<Users>>(
                 future: _secondfetchUsers(),
                 builder: (BuildContext context,
                     AsyncSnapshot<List<Users>> snapshot) {
@@ -301,17 +330,97 @@ class _LocationState extends State<Location> {
                     hint: _secondcurrentUser != null
                         ? Text("" +
                         _secondcurrentUser.name )
-                        : Text("No Target selected"),//Text('select Target'+_secondcurrentUser.name),
+                        : Text("No Project selected online"),//Text('select Target'+_secondcurrentUser.name),
 
                   );
-                }),*/
+                }),
+
+            FutureBuilder<List<Users>>(                     //This one for first dropdown
+                future:_fetchUsers(),
+                builder: (BuildContext context,
+                    AsyncSnapshot<List<Users>> snapshot) {
+                  if (!snapshot.hasData) return CircularProgressIndicator();
+                  return DropdownButton<Users>(
+                    items: snapshot.data
+                        .map((user) => DropdownMenuItem<Users>(
+                      child: Text(user.name),
+                      value: user,
+                    ))
+                        .toList(),
+                    onChanged: (Users value) {
+                      setState(() {
+                        _currentUser = value;
+                      });
+                    },
+                    isExpanded: false,
+                    //value: _currentUser,
+
+                    hint: _currentUser != null
+                        ? Text("" +
+                        _currentUser.name )
+                        : Text("No Target selected online"),//Text('select Target'+_secondcurrentUser.name),
+
+                  );
+                }),
 
 
-            SizedBox(height: 20.0),
-            _secondcurrentUser != null
-                ? Text("Name: " +
-                _secondcurrentUser.name )
-                : Text("No Target selected"),
+
+
+
+            //
+            // FutureBuilder<List>(
+            //   future: dbmanager.getStudentList(),
+            //   initialData: List(),
+            //   builder: (context, snapshot) {
+            //     return snapshot.hasData ?
+            //     new ListView.builder(
+            //       padding: const EdgeInsets.all(10.0),
+            //       itemCount: snapshot.data.length,
+            //       itemBuilder: (context, i) {
+            //         return _buildRow(snapshot.data[i]);
+            //       },
+            //     )
+            //         : Center(
+            //       child: CircularProgressIndicator(),
+            //     );
+            //   },
+            // ),
+
+
+
+
+
+
+
+         // if(_fetchUsers() == dbmanager.getStudentList() || _secondfetchUsers() == dbmanager.getProjectList() )
+         //   Text('tru'),
+
+            // for(int b = 0 ; b < 5 ; b ++ )
+            //    if( listOfUsers[b] == secoundlistOfUsers[b] )
+            //      Text('tru'),
+            //   // }
+            //  else
+              //   {}
+
+         //  Text('agan tru'),
+         //    else{
+         //       Text('fals')
+         // }
+
+          // FutureBuilder<List<Target>>(                     //This one for first dropdown
+          //     future: dbmanager.getStudentList(),
+          //     builder: (BuildContext context,
+          //         AsyncSnapshot<List<Target>> snapshot) {
+          //       if (!snapshot.hasData) return CircularProgressIndicator();
+          //       return offlist =
+          //       //   Column (
+          //       //   children: [
+          //       //     Text('this is my target list ${dbmanager.getStudentList()}')
+          //       //   ],
+          //       //
+          //       // );
+          //     }
+          //       ),
 
             Divider(
                 color: Colors.black
@@ -405,7 +514,89 @@ class _LocationState extends State<Location> {
                 )
             ),
 
-           FlatButton(
+   Row(
+     mainAxisAlignment: MainAxisAlignment.spaceAround,
+     children: [
+       FlatButton(
+           color: Colors.blue,
+           textColor: Colors.white,
+           splashColor: Colors.blueAccent,
+           onPressed: (){
+             print("hello");
+             int id=24;
+             dbmanager.deleteStudent(id);
+             dbmanager.deleteProject(id);
+             setState(() {
+               // studlist.removeAt(id);
+             });
+             print('db checked ');
+           },
+           child: Text(
+             "DB Detete",
+           )
+       ),
+
+       FlatButton(
+           color: Colors.blue,
+           textColor: Colors.white,
+           splashColor: Colors.blueAccent,
+           onPressed: (){
+          //   offlineList();
+          //   _secondfetchUsers();
+          // for (int b = 0; b<5 ; b++ )
+          //                   print(listOfUsers[b]);
+             offlineList = dbmanager.getStudentList();
+        //     print('offline data $offlineList');
+         // if (listOfUsers.any((element) => offlineList.contains(element))){
+           if(listOfUsers == offlineList){
+            print('true');
+          }else{
+               print('fals ${dbmanager.getStudentList()} for online ${listOfUsers[1]}');
+             }
+          //   print('tru');
+          //
+          // }
+          // else{
+          //   print('false');
+          // }
+            //  offlineList == dbmanager.getStudentList();
+            // targetlistooo == dbmanager.getStudentList();
+           // print('my data ${dbmanager.getStudentList()} online data ${listOfUsers[1]}');
+
+
+             // print(' my db list ${
+             //     () async {
+             // final Future<List<Target>> futureList = dbmanager.getStudentList();
+             // final
+             //     list  = await futureList;
+             //  print(list);
+             // }
+             //    // dbmanager.getStudentList().toString()
+             // }');
+             // for(int b = 0; b < 5 ; b++ ) {
+             //   if ( listOfUsers[b] ==  dbmanager.getStudentList()) {
+             //     print('tru');
+             //   } else {
+             //     print('fals');
+             //   }
+             // }
+             // dbmanager.deleteStudent(id);
+             // dbmanager.deleteProject(id);
+             setState(() {
+               // studlist.removeAt(id);
+             });
+           },
+           child: Text(
+             "Sync",
+           )
+       ),
+
+
+     ],
+   ),
+
+
+            /*     FlatButton(
                 color: Colors.blue,
                 textColor: Colors.white,
                 splashColor: Colors.blueAccent,
@@ -422,7 +613,7 @@ class _LocationState extends State<Location> {
                 child: Text(
                   "My Item",
                 )
-            ),
+            ),*/
 
           ],
         ),
@@ -530,8 +721,8 @@ class _LocationState extends State<Location> {
       {
         setState(() {
 //      for (int i = 0; i < listOfUsers.length; i++) {
-        studlist[updateIndex].id = _currentUser.id;
-        studlist[updateIndex].name = _currentUser.name;
+        targetlist[updateIndex].id = _currentUser.id;
+        targetlist[updateIndex].name = _currentUser.name;
 //      }
         }),
         // _nameController.clear(),
@@ -615,6 +806,10 @@ class _LocationState extends State<Location> {
 //      });
 //    } */
   }
-
+  Widget _buildRow(Target target) {
+    return new ListTile(
+      title: new Text(target.name),
+    );
+  }
  }
 
