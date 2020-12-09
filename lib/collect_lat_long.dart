@@ -9,12 +9,15 @@ import 'package:geo_app_final/Map/gmap.dart';
 import 'package:geo_app_final/server_response.dart';
 import 'package:geolocator/geolocator.dart';
 import 'DBmanager/dbmanager.dart';
-import 'submit_coodinates.dart';
+import 'submit_coordinates.dart';
 import 'Main/main.dart';
 import 'dart:async';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'Map/next_map.dart';
+import 'package:hexcolor/hexcolor.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:fluttertoast/fluttertoast_web.dart';
 
 
 //import 'main3.dart';
@@ -84,9 +87,96 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  void _locationCheking(){
+
+    if (_currentPosition != null  )
+      for(int i = 0; i < listOfCoordinates.length; i++)
+        //   if(listOfCoordinates[0].latitude == listOfCoordinates[0+1].longitude)
+
+
+        if(listOfCoordinates[0].latitude == listOfCoordinates[0 + 1].longitude)
+          //  Text(' wow imran its true'),
+          Fluttertoast.showToast(
+          msg: 'Please change your location',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          // timeInSecForIos: 1,
+          backgroundColor: Colors.blueGrey,
+          textColor: Colors.white
+          );
+             else
+
+        ListView(
+          // child: Column(
+          children: <Widget>[
+
+            // _locationCheking(),
+            if (_currentPosition != null  )
+              for(int i = 0; i < listOfCoordinates.length; i++)
+              //   if(listOfCoordinates[0].latitude == listOfCoordinates[0+1].longitude)
+
+
+              // if(listOfCoordinates[i].latitude == listOfCoordinates[i + 1].longitude)
+              //   Center(child: Text(' wow imran its true')),
+              // Fluttertoast.showToast(
+              // msg: 'Select both dropdown',
+              // toastLength: Toast.LENGTH_SHORT,
+              // gravity: ToastGravity.BOTTOM,
+              // // timeInSecForIos: 1,
+              // backgroundColor: Colors.blueGrey,
+              // textColor: Colors.white
+              // );
+              //   else
+              //_sendDataToSecondScreen(context);
+              // ,
+
+
+              // GestureDetector(
+              //   onHorizontalDragEnd: (endxy){
+              //     listOfCoordinates.removeAt(i);
+              //     itemcount --;
+              //     setState(() {
+              //     });
+
+
+                Center(
+                  child: Text(("${i + 1} LAT: ${listOfCoordinates[i]
+                      .latitude}, LNG: ${listOfCoordinates[i]
+                      .longitude}"),
+                    style: TextStyle(fontSize: 19, color: Colors.black),
+                  ),
+                ),
+            //   ),
+
+          ],
+
+        );
+          //_sendDataToSecondScreen(context);
+          // ,
+
+
+          // GestureDetector(
+          //   onHorizontalDragEnd: (endxy){
+          //     listOfCoordinates.removeAt(i);
+          //     itemcount --;
+          //     setState(() {
+          //     });
+
+
+          // Center(
+          //   child: Text(("${i + 1} LAT: ${listOfCoordinates[i].latitude}, LNG: ${listOfCoordinates[i].longitude}"),
+          //     style: TextStyle(fontSize: 19, color: Colors.black),
+          //   ),
+          // );
+
+  }
+
 
   Widget potrate(){
     return  Container(
+       // decoration: new BoxDecoration(
+       //  color: HexColor('#E0E0E0'),),
+      // Colors(int.parse('0X1231321')),
       child:Column(
         //mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -101,17 +191,17 @@ class _HomePageState extends State<HomePage> {
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 110,),
-                  child: FlatButton(
+                  child: RaisedButton(
                     color: Colors.blue,
-                    child: Text('Done' , style: TextStyle(color: Colors.white),),
-                    onPressed: (){
-                    //  print("")
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                    onPressed: () {
                       _submitTarget(context);
                       _sendDataToSubmitCoordinate(context);
 
-                      //  Navigator.push(context, MaterialPageRoute(builder: (context) => SubmitCoordinat() ) );//str: "hello"
                     },
+                    child: Text("Done", style: TextStyle(color: Colors.white),),
                   ),
+
                 ),
               ],
             ),
@@ -124,7 +214,7 @@ class _HomePageState extends State<HomePage> {
               //mainAxisAlignment: MainAxisAlignment.end,
               children: [
 
-                Text('PROJECt: ' +  widget.department ,
+                Text('PROJECT: ' +  widget.department ,
                     style: TextStyle(fontWeight: FontWeight.bold) ),
 
                 Text('TARGET  : '+ widget.secondname,
@@ -137,44 +227,75 @@ class _HomePageState extends State<HomePage> {
           // Column(
           //   children: [
           Container(
+
+   // decoration: new BoxDecoration(
+   //   color: HexColor('#E0E0E0'),),
+    // Colors(int.parse('0X1231321')),
             //  color: Colors.amber[600],
             height: 260,
-            width: 350,
+            width: 345,
+            //fcolor: Colors.red,
             decoration: BoxDecoration(
+              color: HexColor('#E0E0E0'),
+            //  color: Colors.white,
               border: Border.all(
-                color: Colors.blue,
+                color: Colors.black,
               ),
-              borderRadius: BorderRadius.circular(10.0),
+              borderRadius: BorderRadius.circular(0.0),
             ),
             //  color: Colors.yellow,
+
             child:
             Expanded(
+              child:Scrollbar (
+
               child:
               ListView(
+               // child: Column(
                 children: <Widget>[
 
-
+                 // _locationCheking(),
                   if (_currentPosition != null  )
                     for(int i = 0; i < listOfCoordinates.length; i++)
-                      GestureDetector(
-                        onHorizontalDragEnd: (endxy){
-                          listOfCoordinates.removeAt(i);
-                          itemcount --;
-                          setState(() {
-                          });
-                        },
+                      //   if(listOfCoordinates[0].latitude == listOfCoordinates[0+1].longitude)
 
 
-                        child: Center(
+                      // if(listOfCoordinates[i].latitude == listOfCoordinates[i + 1].longitude)
+                      //   Center(child: Text(' wow imran its true')),
+                      // Fluttertoast.showToast(
+                      // msg: 'Select both dropdown',
+                      // toastLength: Toast.LENGTH_SHORT,
+                      // gravity: ToastGravity.BOTTOM,
+                      // // timeInSecForIos: 1,
+                      // backgroundColor: Colors.blueGrey,
+                      // textColor: Colors.white
+                      // );
+                      //   else
+                      //_sendDataToSecondScreen(context);
+                      // ,
 
 
+                      // GestureDetector(
+                      //   onHorizontalDragEnd: (endxy){
+                      //     listOfCoordinates.removeAt(i);
+                      //     itemcount --;
+                      //     setState(() {
+                      //     });
+
+
+                        Center(
                           child: Text(("${i + 1} LAT: ${listOfCoordinates[i]
-                              .latitude}, LNG: ${listOfCoordinates[i].longitude}"),style: TextStyle(fontSize: 19),
-                           ),
+                              .latitude}, LNG: ${listOfCoordinates[i]
+                              .longitude}"),
+                            style: TextStyle(fontSize: 19, color: Colors.black),
+                          ),
                         ),
-                      ),
+                      //   ),
+
                 ],
+
               ),
+              )
             ),
           ),
           //   SizedBox.fromSize()
@@ -336,7 +457,7 @@ class _HomePageState extends State<HomePage> {
                           children: <Widget>[
                             Icon(Icons.add_location, color: Colors.white,),
                             // icon
-                            Text("location" ,  style: TextStyle(fontSize: 10, color: Colors.white),  ),
+                            Text("Get point" ,  style: TextStyle(fontSize: 10, color: Colors.white),  ),
                             // text
                           ],
                         ),
@@ -406,7 +527,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Get Collection'),
+        title: Text('Point'),
 
       ),
       body: OrientationBuilder(

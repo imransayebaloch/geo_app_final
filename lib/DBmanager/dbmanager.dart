@@ -88,6 +88,7 @@ class DbStudentManager {
       return Target(
           id: maps[i]['id'], name: maps[i]['name']);
     });
+
   }
   Future<List<QuestionOfftarget>> getQuestionOff() async {
     await openDb();
@@ -182,6 +183,14 @@ class DbStudentManager {
 
 
   }
+  Future<void> deleteProject(int id) async {
+    await openDb();
+    print("object");
+    await _database
+        .rawDelete('DELETE FROM projects');
+  }
+
+
   Future<List<Map<String,dynamic>>> query() async {
     await openDb();
     // await _database.delete(

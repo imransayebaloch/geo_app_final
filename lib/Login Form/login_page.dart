@@ -5,9 +5,9 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'Login_Screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'Email Model/email_model.dart';
+import '../Email Model/email_model.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'main.dart';
+import '../Main/main.dart';
 
 
 
@@ -143,6 +143,7 @@ class _LoginPageState extends State<LoginPage> {
             _isLoading = true;
           });
           signIn(emailController.text, passwordController.text);
+          print('this is sign in dear imran');
         },
         elevation: 0.0,
         color: Colors.purple,

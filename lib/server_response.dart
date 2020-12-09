@@ -10,7 +10,7 @@ import 'Main/main.dart';
 import 'dart:async';
 import 'package:circle_list/circle_list.dart';
 import 'collect_lat_long.dart';
-import 'submit_coodinates.dart';
+import 'submit_coordinates.dart';
 import 'DropDown Model/Dropdown_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:dio/dio.dart';
@@ -56,7 +56,7 @@ class ServerResponse extends StatefulWidget {
 class _HomePageState extends State<ServerResponse> {
   File imageFile;
 
-
+/*
   _openGallery(BuildContext context) async{
 
     var picture =  await ImagePicker.pickImage(source: ImageSource.gallery);
@@ -109,7 +109,7 @@ class _HomePageState extends State<ServerResponse> {
       );
     }
     );
-  }
+  }  */
 
   // Future<Users> getApiCallUsingDio () async{
   //   Dio dio= Dio();
@@ -186,7 +186,7 @@ class _HomePageState extends State<ServerResponse> {
           //mainAxisAlignment: MainAxisAlignment.center,
           children: [
 
-           Expanded(
+    /*       Expanded(
              child: Center(child: Text("Project Id : "+ widget.id.toString())),
            ),
             Expanded( child:
@@ -200,6 +200,9 @@ class _HomePageState extends State<ServerResponse> {
             Center(child: Text('Target name: ' + widget.secondname)),
             ),
 
+                */
+
+
             //  Expanded( child:
             // // Center(child: Text('list : ' + widget.collectcor)),
             //  ),
@@ -208,12 +211,9 @@ class _HomePageState extends State<ServerResponse> {
 
             Row(
               children: [
+               // _DecideImageView(),
                 Padding(
-                  padding: const EdgeInsets.only(right: 10,left: 40),
-                  child: _DecideImageView(),                                // dilog alert function calling here for camra nad gallery
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 10),
+                  padding: const EdgeInsets.only(top: 10, left: 130),
                   child: Icon(Icons.check, size: 100, color: Colors.green,),
                 ),
               ],
@@ -245,7 +245,7 @@ class _HomePageState extends State<ServerResponse> {
             Divider(
                 color: Colors.black
             ),
-        Container(
+    /*    Container(
           height: 100,
           width: 280,
           decoration: BoxDecoration(
@@ -298,7 +298,7 @@ class _HomePageState extends State<ServerResponse> {
                        icon: Icon(Icons.camera_alt, size: 40, color: Colors.blueAccent,),
                        tooltip: 'Increase volume by 10%',
                        onPressed: () {
-                         _showChoiceDialog(context);
+                       //  _showChoiceDialog(context);
                          print('Volume button clicked');
                          },
                      ),
@@ -308,21 +308,36 @@ class _HomePageState extends State<ServerResponse> {
 
 
                ],
-             ),
+             ),   */
             Row(
               //  mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Expanded( child:
                 Padding(
-                  padding: const EdgeInsets.only( left: 60, right: 60),
-                  child: FlatButton(
-                    child: Text("Back"),
-                    color: Colors.blueAccent,
+                  padding: const EdgeInsets.only( left: 60, right: 60, top: 220),
+                  child: RaisedButton(
+                    color: Colors.blue,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                     onPressed: () {
-                      print('list cheking ${widget.listOFCor}');
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => DropDown()));
+                     // _sendDataToServer(context);
+                      //Navigator.pop(context);
+                      // Navigator.of(context).pop();
+                      // //  Navigator.push(context, MaterialPageRoute(builder: (_)=>  DropDown(),));
+                       Navigator.push(context, MaterialPageRoute(builder: (context) => DropDown()));
+                      //_getCurrentLocation();
                     },
+                    child: Text("Back", style: TextStyle(color: Colors.white),),
                   ),
+
+
+                  // FlatButton(
+                  //   child: Text("Back", style: TextStyle(color: Colors.white),),
+                  //   color: Colors.blueAccent,
+                  //   onPressed: () {
+                  //     print('list cheking ${widget.listOFCor}');
+                  //     Navigator.push(context, MaterialPageRoute(builder: (context) => DropDown()));
+                  //   },
+                  // ),
                 ),
                 ),
               ],
