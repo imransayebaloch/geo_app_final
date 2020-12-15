@@ -13,12 +13,11 @@ import 'submit_coordinates.dart';
 import 'Main/main.dart';
 import 'dart:async';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:geolocator/geolocator.dart';
+//import 'package:geolocator/geolocator.dart';
 import 'Map/next_map.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:fluttertoast/fluttertoast_web.dart';
-
+//import 'package:fluttertoast/fluttertoast.dart';
+//import 'package:fluttertoast/fluttertoast_web.dart';
 
 //import 'main3.dart';
 /* class MyApp extends StatelessWidget {
@@ -41,18 +40,18 @@ import 'package:fluttertoast/fluttertoast_web.dart';
 } */
 
 class HomePage extends StatefulWidget {
-  String department= "";
+  String department = "";
   int id;
 
-  String  secondname = "";
+  String secondname = "";
   int secondid;
-  HomePage({Key key ,this.id ,this.department, this.secondid,this.secondname}): super(key: key);
+  HomePage({Key key, this.id, this.department, this.secondid, this.secondname})
+      : super(key: key);
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-
   MapType _currentMapType = MapType.normal;
   //Completer<GoogleMapController> _controller = Completer();
 
@@ -65,10 +64,8 @@ class _HomePageState extends State<HomePage> {
   GoogleMapController _mapController;
   BitmapDescriptor _markerIcon;
 
-
   final DbStudentManager dbmanager = new DbStudentManager();
   LatlngTarget target;
-
 
   void _onMapCreated(GoogleMapController controller) {
     _mapController = controller;
@@ -87,97 +84,82 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  void _locationCheking(){
-
-    if (_currentPosition != null  )
-      for(int i = 0; i < listOfCoordinates.length; i++)
+  void _locationCheking() {
+    if (_currentPosition != null)
+      for (int i = 0; i < listOfCoordinates.length; i++)
         //   if(listOfCoordinates[0].latitude == listOfCoordinates[0+1].longitude)
 
-
-        if(listOfCoordinates[0].latitude == listOfCoordinates[0 + 1].longitude)
+        if (listOfCoordinates[0].latitude == listOfCoordinates[0 + 1].longitude)
           //  Text(' wow imran its true'),
           Fluttertoast.showToast(
-          msg: 'Please change your location',
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          // timeInSecForIos: 1,
-          backgroundColor: Colors.blueGrey,
-          textColor: Colors.white
-          );
-             else
+              msg: 'Please change your location',
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              // timeInSecForIos: 1,
+              backgroundColor: Colors.blueGrey,
+              textColor: Colors.white);
+        else
+          ListView(
+            // child: Column(
+            children: <Widget>[
+              // _locationCheking(),
+              if (_currentPosition != null)
+                for (int i = 0; i < listOfCoordinates.length; i++)
+                  //   if(listOfCoordinates[0].latitude == listOfCoordinates[0+1].longitude)
 
-        ListView(
-          // child: Column(
-          children: <Widget>[
+                  // if(listOfCoordinates[i].latitude == listOfCoordinates[i + 1].longitude)
+                  //   Center(child: Text(' wow imran its true')),
+                  // Fluttertoast.showToast(
+                  // msg: 'Select both dropdown',
+                  // toastLength: Toast.LENGTH_SHORT,
+                  // gravity: ToastGravity.BOTTOM,
+                  // // timeInSecForIos: 1,
+                  // backgroundColor: Colors.blueGrey,
+                  // textColor: Colors.white
+                  // );
+                  //   else
+                  //_sendDataToSecondScreen(context);
+                  // ,
 
-            // _locationCheking(),
-            if (_currentPosition != null  )
-              for(int i = 0; i < listOfCoordinates.length; i++)
-              //   if(listOfCoordinates[0].latitude == listOfCoordinates[0+1].longitude)
+                  // GestureDetector(
+                  //   onHorizontalDragEnd: (endxy){
+                  //     listOfCoordinates.removeAt(i);
+                  //     itemcount --;
+                  //     setState(() {
+                  //     });
 
-
-              // if(listOfCoordinates[i].latitude == listOfCoordinates[i + 1].longitude)
-              //   Center(child: Text(' wow imran its true')),
-              // Fluttertoast.showToast(
-              // msg: 'Select both dropdown',
-              // toastLength: Toast.LENGTH_SHORT,
-              // gravity: ToastGravity.BOTTOM,
-              // // timeInSecForIos: 1,
-              // backgroundColor: Colors.blueGrey,
-              // textColor: Colors.white
-              // );
-              //   else
-              //_sendDataToSecondScreen(context);
-              // ,
-
-
-              // GestureDetector(
-              //   onHorizontalDragEnd: (endxy){
-              //     listOfCoordinates.removeAt(i);
-              //     itemcount --;
-              //     setState(() {
-              //     });
-
-
-                Center(
-                  child: Text(("${i + 1} LAT: ${listOfCoordinates[i]
-                      .latitude}, LNG: ${listOfCoordinates[i]
-                      .longitude}"),
-                    style: TextStyle(fontSize: 19, color: Colors.black),
+                  Center(
+                    child: Text(
+                      ("${i + 1} LAT: ${listOfCoordinates[i].latitude}, LNG: ${listOfCoordinates[i].longitude}"),
+                      style: TextStyle(fontSize: 19, color: Colors.black),
+                    ),
                   ),
-                ),
-            //   ),
+              //   ),
+            ],
+          );
+    //_sendDataToSecondScreen(context);
+    // ,
 
-          ],
+    // GestureDetector(
+    //   onHorizontalDragEnd: (endxy){
+    //     listOfCoordinates.removeAt(i);
+    //     itemcount --;
+    //     setState(() {
+    //     });
 
-        );
-          //_sendDataToSecondScreen(context);
-          // ,
-
-
-          // GestureDetector(
-          //   onHorizontalDragEnd: (endxy){
-          //     listOfCoordinates.removeAt(i);
-          //     itemcount --;
-          //     setState(() {
-          //     });
-
-
-          // Center(
-          //   child: Text(("${i + 1} LAT: ${listOfCoordinates[i].latitude}, LNG: ${listOfCoordinates[i].longitude}"),
-          //     style: TextStyle(fontSize: 19, color: Colors.black),
-          //   ),
-          // );
-
+    // Center(
+    //   child: Text(("${i + 1} LAT: ${listOfCoordinates[i].latitude}, LNG: ${listOfCoordinates[i].longitude}"),
+    //     style: TextStyle(fontSize: 19, color: Colors.black),
+    //   ),
+    // );
   }
 
-
-  Widget potrate(){
-    return  Container(
-       // decoration: new BoxDecoration(
-       //  color: HexColor('#E0E0E0'),),
+  Widget potrate() {
+    return Container(
+      // decoration: new BoxDecoration(
+      //  color: HexColor('#E0E0E0'),),
       // Colors(int.parse('0X1231321')),
-      child:Column(
+      child: Column(
         //mainAxisAlignment: MainAxisAlignment.center,
         children: [
           // Text(str),
@@ -190,54 +172,53 @@ class _HomePageState extends State<HomePage> {
                   child: Text('Coardinator Collection'),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(left: 110,),
+                  padding: const EdgeInsets.only(
+                    left: 110,
+                  ),
                   child: RaisedButton(
                     color: Colors.blue,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20)),
                     onPressed: () {
                       _submitTarget(context);
                       _sendDataToSubmitCoordinate(context);
-
                     },
-                    child: Text("Done", style: TextStyle(color: Colors.white),),
+                    child: Text(
+                      "Done",
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
-
                 ),
               ],
             ),
           ),
-
 
           Padding(
             padding: const EdgeInsets.only(right: 240),
             child: Column(
               //mainAxisAlignment: MainAxisAlignment.end,
               children: [
-
-                Text('PROJECT: ' +  widget.department ,
-                    style: TextStyle(fontWeight: FontWeight.bold) ),
-
-                Text('TARGET  : '+ widget.secondname,
-                    style: TextStyle(fontWeight: FontWeight.bold) ),
+                Text('PROJECT: ' + widget.department,
+                    style: TextStyle(fontWeight: FontWeight.bold)),
+                Text('TARGET  : ' + widget.secondname,
+                    style: TextStyle(fontWeight: FontWeight.bold)),
               ],
             ),
           ),
 
-
           // Column(
           //   children: [
           Container(
-
-   // decoration: new BoxDecoration(
-   //   color: HexColor('#E0E0E0'),),
-    // Colors(int.parse('0X1231321')),
+            // decoration: new BoxDecoration(
+            //   color: HexColor('#E0E0E0'),),
+            // Colors(int.parse('0X1231321')),
             //  color: Colors.amber[600],
             height: 260,
             width: 345,
             //fcolor: Colors.red,
             decoration: BoxDecoration(
               color: HexColor('#E0E0E0'),
-            //  color: Colors.white,
+              //  color: Colors.white,
               border: Border.all(
                 color: Colors.black,
               ),
@@ -245,20 +226,15 @@ class _HomePageState extends State<HomePage> {
             ),
             //  color: Colors.yellow,
 
-            child:
-            Expanded(
-              child:Scrollbar (
-
-              child:
-              ListView(
-               // child: Column(
+            child: Expanded(
+                child: Scrollbar(
+              child: ListView(
+                // child: Column(
                 children: <Widget>[
-
-                 // _locationCheking(),
-                  if (_currentPosition != null  )
-                    for(int i = 0; i < listOfCoordinates.length; i++)
+                  // _locationCheking(),
+                  if (_currentPosition != null)
+                    for (int i = 0; i < listOfCoordinates.length; i++)
                       //   if(listOfCoordinates[0].latitude == listOfCoordinates[0+1].longitude)
-
 
                       // if(listOfCoordinates[i].latitude == listOfCoordinates[i + 1].longitude)
                       //   Center(child: Text(' wow imran its true')),
@@ -274,7 +250,6 @@ class _HomePageState extends State<HomePage> {
                       //_sendDataToSecondScreen(context);
                       // ,
 
-
                       // GestureDetector(
                       //   onHorizontalDragEnd: (endxy){
                       //     listOfCoordinates.removeAt(i);
@@ -282,46 +257,40 @@ class _HomePageState extends State<HomePage> {
                       //     setState(() {
                       //     });
 
-
-                        Center(
-                          child: Text(("${i + 1} LAT: ${listOfCoordinates[i]
-                              .latitude}, LNG: ${listOfCoordinates[i]
-                              .longitude}"),
-                            style: TextStyle(fontSize: 19, color: Colors.black),
-                          ),
+                      Center(
+                        child: Text(
+                          ("${i + 1} LAT: ${listOfCoordinates[i].latitude}, LNG: ${listOfCoordinates[i].longitude}"),
+                          style: TextStyle(fontSize: 19, color: Colors.black),
                         ),
-                      //   ),
-
+                      ),
+                  //   ),
                 ],
-
               ),
-              )
-            ),
+            )),
           ),
           //   SizedBox.fromSize()
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-
               Text(
-                ' $itemcount Coordinates Collected ' ,
+                ' $itemcount Coordinates Collected ',
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
-
               IconButton(
-                icon: Icon(Icons.delete_forever, size: 40, color: Colors.red,),
+                icon: Icon(
+                  Icons.delete_forever,
+                  size: 40,
+                  color: Colors.red,
+                ),
                 tooltip: 'camera ',
                 onPressed: () {
-                        listOfCoordinates.removeLast();
+                  listOfCoordinates.removeLast();
 
-                        itemcount --;
-                        setState(() {
-                        });
-                        //my code
-                        },
-
+                  itemcount--;
+                  setState(() {});
+                  //my code
+                },
               ),
-
             ],
           ),
           // Padding(
@@ -332,24 +301,16 @@ class _HomePageState extends State<HomePage> {
           //   ),
           // ),
 
-          Divider(
-              color: Colors.black
-          ),
+          Divider(color: Colors.black),
 
           Padding(
-            padding: const EdgeInsets.only(right: 0, top:10,bottom: 10),
+            padding: const EdgeInsets.only(right: 0, top: 10, bottom: 10),
             child: Text(
               'Tap on collect to record current coordinate or\n        Delete Icon to delete last coordinate',
               style: TextStyle(fontWeight: FontWeight.bold),
-
             ),
           ),
-          Divider(
-              color: Colors.black
-          ),
-
-
-
+          Divider(color: Colors.black),
 
           /*    FlatButton(
            child: Text('Delete'),
@@ -367,9 +328,7 @@ class _HomePageState extends State<HomePage> {
            },
          ), */
 
-
-
-   /*       Container(
+          /*       Container(
             height: 220,
             width: 320,
             decoration: BoxDecoration(
@@ -395,11 +354,9 @@ class _HomePageState extends State<HomePage> {
             ),
           ),*/
 
-
           Row(
             //mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: SizedBox.fromSize(
@@ -410,13 +367,20 @@ class _HomePageState extends State<HomePage> {
                       child: InkWell(
                         splashColor: Colors.yellow, // splash color
                         onTap: () {
-                       _sendToMap(context);
+                          _sendToMap(context);
                         }, // button pressed
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
-                            Icon(Icons.map, color: Colors.white,), // icon
-                            Text("Map" ,  style: TextStyle(fontSize: 10, color: Colors.white),  ), // text
+                            Icon(
+                              Icons.map,
+                              color: Colors.white,
+                            ), // icon
+                            Text(
+                              "Map",
+                              style:
+                                  TextStyle(fontSize: 10, color: Colors.white),
+                            ), // text
                           ],
                         ),
                       ),
@@ -438,26 +402,32 @@ class _HomePageState extends State<HomePage> {
               // ),
 
               Padding(
-                padding: const EdgeInsets.only(left: 225 ),
+                padding: const EdgeInsets.only(left: 225),
                 child: SizedBox.fromSize(
                   size: Size(56, 56), // button width and height
                   child: ClipOval(
                     child: Material(
                       color: Colors.blue, // button color
                       child: InkWell(
-
                         splashColor: Colors.yellow,
                         // splash color
                         onTap: () {
                           _getCurrentLocation();
-                          itemcount ++;
+                          itemcount++;
                         }, // button pressed
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
-                            Icon(Icons.add_location, color: Colors.white,),
+                            Icon(
+                              Icons.add_location,
+                              color: Colors.white,
+                            ),
                             // icon
-                            Text("Get point" ,  style: TextStyle(fontSize: 10, color: Colors.white),  ),
+                            Text(
+                              "Get point",
+                              style:
+                                  TextStyle(fontSize: 10, color: Colors.white),
+                            ),
                             // text
                           ],
                         ),
@@ -467,8 +437,7 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
 
-
-          /*    Padding(
+              /*    Padding(
                 padding: const EdgeInsets.only(left: 225 ),
                 child: FloatingActionButton(   // const EdgeInsets.only(right: 20 ,top: 15),
                   heroTag: "syed",
@@ -489,9 +458,11 @@ class _HomePageState extends State<HomePage> {
                   },
                 ),
               ),*/
-                    SizedBox(height: 10,),
+              SizedBox(
+                height: 10,
+              ),
 
-            /*  FloatingActionButton(
+              /*  FloatingActionButton(
                 heroTag: "imran",
                 tooltip: 'setlite',
                 child: Icon(Icons.add_location),
@@ -515,7 +486,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
- /* Widget landscape(){
+  /* Widget landscape(){
 
   } */
 
@@ -526,30 +497,22 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Point'),
-
-      ),
-      body: OrientationBuilder(
-        builder: (context, orientation ){
-          if(orientation == Orientation.portrait){
-            return potrate();
-
-          }else {
-            return null;
-          }
-        },
-      )
-
-    );
-
+        appBar: AppBar(
+          title: Text('Point'),
+        ),
+        body: OrientationBuilder(
+          builder: (context, orientation) {
+            if (orientation == Orientation.portrait) {
+              return potrate();
+            } else {
+              return null;
+            }
+          },
+        ));
   }
 
-
   _getCurrentLocation() {
-
-    final Geolocator geolocator = Geolocator()
-      ..forceAndroidLocationManager;
+    final Geolocator geolocator = Geolocator()..forceAndroidLocationManager;
     geolocator
         .getCurrentPosition(desiredAccuracy: LocationAccuracy.best)
         .then((Position position) {
@@ -563,12 +526,19 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  void _sendDataToSubmitCoordinate (BuildContext context) {
+  void _sendDataToSubmitCoordinate(BuildContext context) {
 //    print();?
     Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => SubmitCoordinat(selectedCoordinat:  '$itemcount' , id: widget.id , department: widget.department, secondid: widget.secondid, secondname:widget.secondname,collectcor: listOfCoordinates),  // collectedList: listOfCoordinates
+          builder: (context) => SubmitCoordinat(
+              selectedCoordinat: '$itemcount',
+              id: widget.id,
+              department: widget.department,
+              secondid: widget.secondid,
+              secondname: widget.secondname,
+              collectcor:
+                  listOfCoordinates), // collectedList: listOfCoordinates
         ));
   }
 
@@ -576,19 +546,22 @@ class _HomePageState extends State<HomePage> {
     //if(_formKey.currentState.validate()){
     if (target == null) {
       for (int i = 0; i < listOfCoordinates.length; i++) {
-        LatlngTarget tv = new   LatlngTarget (
-            assetid: widget.id, lat: listOfCoordinates[i].latitude,lng:listOfCoordinates[i].longitude );//
+        LatlngTarget tv = new LatlngTarget(
+            assetid: widget.id,
+            lat: listOfCoordinates[i].latitude,
+            lng: listOfCoordinates[i].longitude); //
 
         dbmanager.insertlocation(tv).then((id) =>
 
-        //.clear(),
-        // _courseController.clear(),
+                //.clear(),
+                // _courseController.clear(),
 
-        //  print('Student Added to Db ${id} ${st.course}')
-        print('test cordinate table ${tv.assetid} ')
-          // }
-        );
-      }}
+                //  print('Student Added to Db ${id} ${st.course}')
+                print('test cordinate table ${tv.assetid} ')
+            // }
+            );
+      }
+    }
 //    } else {
 ////      for (int i = 0; i < listOfUsers.length; i++) {
 //      target.id = _currentUser.id;
@@ -609,11 +582,13 @@ class _HomePageState extends State<HomePage> {
 //    }
   }
 
-  void _sendToMap (BuildContext context ) {
+  void _sendToMap(BuildContext context) {
     Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => MapsDemo(latAndLong: listOfCoordinates),  // collectedList: listOfCoordinates
+          builder: (context) => MapsDemo(
+              latAndLong:
+                  listOfCoordinates), // collectedList: listOfCoordinates
         ));
   }
   // void _sendDataToserverScreen (BuildContext context ) {

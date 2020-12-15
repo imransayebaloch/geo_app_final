@@ -1,3 +1,5 @@
+// ignore: avoid_web_libraries_in_flutter
+//import 'dart:html';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:ui';
@@ -13,6 +15,7 @@ import 'package:flutter/rendering.dart';
 import 'server_response.dart';
 import 'package:geo_app_final/Main/main.dart';
 import 'package:http/http.dart' as http ;
+
 
 
 class ImageScreen extends StatefulWidget {
