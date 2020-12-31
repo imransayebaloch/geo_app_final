@@ -1,4 +1,6 @@
 import 'dart:collection';
+import 'dart:ffi';
+//import 'dart:html';
 import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -9,15 +11,12 @@ import 'package:geo_app_final/Map/gmap.dart';
 import 'package:geo_app_final/server_response.dart';
 import 'package:geolocator/geolocator.dart';
 import 'DBmanager/dbmanager.dart';
-import 'submit_coordinates.dart';
+import 'questions.dart';
 import 'Main/main.dart';
 import 'dart:async';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-//import 'package:geolocator/geolocator.dart';
 import 'Map/next_map.dart';
 import 'package:hexcolor/hexcolor.dart';
-//import 'package:fluttertoast/fluttertoast.dart';
-//import 'package:fluttertoast/fluttertoast_web.dart';
 
 //import 'main3.dart';
 /* class MyApp extends StatelessWidget {
@@ -53,6 +52,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   MapType _currentMapType = MapType.normal;
+
   //Completer<GoogleMapController> _controller = Completer();
 
   Set<Marker> _markers = HashSet<Marker>();
@@ -65,7 +65,102 @@ class _HomePageState extends State<HomePage> {
   BitmapDescriptor _markerIcon;
 
   final DbStudentManager dbmanager = new DbStudentManager();
+
+  LatLng _center;
+
   LatlngTarget target;
+
+  Position currentLocation;
+
+  Position _currentPosition;
+  List<Position> listOfCoordinates =  new List();
+ // List<LatLng> listOfCoordinates1 = new List();
+
+  int itemcount = 0;
+ // List<List<int>> result = coordinates.map( (data) => [ data.latitude , data.longitude ] ) ;
+  @override
+  void initState() {
+    // TODO: implement initState
+   // for(int i=0 ;i<listOfCoordinates.length;i++){
+      // listOfCoordinates1[i]= listOfCoordinates[i].latitude , listOfCoordinates[i].longitude as LatLng;
+    //listOfCoordinates as LatLng;
+ //   }
+    super.initState();
+   // getlatlong();
+  }
+List<LatLng> mylatLong = [
+  LatLng(36.78493, -128.42932),
+    LatLng(39.88257, -128.42582),
+    LatLng(39.78693, -122.41942),
+    LatLng(36.78923, -122.66985),
+];
+void getlatlong() {
+  print('hellow');
+  for (int b = 0; b < 4; b++) {
+    print('Wah tra jgrok');
+    //print('hi ${listOfCoordinates[1]} ');
+    print('hi ${listOfCoordinates[1]} ');
+    print('hi ${mylatLong[1]} ');
+  // List<LatLng> mylatLong = [
+  //
+  //   // widget.listOfCoordinates[i];
+  //   LatLng(36.78493, -128.42932),
+  //   LatLng(39.88257, -128.42582),
+  //   LatLng(39.78693, -122.41942),
+  //   LatLng(36.78923, -122.66985),
+
+//  ];
+}}
+  //
+  // polygonLatLongs.add(LatLng(37.78493, -122.42932));
+  // polygonLatLongs.add(LatLng(37.78693, -122.41942));
+  // polygonLatLongs.add(LatLng(37.78923, -122.41542));
+  // polygonLatLongs.add(LatLng(37.78923, -122.42582));
+
+  // List<Position> myLatLong = new List();
+  // List dlfkdjf = {}
+  // List<LatLng> mylatLong = List<LatLng>();
+  //  void   mynew() {
+  //     List<LatLng> mylatLong = List<LatLng>();
+  //    mylatLong.add(LatLng(
+  //      37.78493,
+  //      -122.42932,
+  //    ));
+  //    mylatLong.add(LatLng(
+  //      37.78693,
+  //      -122.41942,
+  //    ));
+  //    mylatLong.add(LatLng(
+  //      37.78923,
+  //      -122.41542,
+  //    ));
+  //    mylatLong.add(LatLng(
+  //      37.78923,
+  //      -122.42582,
+  //    ));
+  //  }
+  // List<LatLng> mylatLong = List<LatLng>();
+  // mylatLong.add()
+  //   37.78493,
+  //   -122.42932,
+  //   37.78693,
+  //   -122.41942,
+  //   37.78923,
+  //   -122.41542,
+  //   37.78923,
+  //   -122.42582
+  // ];
+  // Future<Position> locateUser() async {
+  //   return Geolocator()
+  //       .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+  // }
+  //
+  // getUserLocation() async {
+  //   currentLocation = await locateUser();
+  //   setState(() {
+  //     _center = LatLng(currentLocation.latitude, currentLocation.longitude);
+  //   });
+  // }
 
   void _onMapCreated(GoogleMapController controller) {
     _mapController = controller;
@@ -163,46 +258,49 @@ class _HomePageState extends State<HomePage> {
         //mainAxisAlignment: MainAxisAlignment.center,
         children: [
           // Text(str),
-          Padding(
-            padding: const EdgeInsets.only(top: 10),
-            child: Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 10),
-                  child: Text('Coardinator Collection'),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(
-                    left: 110,
-                  ),
-                  child: RaisedButton(
-                    color: Colors.blue,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20)),
-                    onPressed: () {
-                      _submitTarget(context);
-                      _sendDataToSubmitCoordinate(context);
-                    },
-                    child: Text(
-                      "Done",
-                      style: TextStyle(color: Colors.white),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(top: 10),
+              child: Row(
+                //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 10),
+                    child: Column(
+                      //  mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(right: 70),
+                          child: Text(
+                              'PROJECT   :${widget.department} \nTARGET     : ${widget.secondname} ',
+                              style: TextStyle(fontWeight: FontWeight.bold)),
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                      ],
                     ),
                   ),
-                ),
-              ],
-            ),
-          ),
-
-          Padding(
-            padding: const EdgeInsets.only(right: 240),
-            child: Column(
-              //mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Text('PROJECT: ' + widget.department,
-                    style: TextStyle(fontWeight: FontWeight.bold)),
-                Text('TARGET  : ' + widget.secondname,
-                    style: TextStyle(fontWeight: FontWeight.bold)),
-              ],
+                  // Padding(
+                  //   padding: const EdgeInsets.only(
+                  //     right: 10,
+                  //   ),
+                  //   child: RaisedButton(
+                  //     color: Colors.blue,
+                  //     shape: RoundedRectangleBorder(
+                  //         borderRadius: BorderRadius.circular(20)),
+                  //     onPressed: () {
+                  //       _submitTarget(context);
+                  //       _sendDataToSubmitCoordinate(context);
+                  //     },
+                  //     child: Text(
+                  //       "Done",
+                  //       style: TextStyle(color: Colors.white),
+                  //     ),
+                  //   ),
+                  // ),
+                ],
+              ),
             ),
           ),
 
@@ -213,7 +311,7 @@ class _HomePageState extends State<HomePage> {
             //   color: HexColor('#E0E0E0'),),
             // Colors(int.parse('0X1231321')),
             //  color: Colors.amber[600],
-            height: 260,
+            height: 309,
             width: 345,
             //fcolor: Colors.red,
             decoration: BoxDecoration(
@@ -259,7 +357,7 @@ class _HomePageState extends State<HomePage> {
 
                       Center(
                         child: Text(
-                          ("${i + 1} LAT: ${listOfCoordinates[i].latitude}, LNG: ${listOfCoordinates[i].longitude}"),
+                          ("$i Lat: ${listOfCoordinates[i].latitude} , Lon:  ${listOfCoordinates[i].longitude}"), //${i + 1} LAT:
                           style: TextStyle(fontSize: 19, color: Colors.black),
                         ),
                       ),
@@ -293,13 +391,6 @@ class _HomePageState extends State<HomePage> {
               ),
             ],
           ),
-          // Padding(
-          //   padding: const EdgeInsets.only(right: 150, top:10),
-          //   child: Text(
-          //     ' $itemcount Coordinates Collected ' ,
-          //     style: TextStyle(fontWeight: FontWeight.bold),
-          //   ),
-          // ),
 
           Divider(color: Colors.black),
 
@@ -367,7 +458,9 @@ class _HomePageState extends State<HomePage> {
                       child: InkWell(
                         splashColor: Colors.yellow, // splash color
                         onTap: () {
+                         // getlatlong();
                           _sendToMap(context);
+                          //  getUserLocation();
                         }, // button pressed
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -412,6 +505,7 @@ class _HomePageState extends State<HomePage> {
                         splashColor: Colors.yellow,
                         // splash color
                         onTap: () {
+
                           _getCurrentLocation();
                           itemcount++;
                         }, // button pressed
@@ -490,15 +584,26 @@ class _HomePageState extends State<HomePage> {
 
   } */
 
-  Position _currentPosition;
-  List<Position> listOfCoordinates = new List();
-  int itemcount = 0;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
           title: Text('Point'),
+          actions: <Widget>[
+            FlatButton(
+              onPressed: () {
+                _submitTarget(context);
+                _sendDataToSubmitCoordinate(context);
+                // sharedPreferences.clear();
+                // sharedPreferences.commit();
+                // Navigator.of(context).pushAndRemoveUntil(
+                //     MaterialPageRoute(
+                //         builder: (BuildContext context) => LoginPage()),
+                //     (Route<dynamic> route) => false);
+              },
+              child: Text("Done", style: TextStyle(color: Colors.white)),
+            ),
+          ],
         ),
         body: OrientationBuilder(
           builder: (context, orientation) {
@@ -514,7 +619,7 @@ class _HomePageState extends State<HomePage> {
   _getCurrentLocation() {
     final Geolocator geolocator = Geolocator()..forceAndroidLocationManager;
     geolocator
-        .getCurrentPosition(desiredAccuracy: LocationAccuracy.best)
+        .getCurrentPosition(desiredAccuracy: LocationAccuracy.bestForNavigation)
         .then((Position position) {
 //if(listOfCoordinates!=null){}
       listOfCoordinates.add(position);
@@ -525,6 +630,22 @@ class _HomePageState extends State<HomePage> {
       print(e);
     });
   }
+
+  // _getAddressFromLatLng() async {
+  //   try {
+  //     List<Placemark> p = await geolocator.placemarkFromCoordinates(
+  //         _currentPosition.latitude, _currentPosition.longitude);
+  //
+  //     Placemark place = p[0];
+  //
+  //     setState(() {
+  //       _currentAddress =
+  //           "${place.locality}, ${place.postalCode}, ${place.country}";
+  //     });
+  //   } catch (e) {
+  //     print(e);
+  //   }
+  // }
 
   void _sendDataToSubmitCoordinate(BuildContext context) {
 //    print();?
@@ -537,8 +658,7 @@ class _HomePageState extends State<HomePage> {
               department: widget.department,
               secondid: widget.secondid,
               secondname: widget.secondname,
-              collectcor:
-                  listOfCoordinates), // collectedList: listOfCoordinates
+              collectcor: mylatLong), // collectedList: listOfCoordinates
         ));
   }
 
@@ -588,7 +708,7 @@ class _HomePageState extends State<HomePage> {
         MaterialPageRoute(
           builder: (context) => MapsDemo(
               latAndLong:
-                  listOfCoordinates), // collectedList: listOfCoordinates
+                  listOfCoordinates) // collectedList: listOfCoordinates
         ));
   }
   // void _sendDataToserverScreen (BuildContext context ) {
@@ -599,4 +719,12 @@ class _HomePageState extends State<HomePage> {
   //       ));
   // }
 
+  void getCurrentPosition() async {
+    Position currentLocation = await Geolocator()
+        .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+
+    setState(() {
+      _center = LatLng(currentLocation.latitude, currentLocation.longitude);
+    });
+  }
 }

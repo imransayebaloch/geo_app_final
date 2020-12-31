@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -10,13 +9,12 @@ import 'Main/main.dart';
 import 'dart:async';
 import 'package:circle_list/circle_list.dart';
 import 'collect_lat_long.dart';
-import 'submit_coordinates.dart';
+import 'questions.dart';
 import 'DropDown Model/Dropdown_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:dio/dio.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
-
 
 /* class ServerResponse extends StatelessWidget {
    String value;
@@ -44,15 +42,22 @@ import 'dart:io';
 }  */
 
 class ServerResponse extends StatefulWidget {
-  String value,secondname;
-  int id,secondid;
+  String value, secondname;
+  int id, secondid;
   var listOFCor = new List();
-  ServerResponse({Key key,this.id, this.value,this.secondid,this.secondname,this.listOFCor }):super(key: key );
-
+  ServerResponse(
+      {Key key,
+      this.id,
+      this.value,
+      this.secondid,
+      this.secondname,
+      this.listOFCor})
+      : super(key: key);
 
   @override
   _HomePageState createState() => _HomePageState();
 }
+
 class _HomePageState extends State<ServerResponse> {
   File imageFile;
 
@@ -119,10 +124,9 @@ class _HomePageState extends State<ServerResponse> {
   //      ret
   //   }
 
+  // print('tesing API $response');
 
-   // print('tesing API $response');
-
- /* void getHttp() async {
+  /* void getHttp() async {
     try {
     //  Response response = await Dio().get("https://raw.githubusercontent.com/iamjawad/sample_data/main/projects_data.json");
     //   Future<Users> getApiCallUsingDio () async{
@@ -168,25 +172,17 @@ class _HomePageState extends State<ServerResponse> {
     }
   }   */
 
-
-
-
-
-
-
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
         title: Text('Server Response'),
       ),
       body: Container(
-        child:Column(
+        child: Column(
           //mainAxisAlignment: MainAxisAlignment.center,
           children: [
-
-    /*       Expanded(
+            /*       Expanded(
              child: Center(child: Text("Project Id : "+ widget.id.toString())),
            ),
             Expanded( child:
@@ -202,25 +198,26 @@ class _HomePageState extends State<ServerResponse> {
 
                 */
 
-
             //  Expanded( child:
             // // Center(child: Text('list : ' + widget.collectcor)),
             //  ),
 
-
-
             Row(
               children: [
-               // _DecideImageView(),
+                // _DecideImageView(),
                 Padding(
                   padding: const EdgeInsets.only(top: 10, left: 130),
-                  child: Icon(Icons.check, size: 100, color: Colors.green,),
+                  child: Icon(
+                    Icons.check,
+                    size: 100,
+                    color: Colors.green,
+                  ),
                 ),
               ],
             ),
 
             Padding(
-              padding: const EdgeInsets.only(right: 15, top:20),
+              padding: const EdgeInsets.only(right: 15, top: 20),
               child: Text(
                 ' Server Response',
                 style: TextStyle(fontWeight: FontWeight.bold),
@@ -229,23 +226,18 @@ class _HomePageState extends State<ServerResponse> {
 
             Padding(
               padding: const EdgeInsets.only(top: 30),
-              child: Divider(
-
-                  color: Colors.black
-              ),
+              child: Divider(color: Colors.black),
             ),
 
             Padding(
-              padding: const EdgeInsets.only(right: 0, top:10,bottom: 10),
+              padding: const EdgeInsets.only(right: 0, top: 10, bottom: 10),
               child: Text(
                 'Collected Coordinates have been submitted \n                            successfully',
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
             ),
-            Divider(
-                color: Colors.black
-            ),
-    /*    Container(
+            Divider(color: Colors.black),
+            /*    Container(
           height: 100,
           width: 280,
           decoration: BoxDecoration(
@@ -312,33 +304,40 @@ class _HomePageState extends State<ServerResponse> {
             Row(
               //  mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Expanded( child:
-                Padding(
-                  padding: const EdgeInsets.only( left: 60, right: 60, top: 220),
-                  child: RaisedButton(
-                    color: Colors.blue,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                    onPressed: () {
-                     // _sendDataToServer(context);
-                      //Navigator.pop(context);
-                      // Navigator.of(context).pop();
-                      // //  Navigator.push(context, MaterialPageRoute(builder: (_)=>  DropDown(),));
-                       Navigator.push(context, MaterialPageRoute(builder: (context) => DropDown()));
-                      //_getCurrentLocation();
-                    },
-                    child: Text("Back", style: TextStyle(color: Colors.white),),
+                Expanded(
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.only(left: 60, right: 60, top: 220),
+                    child: RaisedButton(
+                      color: Colors.blue,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20)),
+                      onPressed: () {
+                        // _sendDataToServer(context);
+                        //Navigator.pop(context);
+                        // Navigator.of(context).pop();
+                        // //  Navigator.push(context, MaterialPageRoute(builder: (_)=>  DropDown(),));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => DropDown()));
+                        //_getCurrentLocation();
+                      },
+                      child: Text(
+                        "Back",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+
+                    // FlatButton(
+                    //   child: Text("Back", style: TextStyle(color: Colors.white),),
+                    //   color: Colors.blueAccent,
+                    //   onPressed: () {
+                    //     print('list cheking ${widget.listOFCor}');
+                    //     Navigator.push(context, MaterialPageRoute(builder: (context) => DropDown()));
+                    //   },
+                    // ),
                   ),
-
-
-                  // FlatButton(
-                  //   child: Text("Back", style: TextStyle(color: Colors.white),),
-                  //   color: Colors.blueAccent,
-                  //   onPressed: () {
-                  //     print('list cheking ${widget.listOFCor}');
-                  //     Navigator.push(context, MaterialPageRoute(builder: (context) => DropDown()));
-                  //   },
-                  // ),
-                ),
                 ),
               ],
             ),
@@ -348,5 +347,3 @@ class _HomePageState extends State<ServerResponse> {
     );
   }
 }
-
-

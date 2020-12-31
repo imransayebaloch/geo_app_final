@@ -6,16 +6,16 @@ import 'package:geolocator/geolocator.dart';
 import 'dart:async';
 
 class GMap extends StatefulWidget {
- // var mapLatLong = new List();
-  GMap({Key key}) : super(key: key);
+  // var mapLatLong = new List();
+  // List polyFonLatLong = Mylatlong;
+  //  var Mylatlong = new List();
+  //  GMap({Key key,this.Mylatlong}) : super(key: key);
 
   @override
   _GMapState createState() => _GMapState();
 }
 
 class _GMapState extends State<GMap> {
-
-
   MapType _currentMapType = MapType.normal;
   //Completer<GoogleMapController> _controller = Completer();
 
@@ -38,12 +38,13 @@ class _GMapState extends State<GMap> {
   }
 
   void _setMarkerIcon() async {
-    _markerIcon =
-        await BitmapDescriptor.fromAssetImage(ImageConfiguration(), 'assets/noodle_icon.png');
+    _markerIcon = await BitmapDescriptor.fromAssetImage(
+        ImageConfiguration(), 'images/noodle_icon.png');
   }
 
   void _toggleMapStyle() async {
-    String style = await DefaultAssetBundle.of(context).loadString('assets/map_style.json');
+    String style = await DefaultAssetBundle.of(context)
+        .loadString('assets/map_style.json');
 
     if (_showMapStyle) {
       _mapController.setMapStyle(style);
@@ -120,7 +121,6 @@ class _GMapState extends State<GMap> {
   //   });
   // }
 
-
   _onMapTypeButtonPressed() {
     setState(() {
       _currentMapType = _currentMapType == MapType.normal
@@ -141,7 +141,6 @@ class _GMapState extends State<GMap> {
   //   controller.animateCamera(CameraUpdate.newCameraPosition(_position1));
   // }
 
-
   Position _currentPosition;
   List<Position> listOfCoordinates = new List();
   int itemcount = 0;
@@ -152,11 +151,9 @@ class _GMapState extends State<GMap> {
       appBar: AppBar(title: Text('Map')),
       body: Stack(
         children: <Widget>[
-
           // Text('Volume : $_volume')
           // button(_onMapTypeButtonPressed, Icons.map),
           GoogleMap(
-
             onMapCreated: _onMapCreated,
             initialCameraPosition: CameraPosition(
               target: LatLng(37.77483, -122.41942),
@@ -170,22 +167,19 @@ class _GMapState extends State<GMap> {
             myLocationButtonEnabled: true,
           ),
           Padding(
-            padding: const EdgeInsets.only(left: 0 ,right: 270),
+            padding: const EdgeInsets.only(left: 0, right: 270),
             child: Container(
-            child:  Column(
-              //  mainAxisAlignment: MainAxisAlignment.end)
-              //mainAxisAlignment: MainAxisAlignment.start,
+              child: Column(
+                //  mainAxisAlignment: MainAxisAlignment.end)
+                //mainAxisAlignment: MainAxisAlignment.start,
 
                 children: [
-
-
-
-                 //floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-                   FloatingActionButton(
+                  //floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+                  FloatingActionButton(
+                    heroTag: '0',
                     tooltip: 'setlite',
                     child: Icon(Icons.map),
                     onPressed: () {
-
                       _onMapTypeButtonPressed();
                       print('map test prssed');
                       // setState(() {
@@ -196,20 +190,24 @@ class _GMapState extends State<GMap> {
                       //_toggleMapStyle();
                     },
                   ),
-                  SizedBox(height: 10,),
+                  SizedBox(
+                    height: 10,
+                  ),
 
                   FloatingActionButton(
+                    heroTag: '1',
                     tooltip: 'collect',
                     child: Icon(Icons.add),
                     onPressed: () {
-
                       _sendDataToCollectSceen(context);
-                    //  _onMapTypeButtonPressed();
+                      //  _onMapTypeButtonPressed();
                       print('map test prssed');
                     },
                   ),
 
-                  SizedBox(height: 10,),
+                  SizedBox(
+                    height: 10,
+                  ),
 
                   FloatingActionButton(
                     tooltip: 'map',
@@ -228,8 +226,6 @@ class _GMapState extends State<GMap> {
                     },
                   ),
 
-
-
                   // IconButton(
                   //   icon: Icon(Icons.add_location, size: 70, color: Colors.blueAccent,),
                   //   tooltip: 'camera ',
@@ -238,33 +234,32 @@ class _GMapState extends State<GMap> {
                   //     print('Volume button clicked');
                   //   },
                   // ),
-                //  _DecideImageView(),
+                  //  _DecideImageView(),
                 ],
               ),
 
-            // child:  Padding(
-            //     padding: const EdgeInsets.only(right: 40.0),
-            //     child: FlatButton(
-            //       child: Text("Test GPS"),
-            //       color: Colors.blueAccent,
-            //       onPressed: () {
-            //         setState(()=> itemcount++);
-            //         _getCurrentLocation();
-            //         //  _sendDataToserverScreen();
-            //       },
-            //     ),
-            //   ),
+              // child:  Padding(
+              //     padding: const EdgeInsets.only(right: 40.0),
+              //     child: FlatButton(
+              //       child: Text("Test GPS"),
+              //       color: Colors.blueAccent,
+              //       onPressed: () {
+              //         setState(()=> itemcount++);
+              //         _getCurrentLocation();
+              //         //  _sendDataToserverScreen();
+              //       },
+              //     ),
+              //   ),
 
               alignment: Alignment.bottomCenter,
               padding: EdgeInsets.fromLTRB(0, 0, 0, 80),
-            //  child: Text("Coding with Imran Syed"),
+              //  child: Text("Coding with Imran Syed"),
             ),
           )
         ],
       ),
 
-
-       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       // floatingActionButton: FloatingActionButton(
       //   tooltip: 'Increment',
       //   child: Icon(Icons.map),
@@ -279,14 +274,11 @@ class _GMapState extends State<GMap> {
       //     //_toggleMapStyle();
       //   },
       // ),
-
     );
   }
 
   _getCurrentLocation() {
-
-    final Geolocator geolocator = Geolocator()
-      ..forceAndroidLocationManager;
+    final Geolocator geolocator = Geolocator()..forceAndroidLocationManager;
     geolocator
         .getCurrentPosition(desiredAccuracy: LocationAccuracy.best)
         .then((Position position) {
@@ -301,13 +293,12 @@ class _GMapState extends State<GMap> {
     });
   }
 
-  void _sendDataToCollectSceen (BuildContext context) {
+  void _sendDataToCollectSceen(BuildContext context) {
 //    print();?
     Navigator.push(
         context,
         MaterialPageRoute(
-         // builder: (context) => HomePage(MapLatLong: listOfCoordinates),  // collectedList: listOfCoordinates
-        ));
+            // builder: (context) => HomePage(MapLatLong: listOfCoordinates),  // collectedList: listOfCoordinates
+            ));
   }
-
 }

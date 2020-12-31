@@ -1,27 +1,23 @@
 // import 'dart:html' as html;
-
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:geo_app_final/Email%20Model/email_model.dart';
 import 'package:geo_app_final/collect_lat_long.dart' as select;
 import 'package:geo_app_final/collect_lat_long.dart';
 //import 'package:geo_app_final/secoundDbManager.dart';
 import 'package:geo_app_final/server_response.dart';
 //import 'package:geo_app_final/your_location.dart' as location;
 import 'package:sqflite/sqflite.dart';
-//import '../your_location.dart';
-//import 'server_response.dart';
 import 'package:http/http.dart' as http;
-//import 'function_of_ropDown.dart';
 import 'dart:convert';
 import '../DropDown Model/Dropdown_model.dart';
 import '../DBmanager/dbmanager.dart';
 import 'package:connectivity/connectivity.dart';
 import '../DropDown Model/DropDown_Project_Model.dart';
 import '../Login Form/Login_Form.dart';
-//import 'transition_route_observer.dart';
 import '../Login form/Login_Screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../Login form/login_page.dart';
@@ -31,12 +27,9 @@ import '../Mytest/Mytest.dart';
 import 'package:geo_app_final/DropDownClass/DropDowClass.dart';
 import 'package:geo_app_final/menu_item.dart';
 import 'package:hexcolor/hexcolor.dart';
-// ignore: avoid_web_libraries_in_flutter
+
 
 void main() => runApp(
-
-    // LoginPage()
-    // LoginScreen()
     DropDown());
 
 class DropDown extends StatefulWidget {
@@ -55,7 +48,7 @@ class DropDownState extends State<DropDown> {
     ]);
 
     return new MaterialApp(
-      //   debugShowCheckedModeBanner: false,
+      debugShowCheckedModeBanner: false,
       home: Location(),
     );
   }
@@ -66,17 +59,9 @@ class Location extends StatefulWidget {
   _LocationState createState() => _LocationState();
 }
 
-//List<Users> listOfUsers;
 class _LocationState extends State<Location> {
-  // String _connectionStatus = 'Unknown';
-  // final Connectivity _connectivity = Connectivity();
-  // StreamSubscription<ConnectivityResult> _connectivitySubscription;
-
   final DbStudentManager dbmanager = new DbStudentManager();
 
-//  final DbProjectManager projectmanager = new DbProjectManager();
-  // final _nameController = TextEditingController();
-  // final _courseController = TextEditingController();
   final _formKey = new GlobalKey<FormState>();
   Target target;
   ProjectTarget ptarget;
@@ -118,39 +103,25 @@ class _LocationState extends State<Location> {
     }
   }
 
-  /*
+  String email_address;
+  EmailAddress() async {
+    var jsonResponse = null;
+    var response = await http.get(
+      "https://raw.githubusercontent.com/imransayebaloch/QDA-question/main/Email%20Addres",
+    ); //, body: data
+    if (response.statusCode == 200) {
+      jsonResponse = json.decode(response.body);
+      if (jsonResponse != null) {
+        setState(() {
+          //   _isLoading = false;
+        });
+        print('email address ${jsonResponse['email_address']}');
+        email_address = jsonResponse['email_address'];
 
-  Future<void> initConnectivity() async {
-    ConnectivityResult result;
-    // Platform messages may fail, so we use a try/catch PlatformException.
-    try {
-      result = await _connectivity.checkConnectivity();
-    } on PlatformException catch (e) {
-      print(e.toString());
+      }
     }
-
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
-    if (!mounted) {
-      return Future.value(null);
-    }
-
-    return _updateConnectionStatus(result);
   }
 
-  Future<void> _updateConnectionStatus(ConnectivityResult result) async {
-    switch (result) {
-      case ConnectivityResult.wifi:
-      case ConnectivityResult.mobile:
-      case ConnectivityResult.none:
-        setState(() => _connectionStatus = result.toString());
-        break;
-      default:
-        setState(() => _connectionStatus = 'Failed to get connectivity.');
-        break;
-    }
-  } */
 
   final uri =
       'https://raw.githubusercontent.com/imransayebaloch/QDA-question/main/qda%20project'; //by jawad https://raw.githubusercontent.com/iamjawad/sample_data/main/qda.json
@@ -189,12 +160,13 @@ class _LocationState extends State<Location> {
     }
   }
 
+
   Widget potrate() {
     return Container(
       child: Center(
         child: Column(
-          //  crossAxisAlignment: CrossAxisAlignment.center,
-          // mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+           //mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             SizedBox(height: 5.0),
 
@@ -211,91 +183,112 @@ class _LocationState extends State<Location> {
             //     borderRadius: BorderRadius.circular(0.0),
             //   ),
             //
+         Expanded(
+           child: Container(
+             width: 350,
+             decoration: BoxDecoration(
+               border: Border.all(color: Colors.grey , width: 1),
+               borderRadius: BorderRadius.circular(15),
+             ),
+             child:
+             Padding(
+               padding: const EdgeInsets.only(left: 10, right: 10),
+               child: FutureBuilder<List<ProjectTarget>>(
+                 //This one for first dropdown
+                   future: dbmanager.getProjectList(),
+                   builder: (BuildContext context,
+                       AsyncSnapshot<List<ProjectTarget>> snapshot) {
+                     if (!snapshot.hasData) return CircularProgressIndicator();
+                     return DropdownButton<ProjectTarget>(
+                       items: snapshot.data
+                           .map((user) => DropdownMenuItem<ProjectTarget>(
+                         child: Text(user.name),
+                         value: user,
+                       ))
+                           .toList(),
+                       onChanged: (ProjectTarget value) {
+                         setState(() {
+                           dbvalueproj = value;
+                         });
+                       },
+                       // icon: Icon(Icons.arrow_drop_down),
+                       iconSize: 36,
+                       isExpanded: true,
+                       dropdownColor: Colors.blue,
+                       style: TextStyle(color: Colors.white ),
+                       underline: SizedBox(),
 
-            Padding(
-              padding: const EdgeInsets.only(right: 10, left: 80),
-              child: FutureBuilder<List<ProjectTarget>>(
-                  //This one for first dropdown
-                  future: dbmanager.getProjectList(),
-                  builder: (BuildContext context,
-                      AsyncSnapshot<List<ProjectTarget>> snapshot) {
-                    if (!snapshot.hasData) return CircularProgressIndicator();
-                    return DropdownButton<ProjectTarget>(
-                      items: snapshot.data
-                          .map((user) => DropdownMenuItem<ProjectTarget>(
-                                child: Text(user.name),
-                                value: user,
-                              ))
-                          .toList(),
-                      onChanged: (ProjectTarget value) {
-                        setState(() {
-                          dbvalueproj = value;
-                        });
-                      },
-                      isExpanded: false,
-                      //value: _currentUser,
+                       //value: _currentUser,
 
-                      hint: dbvalueproj != null
-                          ? Text("" + dbvalueproj.name)
-                          : Text(
-                              "No project selected"), //Text('select Target'+_secondcurrentUser.name),
-                    );
-                  }),
-            ),
+                       hint: dbvalueproj != null
+                           ? Text("    " + dbvalueproj.name+" ")
+                           : Text(
+                           "   No project selected"), //Text('select Target'+_secondcurrentUser.name),
+                     );
+                   }),
+             ),
+
+
+           )
+
+
+         ),
+
 
             SizedBox(
               height: 10,
             ),
 
-            // Divider(
-            //       color: Colors.black,
-            //     ),
-            // Padding(
-            //   padding: const EdgeInsets.only(right: 150),
-            //   child: Text('SELECT TARGET'),
-            // ),
+       Expanded(
 
-            // Container(
-            //   height: 30,
-            //   width: 250,
-            //   decoration: BoxDecoration(
-            //     color: HexColor('#E0E0E0'),
-            //     //  color: Colors.white,
-            //     border: Border.all(
-            //       color: Colors.black,
-            //     ),
-            //     borderRadius: BorderRadius.circular(0.0),
-            //   ),
+         child: Container(
+
+           width: 350,
+           decoration: BoxDecoration(
+             border: Border.all(color: Colors.grey , width: 1),
+             borderRadius: BorderRadius.circular(15),
+           ),
+           child:
             Padding(
-              padding: const EdgeInsets.only(right: 10, left: 80),
-              child: FutureBuilder<List<Target>>(
-                  //This one for first dropdown
-                  future: dbmanager.getStudentList(),
-                  builder: (BuildContext context,
-                      AsyncSnapshot<List<Target>> snapshot) {
-                    if (!snapshot.hasData) return CircularProgressIndicator();
-                    return DropdownButton<Target>(
-                      items: snapshot.data
-                          .map((user) => DropdownMenuItem<Target>(
-                                child: Text(user.name),
-                                value: user,
-                              ))
-                          .toList(),
-                      onChanged: (Target value) {
-                        setState(() {
-                          dbvalue = value;
-                        });
-                      },
-                      isExpanded: false,
-                      //value: _currentUser,
+             padding: const EdgeInsets.only(right: 10, left: 10),
+             child: FutureBuilder<List<Target>>(
+               //This one for first dropdown
+                 future: dbmanager.getStudentList(),
+                 builder: (BuildContext context,
+                     AsyncSnapshot<List<Target>> snapshot) {
+                   if (!snapshot.hasData) return CircularProgressIndicator();
+                   return DropdownButton<Target>(
+                     items: snapshot.data
+                         .map((user) => DropdownMenuItem<Target>(
+                       child: Text(user.name),
+                       value: user,
+                     ))
+                         .toList(),
+                     onChanged: (Target value) {
+                       setState(() {
+                         dbvalue = value;
+                       });
+                     },
+                     // isExpanded: false,
+                     // icon: Icon(Icons.arrow_drop_down),
+                     iconSize: 36,
+                     isExpanded: true,
+                     dropdownColor: Colors.blue,
+                     underline: SizedBox(),
+                     style: TextStyle(color: Colors.white ),
+                     //value: _currentUser,
 
-                      hint: dbvalue != null
-                          ? Text("" + dbvalue.name)
-                          : Text(
-                              "No Target selected"), //Text('select Target'+_secondcurrentUser.name),
-                    );
-                  }),
-            ),
+                     hint: dbvalue != null
+                         ? Text("    " + dbvalue.name+"")
+                         : Text(
+                       "   No Target selected" , ), //Text('select Target'+_secondcurrentUser.name),
+                   );
+                 }),
+           ),
+
+         ),
+       ),
+
 
             SizedBox(
               height: 60,
@@ -431,7 +424,7 @@ class _LocationState extends State<Location> {
             // ),
 
             Padding(
-              padding: const EdgeInsets.only(right: 10, top: 20),
+              padding: const EdgeInsets.only(right: 10, top: 40),
               child: Text(
                 'Tap on  Start to begin collecting coordinate or\n                 aginst selected project & target',
                 style: TextStyle(fontWeight: FontWeight.bold),
@@ -493,13 +486,18 @@ class _LocationState extends State<Location> {
 
             // RaisedButton(
             //   color: Colors.blue,
-            //   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            //   shape: RoundedRectangleBorder(
+            //       borderRadius: BorderRadius.circular(20)),
             //   onPressed: () {
-            //     _submitTarget(context);
+            //     //EmailAddress();
+            //     //  _submitTarget(context);
             //     //  _sendDataTotestDropdown(context);
-            //     _submitProject(context);
+            //     // _submitProject(context);
             //   },
-            //   child: Text("DB Test", style: TextStyle(color: Colors.white),),
+            //   child: Text(
+            //     "email test",
+            //     style: TextStyle(color: Colors.white),
+            //   ),
             // ),
 
             /* FlatButton(
@@ -516,136 +514,15 @@ class _LocationState extends State<Location> {
                 )
             ),*/
 
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                // Container(
-                //
-                //
-                //  width: 190.0,
-                //              height: 190.0,
-                // decoration: new BoxDecoration(
-                //     shape: BoxShape.circle,
-                //  image: new DecorationImage(
-                // fit: BoxFit.fill,
-                //    Image.asset(
-                //          'images/tagging.png',
-                //     width: 45.0,
-                //     height: 45.0,
-                //     fit: BoxFit.cover,
-                //   )
-                //        )
+         /*   Padding(
+              padding: const EdgeInsets.only(bottom: 20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
 
-                // RaisedButton(
-                //   color: Colors.blue,
-                //   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                //   onPressed: () {
-                //     print("hello");
-                //     int id=24;
-                //     dbmanager.deleteStudent(id);
-                //     dbmanager.deleteProject(id);
-                //     setState(() {
-                //       // studlist.removeAt(id);
-                //     });
-                //     print('db checked ');
-                //   },
-                //   child: Text("db delete", style: TextStyle(color: Colors.white),),
-                // ),
-                /* FlatButton(
-           color: Colors.blue,
-           textColor: Colors.white,
-           splashColor: Colors.blueAccent,
-           onPressed: (){
-             print("hello");
-             int id=24;
-             dbmanager.deleteStudent(id);
-             dbmanager.deleteProject(id);
-             setState(() {
-               // studlist.removeAt(id);
-             });
-             print('db checked ');
-           },
-           child: Text(
-             "DB Detete",
-           )
-       ),*/
-                // RaisedButton(
-                //   color: Colors.blue,
-                //   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                //   onPressed: () {
-                //     _submitTarget(context);
-                //     _submitProject(context);
-                //     CircularProgressIndicator();
-                //     /*offlineList = dbmanager.getStudentList();
-                //     if(listOfUsers == offlineList){
-                //       print('true');
-                //     }else{
-                //       print('fals ${offlineList} for online ${listOfUsers}');
-                //     }*/
-                //     setState(() {
-                //       // studlist.removeAt(id);
-                //     });
-                //     },
-                //   child: Text("Sync", style: TextStyle(color: Colors.white),),
-                // ),
-
-                /*  FlatButton(
-           color: Colors.blue,
-           textColor: Colors.white,
-           splashColor: Colors.blueAccent,
-           onPressed: (){
-          //   offlineList();
-          //   _secondfetchUsers();
-          // for (int b = 0; b<5 ; b++ )
-          //                   print(listOfUsers[b]);
-           CircularProgressIndicator();
-             offlineList = dbmanager.getStudentList();
-        //     print('offline data $offlineList');
-         // if (listOfUsers.any((element) => offlineList.contains(element))){
-           if(listOfUsers == offlineList){
-            print('true');
-          }else{
-               print('fals ${offlineList} for online ${listOfUsers}');
-             }
-          //   print('tru');
-          //
-          // }
-          // else{
-          //   print('false');
-          // }
-            //  offlineList == dbmanager.getStudentList();
-            // targetlistooo == dbmanager.getStudentList();
-           // print('my data ${dbmanager.getStudentList()} online data ${listOfUsers[1]}');
-
-
-             // print(' my db list ${
-             //     () async {
-             // final Future<List<Target>> futureList = dbmanager.getStudentList();
-             // final
-             //     list  = await futureList;
-             //  print(list);
-             // }
-             //    // dbmanager.getStudentList().toString()
-             // }');
-             // for(int b = 0; b < 5 ; b++ ) {
-             //   if ( listOfUsers[b] ==  dbmanager.getStudentList()) {
-             //     print('tru');
-             //   } else {
-             //     print('fals');
-             //   }
-             // }
-             // dbmanager.deleteStudent(id);
-             // dbmanager.deleteProject(id);
-             setState(() {
-               // studlist.removeAt(id);
-             });
-           },
-           child: Text(
-             "Sync",
-           )
-       ),*/
-              ],
-            ),
+                ],
+              ),
+            ),*/
 
             /*     FlatButton(
                 color: Colors.blue,
@@ -668,7 +545,7 @@ class _LocationState extends State<Location> {
 
             //================================= testing button=====
             Padding(
-              padding: const EdgeInsets.only(top: 40),
+              padding: const EdgeInsets.only(top: 40,bottom: 10),
               child: Row(
                 //  mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
@@ -705,12 +582,7 @@ class _LocationState extends State<Location> {
                         _submitTarget(context);
                         _submitProject(context);
                         CircularProgressIndicator();
-                        /*offlineList = dbmanager.getStudentList();
-                           if(listOfUsers == offlineList){
-                             print('true');
-                           }else{
-                             print('fals ${offlineList} for online ${listOfUsers}');
-                           }*/
+
                         setState(() {
                           // studlist.removeAt(id);
                         });
@@ -722,29 +594,6 @@ class _LocationState extends State<Location> {
                     ),
                   ),
 
-                  // FloatingActionButton(
-                  //   backgroundColor: Colors.blue, //const Color(0xff03dac6),
-                  //   foregroundColor: Colors.white,
-                  //   mini: true,
-                  //   onPressed: () {
-                  //
-                  //     if(dbvalueproj == null || dbvalueproj == null  ){
-                  //       Fluttertoast.showToast(
-                  //           msg: 'Select both dropdown',
-                  //           toastLength: Toast.LENGTH_SHORT,
-                  //           gravity: ToastGravity.BOTTOM,
-                  //           // timeInSecForIos: 1,
-                  //           backgroundColor: Colors.blueGrey,
-                  //           textColor: Colors.white
-                  //       );
-                  //     }else {
-                  //       _sendDataToSecondScreen(context);
-                  //     }
-                  //
-                  //   },
-                  //   child: Icon(Icons.),
-                  // ),
-
                   Padding(
                     padding: const EdgeInsets.only(right: 0, left: 15),
                     child: RaisedButton(
@@ -752,7 +601,7 @@ class _LocationState extends State<Location> {
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20)),
                       onPressed: () {
-                        if (dbvalueproj == null || dbvalueproj == null) {
+                        if (dbvalueproj == null || dbvalue == null) {
                           Fluttertoast.showToast(
                               msg: 'Select both dropdown',
                               toastLength: Toast.LENGTH_SHORT,
@@ -842,8 +691,11 @@ class _LocationState extends State<Location> {
                              // )
                         )
                     ),*/
+
                 padding: const EdgeInsets.symmetric(horizontal: 20),
-                color: const Color(0xFF262AAA),
+                //  color: const Color ()//(0xFF64B5F6),
+                // color: Color(CColors.blue),
+                color: HexColor('#0277BD'),
                 child: Column(
                   children: <Widget>[
                     SizedBox(
@@ -851,7 +703,7 @@ class _LocationState extends State<Location> {
                     ),
                     ListTile(
                       title: Text(
-                        "imran syed",
+                        '$email_address',
                         style: TextStyle(
                             color: Colors.white,
                             fontSize: 20,

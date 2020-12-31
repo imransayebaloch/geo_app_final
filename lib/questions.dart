@@ -1,4 +1,3 @@
-
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -25,21 +24,24 @@ import 'URL Network Helpher/networking.dart';
 import 'dart:io';
 import 'image_screen.dart';
 
-
-
-
-
-
-
 class SubmitCoordinat extends StatefulWidget {
-  String selectedCoordinat,department, secondname;
+  String selectedCoordinat, department, secondname;
   var collectcor = new List();
-  int id,secondid;
-  SubmitCoordinat({ Key key,this.id, this.department, this.selectedCoordinat,this.secondid,this.secondname,this.collectcor }):super(key: key );
+  int id, secondid;
+  SubmitCoordinat(
+      {Key key,
+      this.id,
+      this.department,
+      this.selectedCoordinat,
+      this.secondid,
+      this.secondname,
+      this.collectcor})
+      : super(key: key);
 
   @override
-  _HomePageState createState() => _HomePageState();  //value
+  _HomePageState createState() => _HomePageState(); //value
 }
+
 class _HomePageState extends State<SubmitCoordinat> {
   final DbStudentManager dbmanager = new DbStudentManager();
   // db
@@ -53,21 +55,16 @@ class _HomePageState extends State<SubmitCoordinat> {
   List type;
   Users _currentUser;
 
-
-
-  _openGallery(BuildContext context) async{
-
+  _openGallery(BuildContext context) async {
     // ignore: deprecated_member_use
-    var picture =  await ImagePicker.pickImage(source: ImageSource.gallery);
+    var picture = await ImagePicker.pickImage(source: ImageSource.gallery);
     this.setState(() {
       imageFile = picture;
     });
     Navigator.of(context).pop();
-
-
   }
 
-  _openCamera(BuildContext context) async{
+  _openCamera(BuildContext context) async {
     // ignore: deprecated_member_use
     var picture = await ImagePicker.pickImage(source: ImageSource.camera);
     this.setState(() {
@@ -76,42 +73,39 @@ class _HomePageState extends State<SubmitCoordinat> {
     Navigator.of(context).pop();
   }
 
-  Widget _DecideImageView(){
-    if( imageFile == null) {
+  Widget _DecideImageView() {
+    if (imageFile == null) {
       return Text('No image selected');
-    }else{ return
-      Image.file( imageFile,width: 200, height: 100);
+    } else {
+      return Image.file(imageFile, width: 200, height: 100);
     }
   }
 
-  Future<void> _showChoiceDialog(BuildContext context){
-
-    return showDialog(context: context, builder: (BuildContext context){
-      return AlertDialog(
-          title: Text('Make a choice'),
-          content: SingleChildScrollView(
-              child: ListBody(
+  Future<void> _showChoiceDialog(BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+              title: Text('Make a choice'),
+              content: SingleChildScrollView(
+                  child: ListBody(
                 children: [
                   GestureDetector(
                     child: Text("Gallary"),
-                    onTap: (){
+                    onTap: () {
                       _openGallery(context);
                     },
                   ),
                   Padding(padding: EdgeInsets.all(8.0)),
                   GestureDetector(
                     child: Text("Camera"),
-                    onTap: (){
+                    onTap: () {
                       _openCamera(context);
-
                     },
                   )
                 ],
-              )
-          )
-      );
-    }
-    );
+              )));
+        });
   }
 
   final myController = TextEditingController();
@@ -139,8 +133,11 @@ class _HomePageState extends State<SubmitCoordinat> {
     dbmanager.query().then((value) {
       setState(() {
         value.forEach((element) {
-          QandAlist.add(QuestionOfftarget(id: element['id'],question: element['question'],type: element['type'],option_id: element['option_id']));
-
+          QandAlist.add(QuestionOfftarget(
+              id: element['id'],
+              question: element['question'],
+              type: element['type'],
+              option_id: element['option_id']));
         });
       });
     }).catchError((error) {
@@ -149,8 +146,10 @@ class _HomePageState extends State<SubmitCoordinat> {
     dbmanager.Questions1().then((value) {
       setState(() {
         value.forEach((element) {
-          Qlist.add(QuestionTarget(id: element['id'],option_id: element['option_id'],options: element['options']));
-
+          Qlist.add(QuestionTarget(
+              id: element['id'],
+              option_id: element['option_id'],
+              options: element['options']));
         });
       });
     }).catchError((error) {
@@ -168,17 +167,17 @@ class _HomePageState extends State<SubmitCoordinat> {
     print("Second text field: ${myController.text}");
     print("my test: ${myTest.text}");
     print("field controller: ${CollectionModel(null).fieldContorller.text}");
-
   }
 
-  void  getDatatoHelper() async {
-    NetworkHelper  networkHelper = NetworkHelper( 'https://raw.githubusercontent.com/imransayebaloch/geo_app_final/Saud-tata/question_type.json');
+  void getDatatoHelper() async {
+    NetworkHelper networkHelper = NetworkHelper(
+        'https://raw.githubusercontent.com/imransayebaloch/geo_app_final/Saud-tata/question_type.json');
     var Question = await networkHelper.getData();
     print(Question);
-    setState(()  {
-    });
+    setState(() {});
     return items = Question;
   }
+
   // final uri = 'https://raw.githubusercontent.com/iamjawad/sample_data/main/projects_data.json';
   // QuestionC _currentQuestion;
   // Future<List<QuestionC>> _fetchUsers() async {
@@ -196,73 +195,66 @@ class _HomePageState extends State<SubmitCoordinat> {
   //   }
   // }
   void getOptions() async {
-    NetworkHelper  networkHelper = NetworkHelper("https://raw.githubusercontent.com/imransayebaloch/geo_app_final/Saud-tata/Options.json");
+    NetworkHelper networkHelper = NetworkHelper(
+        "https://raw.githubusercontent.com/imransayebaloch/geo_app_final/Saud-tata/Options.json");
     var options = await networkHelper.getData();
 
     print("hello");
     print(options);
-    setState(()  {
-    });
+    setState(() {});
     return QuestionOptions = options;
-
   }
-
 
   void getHttp() async {
     try {
-      var response = await Dio().get("https://raw.githubusercontent.com/imransayebaloch/QDA-question/main/pushData.json");
+      var response = await Dio().get(
+          "https://raw.githubusercontent.com/imransayebaloch/QDA-question/main/pushData.json");
       print("dio get $response");
     } catch (e) {
       print(e);
     }
   }
 
-
-
-
   // List<CollectionModel> itemss = CollectionModel
-  List<CollectionModel> textEdit =  List<CollectionModel>.generate(5, (i) => CollectionModel("Question $i"));
+  List<CollectionModel> textEdit =
+      List<CollectionModel>.generate(5, (i) => CollectionModel("Question $i"));
 
-  var  items =  new List();
+  var items = new List();
   var listAwnsers = new List();
-  var  QuestionOptions =  new List();
-
+  var QuestionOptions = new List();
 
   @override
-  Widget build(BuildContext context)  {
+  Widget build(BuildContext context) {
     TextEditingController fieldContorller = TextEditingController();
 
     print("list size here1212${QandAlist.length}");
-    if (QtargetOff==null ) {
-
+    if (QtargetOff == null) {
       CircularProgressIndicator();
 
       for (int i = 0; i < items.length; i++) {
-        QuestionOfftarget st = new QuestionOfftarget (
+        QuestionOfftarget st = new QuestionOfftarget(
             id: items[i]['id'],
             question: items[i]['question'],
 
             // awnser: textEdit[i].awnsers,
             type: items[i]['type'],
-            option_id: items[i]['option_id']
-        ); //
+            option_id: items[i]['option_id']); //
 
-        dbmanager.insertQuestionsOffline(st).then((id) =>
+        dbmanager
+            .insertQuestionsOffline(st)
+            .then((id) =>
 
-        //.clear(),
-        // _courseController.clear(),
+                    //.clear(),
+                    // _courseController.clear(),
 
-        //  print('Student Added to Db ${id} ${st.course}')
-        print('target test ${st.id} ${st.question}  ')
-          // }
-        ).catchError((error) {
+                    //  print('Student Added to Db ${id} ${st.course}')
+                    print('target test ${st.id} ${st.question}  ')
+                // }
+                )
+            .catchError((error) {
           throw i++;
         });
-
-
       }
-
-
     }
 //     else {
 // //      for (int i = 0; i < listOfUsers.length; i++) {
@@ -272,33 +264,33 @@ class _HomePageState extends State<SubmitCoordinat> {
 //         // target = null;
 //
 //     }
-    if (Qtarget==null ) {
+    if (Qtarget == null) {
       CircularProgressIndicator();
       for (int i = 0; i < QuestionOptions.length; i++) {
-        QuestionTarget st = new QuestionTarget (
-            id:  QuestionOptions[i]["id"],
+        QuestionTarget st = new QuestionTarget(
+            id: QuestionOptions[i]["id"],
             options: QuestionOptions[i]["options"],
             // awnser: textEdit[i].awnsers,
             option_id: QuestionOptions[i]["option_id"]); //
 
-        dbmanager.insertQuestions(st).then((id) =>
+        dbmanager
+            .insertQuestions(st)
+            .then((id) =>
 
-        //.clear(),
-        // _courseController.clear(),
+                    //.clear(),
+                    // _courseController.clear(),
 
-        //  print('Student Added to Db ${id} ${st.course}')
-        print('Qtarget test ${st.options}')
-          // }
-        ).catchError((error) {
+                    //  print('Student Added to Db ${id} ${st.course}')
+                    print('Qtarget test ${st.options}')
+                // }
+                )
+            .catchError((error) {
           i++;
         });
       }
-
-
-    }else{
+    } else {
       // Qtarget=null;
     }
-
 
     // List<String> list = dbmanager.query() as List<String>;
     // print("check size here1234 ${list.length}");
@@ -308,26 +300,24 @@ class _HomePageState extends State<SubmitCoordinat> {
 //  print("options${QuestionOptions[t]["options"].toString()}");
 //}
 
-
     int i = 0;
     return Scaffold(
-      appBar: AppBar(
-        // title: Text("Get location"),
-        title: Text('Survey'),
-      ),
-      body: Container(
-           //child:  Expanded(
+        appBar: AppBar(
+          // title: Text("Get location"),
+          title: Text('Survey'),
+        ),
+        body: Container(
+          //child:  Expanded(
 
-       // child:widget(
+          // child:widget(
           child: Column(
-
             // mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
 
             children: [
               // if(QandAlist.isEmpty)               //if there are no data then print the cercular progerss
               //   CircularProgressIndicator(),
-          /*    Row(
+              /*    Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   Padding(
@@ -382,25 +372,23 @@ class _HomePageState extends State<SubmitCoordinat> {
                 'Tap on submit to submit coardinates or\n                 Cancel to go start back',
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),   */
-                                                                            // ===========question start here ========
-             // Divider(height: 20, color: Colors.black),
+              // ===========question start here ========
+              // Divider(height: 20, color: Colors.black),
               // past here the quistionar
 
-                SizedBox(height: 10,),
-              if(QandAlist.isEmpty)               //if there are no data then print the cercular progerss
+              SizedBox(
+                height: 10,
+              ),
+              if (QandAlist
+                  .isEmpty) //if there are no data then print the cercular progerss
                 CircularProgressIndicator(),
 
               Expanded(
-
-
-
-
-                child:Container(
-
+                child: Container(
                   height: 200,
                   width: 360,
 
-                /*  decoration: BoxDecoration(
+                  /*  decoration: BoxDecoration(
                     border: Border.all(
                         color: Colors.green
                     ),
@@ -409,8 +397,6 @@ class _HomePageState extends State<SubmitCoordinat> {
 
                   // padding: const EdgeInsets.only(right: 20.0,left:20,top: 10,bottom: 10),
                   child: ListView.builder(
-
-
                     // itemCount: Data == null ? 0 :Data.length ,
                     itemCount: QandAlist.length,
                     itemBuilder: (context, index) {
@@ -419,15 +405,14 @@ class _HomePageState extends State<SubmitCoordinat> {
                       //   CircularProgressIndicator();
                       // print("${items[index]['type']}");
                       //_controllers.add(new TextEditingController());
-                      switch(QandAlist[index].type){
-
+                      switch (QandAlist[index].type) {
                         case "Single Awnsers":
 
 //                        make new lists dynamically
                           var list1 = new List();
-                          for(var i=0;i<Qlist.length;i++) {
-
-                            if (Qlist[i].option_id==QandAlist[index].option_id){
+                          for (var i = 0; i < Qlist.length; i++) {
+                            if (Qlist[i].option_id ==
+                                QandAlist[index].option_id) {
                               // print("items here123 ${items[index]["option_id"]}");
                               list1.add(Qlist[i].options);
                               print("list options here ${Qlist[i].options}");
@@ -447,80 +432,69 @@ class _HomePageState extends State<SubmitCoordinat> {
 //                               return Text(target.question[index]);
 //                             });
 
-                          return
+                          return ListTile(
+                            //  title: Text('${items[index].name}'),
+                            // title: Text(Data[index].name),
 
-                            ListTile(
+                            title: Text(QandAlist[index].question)
+                            // FutureBuilder<List<awnserTarget>>(                     //This one for first dropdown
+                            //     future: dbmanager.getAwnsers(),
+                            //     builder: (BuildContext context,
+                            //         AsyncSnapshot<List<awnserTarget>> snapshot) {
+                            //       if (!snapshot.hasData) return CircularProgressIndicator();
+                            //       print("question here check${snapshot.data[index].question}");
+                            //       return Text(snapshot.data[index].question);
+                            //     })
+                            , //here i am showing the question from the server
 
-                                 //  title: Text('${items[index].name}'),
-                                 // title: Text(Data[index].name),
-
-                                 title:Text(QandAlist[index].question)
-                                 // FutureBuilder<List<awnserTarget>>(                     //This one for first dropdown
-                                 //     future: dbmanager.getAwnsers(),
-                                 //     builder: (BuildContext context,
-                                 //         AsyncSnapshot<List<awnserTarget>> snapshot) {
-                                 //       if (!snapshot.hasData) return CircularProgressIndicator();
-                                 //       print("question here check${snapshot.data[index].question}");
-                                 //       return Text(snapshot.data[index].question);
-                                 //     })
-                                 , //here i am showing the question from the server
-
-                                 subtitle:DropdownButtonFormField<String>(
-
-
-                                   value:textEdit[index].awnsers=dropdownValue,
-                                   icon: Icon(Icons.arrow_downward),
-                                   iconSize: 24,
-                                   elevation: 16,
-
-                                   style: TextStyle(
-                                       color: Colors.deepPurple
-                                   ),
-
-                                   onChanged: (String newValue){
-                                     textEdit[index].awnsers=newValue;
-                                     print("awnser123${textEdit[index].awnsers}");
-                                     setState(() => dropdownValue = newValue);},
-                                   items: [
-                                     for (String i in list1) DropdownMenuItem(
-                                       value: i,
-                                       child: Text('$i'),
-                                     )
-                                   ],
-                                 ),
+                            subtitle: DropdownButtonFormField<String>(
+                              value: textEdit[index].awnsers = dropdownValue,
+                              icon: Icon(Icons.arrow_downward),
+                              iconSize: 24,
+                              elevation: 16,
+                              style: TextStyle(color: Colors.deepPurple),
+                              onChanged: (String newValue) {
+                                textEdit[index].awnsers = newValue;
+                                print("awnser123${textEdit[index].awnsers}");
+                                setState(() => dropdownValue = newValue);
+                              },
+                              items: [
+                                for (String i in list1)
+                                  DropdownMenuItem(
+                                    value: i,
+                                    child: Text('$i'),
+                                  )
+                              ],
+                            ),
 //                        controller: textEdit[index].fieldContorller,
-                               );
-
+                          );
 
                         default:
-                          return
-                            ListTile(
+                          return ListTile(
+                            //  title: Text('${items[index].name}'),
+                            // title: Text(Data[index].name),
+                            title: Text(QandAlist[index].question)
+                            // FutureBuilder<List<awnserTarget>>(                     //This one for first dropdown
+                            //     future: dbmanager.getAwnsers(),
+                            //     builder: (BuildContext context,
+                            //         AsyncSnapshot<List<awnserTarget>> snapshot) {
+                            //       if (!snapshot.hasData) return CircularProgressIndicator();
+                            //       print("question here check${snapshot.data[index].question}");
+                            //       return Text(snapshot.data[index].question);
+                            //     })
+                            , //here i am showing the question from the server
 
-                              //  title: Text('${items[index].name}'),
-                              // title: Text(Data[index].name),
-                              title:Text(QandAlist[index].question)
-                              // FutureBuilder<List<awnserTarget>>(                     //This one for first dropdown
-                              //     future: dbmanager.getAwnsers(),
-                              //     builder: (BuildContext context,
-                              //         AsyncSnapshot<List<awnserTarget>> snapshot) {
-                              //       if (!snapshot.hasData) return CircularProgressIndicator();
-                              //       print("question here check${snapshot.data[index].question}");
-                              //       return Text(snapshot.data[index].question);
-                              //     })
-                              , //here i am showing the question from the server
-
-                              subtitle: TextField(
-                                  controller: textEdit[index].fieldContorller,
-                                  onSubmitted: _controllertoawnser(index),
+                            subtitle: TextField(
+                                controller: textEdit[index].fieldContorller,
+                                onSubmitted: _controllertoawnser(index),
 //                                onChanged: (),
 //                                onChanged: (text),
-                                  // controller: items[i++].myController,
-                                  // controller: myTest,
-                                  decoration: const InputDecoration(
-                                    hintText: 'Enter your Close Awnser here now',
-                                  )
-                              ),
-                            );
+                                // controller: items[i++].myController,
+                                // controller: myTest,
+                                decoration: const InputDecoration(
+                                  hintText: 'Enter your Close Awnser here now',
+                                )),
+                          );
 //                        print("bla bla");
                       }
                     },
@@ -528,83 +502,95 @@ class _HomePageState extends State<SubmitCoordinat> {
                 ),
               ),
 
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  RaisedButton(
-                    color: Colors.blue,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => DropDown()));
-                    },
-                    child: Text("Cancel", style: TextStyle(color: Colors.white),),
-                  ),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 10),
+                child: Row(
+                  // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left: 25),
+                      child: RaisedButton(
+                        color: Colors.blue,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20)),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => DropDown()));
+                        },
+                        child: Text(
+                          "Cancel",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ),
 
-                /*  FlatButton(
-                    color: Colors.blueAccent,
-                    // color: Colors(Colors ,0x156562),
-                    // backgroundColor: Color(0xffFDCF09),
-                    child: Text('CANCEL' ,style: TextStyle(color: Colors.white),),
-                    onPressed: () {
-                      //Navigator.pop(context);
-                      Navigator.of(context).pop();
-                      //  Navigator.push(context, MaterialPageRoute(builder: (_)=>  DropDown(),));
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => DropDown()));
-                      //_getCurrentLocation();
-                    },
-                  ),*/
-                  //FlatButton.icon(onPressed: null, icon: null, label: null),
-       /*         FlatButton(
-                    child: Text("push"),
-                    color: Colors.blueAccent,
-                    onPressed: () {
-                      print(_printLatestValue());
-                      print('items ${widget.selectedCoordinat}');
-                      print('dpaertment ${widget.department}');
-                      print('second name ${widget.secondname}');
-                      print('id ${widget.id}');
-                      print('second id ${widget.secondid}');
-                      print('collect coordinats ${widget.collectcor}');
-                      print('image test  $imageFile');
-                      //print('edit text  ${CollectionModel(null).fieldContorller.text}');
-                      print("controller ${textEdit}");
-                      print("type my friend${dbmanager.queryQQQ()}");
-                      print("type my friend${dbmanager.queryQQ()}");
-                      print("type my count${dbmanager.queryoption()}");
-                      print("type my count${dbmanager.query()}");
+                    /*  FlatButton(
+                      color: Colors.blueAccent,
+                      // color: Colors(Colors ,0x156562),
+                      // backgroundColor: Color(0xffFDCF09),
+                      child: Text('CANCEL' ,style: TextStyle(color: Colors.white),),
+                      onPressed: () {
+                        //Navigator.pop(context);
+                        Navigator.of(context).pop();
+                        //  Navigator.push(context, MaterialPageRoute(builder: (_)=>  DropDown(),));
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => DropDown()));
+                        //_getCurrentLocation();
+                      },
+                    ),*/
+                    //FlatButton.icon(onPressed: null, icon: null, label: null),
+                    /*         FlatButton(
+                      child: Text("push"),
+                      color: Colors.blueAccent,
+                      onPressed: () {
+                        print(_printLatestValue());
+                        print('items ${widget.selectedCoordinat}');
+                        print('dpaertment ${widget.department}');
+                        print('second name ${widget.secondname}');
+                        print('id ${widget.id}');
+                        print('second id ${widget.secondid}');
+                        print('collect coordinats ${widget.collectcor}');
+                        print('image test  $imageFile');
+                        //print('edit text  ${CollectionModel(null).fieldContorller.text}');
+                        print("controller ${textEdit}");
+                        print("type my friend${dbmanager.queryQQQ()}");
+                        print("type my friend${dbmanager.queryQQ()}");
+                        print("type my count${dbmanager.queryoption()}");
+                        print("type my count${dbmanager.query()}");
 
-                    },
-                  ), */
+                      },
+                    ), */
 
-                  RaisedButton(
-                    color: Colors.blue,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                    onPressed: () {
-                      _sendDataToImageScreen(context);
-                      _submitTarget(context);
-                      //_sendDataToSubmitCoordinate(context);
-
-                    },
-                    child: Text("Next", style: TextStyle(color: Colors.white),),
-                  ),
-
-                ],
+                    Padding(
+                      padding: const EdgeInsets.only(left: 135),
+                      child: RaisedButton(
+                        color: Colors.blue,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20)),
+                        onPressed: () {
+                          _sendDataToImageScreen(context);
+                          _submitTarget(context);
+                          //_sendDataToSubmitCoordinate(context);
+                        },
+                        child: Text(
+                          "Next",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-
-
-
             ],
-
           ),
-      //  ),
-      )
-    );
+          //  ),
+        ));
   }
 
-  void _sendDataToServer (BuildContext context) {
-    for (int i=0;i<items.length;i++ ){
-
+  void _sendDataToServer(BuildContext context) {
+    for (int i = 0; i < items.length; i++) {
       print("questions ${items[i]['question']}");
       print("awnsers1234${textEdit[i].awnsers}");
       print("awnsers${textEdit[i].fieldContorller.text}");
@@ -612,21 +598,22 @@ class _HomePageState extends State<SubmitCoordinat> {
     Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => ServerResponse(id: widget.id , value: widget.department, secondid:widget.secondid, secondname: widget.secondname, listOFCor: widget.collectcor),
+          builder: (context) => ServerResponse(
+              id: widget.id,
+              value: widget.department,
+              secondid: widget.secondid,
+              secondname: widget.secondname,
+              listOFCor: widget.collectcor),
         ));
   }
 
-
-
   _controllertoawnser(int index) {
-    textEdit[index].awnsers=textEdit[index].fieldContorller.text;
-
+    textEdit[index].awnsers = textEdit[index].fieldContorller.text;
   }
 
   void _submitTarget(BuildContext context) {
-
     for (int i = 0; i < QandAlist.length; i++) {
-      awnserTarget st = new awnserTarget (
+      awnserTarget st = new awnserTarget(
           assetid: widget.id,
           question: QandAlist[i].question,
           awnser: textEdit[i].awnsers,
@@ -634,23 +621,22 @@ class _HomePageState extends State<SubmitCoordinat> {
 
       dbmanager.insertAwnser(st).then((id) =>
 
-      //.clear(),
-      // _courseController.clear(),
+              //.clear(),
+              // _courseController.clear(),
 
-      //  print('Student Added to Db ${id} ${st.course}')
-      print('target test ${st.assetid} ${st.awnser} ${st.question}  ')
-        // }
-      );
-
+              //  print('Student Added to Db ${id} ${st.course}')
+              print('target test ${st.assetid} ${st.awnser} ${st.question}  ')
+          // }
+          );
     }
   }
+
   void _getQuestions() {
     super.initState();
     dbmanager.query().then((value) {
       setState(() {
         value.forEach((element) {
           // QandAlist.add(awnserTarget(type: element['type']));
-
         });
       });
     }).catchError((error) {
@@ -658,36 +644,20 @@ class _HomePageState extends State<SubmitCoordinat> {
     });
   }
 
-  void _sendDataToImageScreen (BuildContext context) {
+  void _sendDataToImageScreen(BuildContext context) {
     Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => ImageScreen(selectedCoordinat:  widget.selectedCoordinat , id: widget.id , department: widget.department, secondid: widget.secondid, secondname:widget.secondname,collectcor: widget.collectcor),
+          builder: (context) => ImageScreen(
+              selectedCoordinat: widget.selectedCoordinat,
+              id: widget.id,
+              department: widget.department,
+              secondid: widget.secondid,
+              secondname: widget.secondname,
+              collectcor: widget.collectcor),
         ));
   }
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 /*
 import 'package:flutter/cupertino.dart';
