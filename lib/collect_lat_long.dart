@@ -1,47 +1,20 @@
 import 'dart:collection';
 import 'dart:ffi';
-//import 'dart:html';
-import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter/services.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:geo_app_final/Map/gmap.dart';
-import 'package:geo_app_final/server_response.dart';
 import 'package:geolocator/geolocator.dart';
 import 'DBmanager/dbmanager.dart';
 import 'questions.dart';
-import 'Main/main.dart';
-import 'dart:async';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'Map/next_map.dart';
+import 'Map/map.dart';
 import 'package:hexcolor/hexcolor.dart';
 
-//import 'main3.dart';
-/* class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: HomePage(),
-    );
-  }
-
-  @override
-  State<StatefulWidget> createState() {
-    // TODO: implement createState
-    throw UnimplementedError();
-  }
-} */
 
 class HomePage extends StatefulWidget {
+  static  const  String id2 = "coordinate_screen";
   String department = "";
   int id;
-
   String secondname = "";
   int secondid;
   HomePage({Key key, this.id, this.department, this.secondid, this.secondname})
@@ -80,6 +53,7 @@ class _HomePageState extends State<HomePage> {
  // List<List<int>> result = coordinates.map( (data) => [ data.latitude , data.longitude ] ) ;
   @override
   void initState() {
+    print('the value ${LocationAccuracy.values} ');
     // TODO: implement initState
    // for(int i=0 ;i<listOfCoordinates.length;i++){
       // listOfCoordinates1[i]= listOfCoordinates[i].latitude , listOfCoordinates[i].longitude as LatLng;
@@ -94,77 +68,9 @@ List<LatLng> mylatLong = [
     LatLng(39.78693, -122.41942),
     LatLng(36.78923, -122.66985),
 ];
-void getlatlong() {
-  print('hellow');
-  for (int b = 0; b < 4; b++) {
-    print('Wah tra jgrok');
-    //print('hi ${listOfCoordinates[1]} ');
-    print('hi ${listOfCoordinates[1]} ');
-    print('hi ${mylatLong[1]} ');
-  // List<LatLng> mylatLong = [
-  //
-  //   // widget.listOfCoordinates[i];
-  //   LatLng(36.78493, -128.42932),
-  //   LatLng(39.88257, -128.42582),
-  //   LatLng(39.78693, -122.41942),
-  //   LatLng(36.78923, -122.66985),
-
-//  ];
-}}
-  //
-  // polygonLatLongs.add(LatLng(37.78493, -122.42932));
-  // polygonLatLongs.add(LatLng(37.78693, -122.41942));
-  // polygonLatLongs.add(LatLng(37.78923, -122.41542));
-  // polygonLatLongs.add(LatLng(37.78923, -122.42582));
-
-  // List<Position> myLatLong = new List();
-  // List dlfkdjf = {}
-  // List<LatLng> mylatLong = List<LatLng>();
-  //  void   mynew() {
-  //     List<LatLng> mylatLong = List<LatLng>();
-  //    mylatLong.add(LatLng(
-  //      37.78493,
-  //      -122.42932,
-  //    ));
-  //    mylatLong.add(LatLng(
-  //      37.78693,
-  //      -122.41942,
-  //    ));
-  //    mylatLong.add(LatLng(
-  //      37.78923,
-  //      -122.41542,
-  //    ));
-  //    mylatLong.add(LatLng(
-  //      37.78923,
-  //      -122.42582,
-  //    ));
-  //  }
-  // List<LatLng> mylatLong = List<LatLng>();
-  // mylatLong.add()
-  //   37.78493,
-  //   -122.42932,
-  //   37.78693,
-  //   -122.41942,
-  //   37.78923,
-  //   -122.41542,
-  //   37.78923,
-  //   -122.42582
-  // ];
-  // Future<Position> locateUser() async {
-  //   return Geolocator()
-  //       .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-  // }
-  //
-  // getUserLocation() async {
-  //   currentLocation = await locateUser();
-  //   setState(() {
-  //     _center = LatLng(currentLocation.latitude, currentLocation.longitude);
-  //   });
-  // }
 
   void _onMapCreated(GoogleMapController controller) {
     _mapController = controller;
-
     setState(() {
       _markers.add(
         Marker(
@@ -179,76 +85,6 @@ void getlatlong() {
     });
   }
 
-  void _locationCheking() {
-    if (_currentPosition != null)
-      for (int i = 0; i < listOfCoordinates.length; i++)
-        //   if(listOfCoordinates[0].latitude == listOfCoordinates[0+1].longitude)
-
-        if (listOfCoordinates[0].latitude == listOfCoordinates[0 + 1].longitude)
-          //  Text(' wow imran its true'),
-          Fluttertoast.showToast(
-              msg: 'Please change your location',
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              // timeInSecForIos: 1,
-              backgroundColor: Colors.blueGrey,
-              textColor: Colors.white);
-        else
-          ListView(
-            // child: Column(
-            children: <Widget>[
-              // _locationCheking(),
-              if (_currentPosition != null)
-                for (int i = 0; i < listOfCoordinates.length; i++)
-                  //   if(listOfCoordinates[0].latitude == listOfCoordinates[0+1].longitude)
-
-                  // if(listOfCoordinates[i].latitude == listOfCoordinates[i + 1].longitude)
-                  //   Center(child: Text(' wow imran its true')),
-                  // Fluttertoast.showToast(
-                  // msg: 'Select both dropdown',
-                  // toastLength: Toast.LENGTH_SHORT,
-                  // gravity: ToastGravity.BOTTOM,
-                  // // timeInSecForIos: 1,
-                  // backgroundColor: Colors.blueGrey,
-                  // textColor: Colors.white
-                  // );
-                  //   else
-                  //_sendDataToSecondScreen(context);
-                  // ,
-
-                  // GestureDetector(
-                  //   onHorizontalDragEnd: (endxy){
-                  //     listOfCoordinates.removeAt(i);
-                  //     itemcount --;
-                  //     setState(() {
-                  //     });
-
-                  Center(
-                    child: Text(
-                      ("${i + 1} LAT: ${listOfCoordinates[i].latitude}, LNG: ${listOfCoordinates[i].longitude}"),
-                      style: TextStyle(fontSize: 19, color: Colors.black),
-                    ),
-                  ),
-              //   ),
-            ],
-          );
-    //_sendDataToSecondScreen(context);
-    // ,
-
-    // GestureDetector(
-    //   onHorizontalDragEnd: (endxy){
-    //     listOfCoordinates.removeAt(i);
-    //     itemcount --;
-    //     setState(() {
-    //     });
-
-    // Center(
-    //   child: Text(("${i + 1} LAT: ${listOfCoordinates[i].latitude}, LNG: ${listOfCoordinates[i].longitude}"),
-    //     style: TextStyle(fontSize: 19, color: Colors.black),
-    //   ),
-    // );
-  }
-
   Widget potrate() {
     return Container(
       // decoration: new BoxDecoration(
@@ -261,58 +97,46 @@ void getlatlong() {
           Expanded(
             child: Padding(
               padding: const EdgeInsets.only(top: 10),
-              child: Row(
-                //mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(left: 10),
-                    child: Column(
-                      //  mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(right: 70),
-                          child: Text(
-                              'PROJECT   :${widget.department} \nTARGET     : ${widget.secondname} ',
-                              style: TextStyle(fontWeight: FontWeight.bold)),
-                        ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                      ],
+
+              child: Padding(
+                padding: const EdgeInsets.only(right: 130),
+                child: Column(
+                    //mainAxisAlignment: MainAxisAlignment.end,
+               //   crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left: 40),
+                      child: Text(
+                          'PROJECT  :   ${widget.department}                \nTARGET    :   ${widget.secondname}',
+                          style: TextStyle(fontWeight: FontWeight.bold)),
                     ),
-                  ),
-                  // Padding(
-                  //   padding: const EdgeInsets.only(
-                  //     right: 10,
-                  //   ),
-                  //   child: RaisedButton(
-                  //     color: Colors.blue,
-                  //     shape: RoundedRectangleBorder(
-                  //         borderRadius: BorderRadius.circular(20)),
-                  //     onPressed: () {
-                  //       _submitTarget(context);
-                  //       _sendDataToSubmitCoordinate(context);
-                  //     },
-                  //     child: Text(
-                  //       "Done",
-                  //       style: TextStyle(color: Colors.white),
-                  //     ),
-                  //   ),
-                  // ),
-                ],
+                    // Padding(
+                    //   padding: const EdgeInsets.only(left: 20),
+                    //   child: Text(
+                    //       'TARGET   :        ${widget.secondname}    ',
+                    //       style: TextStyle(fontWeight: FontWeight.bold)),
+                    // ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
 
-          // Column(
-          //   children: [
+         // Column(
+           // children: [
+
+
           Container(
             // decoration: new BoxDecoration(
             //   color: HexColor('#E0E0E0'),),
             // Colors(int.parse('0X1231321')),
             //  color: Colors.amber[600],
-            height: 309,
+            height: 300,
             width: 345,
+           // alignment: ,
             //fcolor: Colors.red,
             decoration: BoxDecoration(
               color: HexColor('#E0E0E0'),
@@ -326,47 +150,47 @@ void getlatlong() {
 
             child: Expanded(
                 child: Scrollbar(
-              child: ListView(
-                // child: Column(
-                children: <Widget>[
-                  // _locationCheking(),
-                  if (_currentPosition != null)
-                    for (int i = 0; i < listOfCoordinates.length; i++)
-                      //   if(listOfCoordinates[0].latitude == listOfCoordinates[0+1].longitude)
+                  child: ListView(
+                    // child: Column(
+                    children: <Widget>[
+                      // _locationCheking(),
+                      if (_currentPosition != null)
+                        for (int i = 0; i < listOfCoordinates.length; i++)
+                        //   if(listOfCoordinates[0].latitude == listOfCoordinates[0+1].longitude)
 
-                      // if(listOfCoordinates[i].latitude == listOfCoordinates[i + 1].longitude)
-                      //   Center(child: Text(' wow imran its true')),
-                      // Fluttertoast.showToast(
-                      // msg: 'Select both dropdown',
-                      // toastLength: Toast.LENGTH_SHORT,
-                      // gravity: ToastGravity.BOTTOM,
-                      // // timeInSecForIos: 1,
-                      // backgroundColor: Colors.blueGrey,
-                      // textColor: Colors.white
-                      // );
-                      //   else
-                      //_sendDataToSecondScreen(context);
-                      // ,
+                        // if(listOfCoordinates[i].latitude == listOfCoordinates[i + 1].longitude)
+                        //   Center(child: Text(' wow imran its true')),
+                        // Fluttertoast.showToast(
+                        // msg: 'Select both dropdown',
+                        // toastLength: Toast.LENGTH_SHORT,
+                        // gravity: ToastGravity.BOTTOM,
+                        // // timeInSecForIos: 1,
+                        // backgroundColor: Colors.blueGrey,
+                        // textColor: Colors.white
+                        // );
+                        //   else
+                        //_sendDataToSecondScreen(context);
+                        // ,
 
-                      // GestureDetector(
-                      //   onHorizontalDragEnd: (endxy){
-                      //     listOfCoordinates.removeAt(i);
-                      //     itemcount --;
-                      //     setState(() {
-                      //     });
+                        // GestureDetector(
+                        //   onHorizontalDragEnd: (endxy){
+                        //     listOfCoordinates.removeAt(i);
+                        //     itemcount --;
+                        //     setState(() {
+                        //     });
 
-                      Center(
-                        child: Text(
-                          ("$i Lat: ${listOfCoordinates[i].latitude} , Lon:  ${listOfCoordinates[i].longitude}"), //${i + 1} LAT:
-                          style: TextStyle(fontSize: 19, color: Colors.black),
-                        ),
-                      ),
-                  //   ),
-                ],
-              ),
-            )),
+                          Center(
+                            child: Text(
+                              ("$i Lat: ${listOfCoordinates[i].latitude} , Lon:  ${listOfCoordinates[i].longitude}"), //${i + 1} LAT:
+                              style: TextStyle(fontSize: 19, color: Colors.black),
+                            ),
+                          ),
+                      //   ),
+                    ],
+                  ),
+                )),
           ),
-          //   SizedBox.fromSize()
+
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
@@ -380,7 +204,7 @@ void getlatlong() {
                   size: 40,
                   color: Colors.red,
                 ),
-                tooltip: 'camera ',
+                tooltip: 'delete ',
                 onPressed: () {
                   listOfCoordinates.removeLast();
 
@@ -403,48 +227,6 @@ void getlatlong() {
           ),
           Divider(color: Colors.black),
 
-          /*    FlatButton(
-           child: Text('Delete'),
-           textColor: Colors.white,
-           color: Colors.redAccent,
-           onPressed: (){
-            // for(int item = 0 ; item < listOfCoordinates.length ; item ++) {
-             //listOfCoordinates.removeAt(listOfCoordinates.length );
-             listOfCoordinates.removeLast();
-          //   }
-             itemcount --;
-             setState(() {
-             });
-             //my code
-           },
-         ), */
-
-          /*       Container(
-            height: 220,
-            width: 320,
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: Colors.blue,
-              ),
-              borderRadius: BorderRadius.circular(10.0),
-            ),
-
-          child:  GoogleMap(
-
-              onMapCreated: _onMapCreated,
-              initialCameraPosition: CameraPosition(
-                target: LatLng(37.77483, -122.41942),
-                zoom: 12,
-              ),
-              markers: _markers,
-              polygons: _polygons,
-              polylines: _polylines,
-              circles: _circles,
-              myLocationEnabled: true,
-              myLocationButtonEnabled: true,
-            ),
-          ),*/
-
           Row(
             //mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
@@ -460,6 +242,7 @@ void getlatlong() {
                         onTap: () {
                          // getlatlong();
                           _sendToMap(context);
+                         // print('the value ${LocationAccuracy.values} ');
                           //  getUserLocation();
                         }, // button pressed
                         child: Column(
@@ -482,18 +265,6 @@ void getlatlong() {
                 ),
               ),
 
-              // Padding(
-              //   padding: const EdgeInsets.all(8.0),
-              //   child: IconButton(
-              //     icon: Icon(Icons.map, size: 40, color: Colors.blue,),
-              //     tooltip: 'map',
-              //
-              //     onPressed: (){
-              //
-              //     },
-              //   ),
-              // ),
-
               Padding(
                 padding: const EdgeInsets.only(left: 225),
                 child: SizedBox.fromSize(
@@ -505,7 +276,6 @@ void getlatlong() {
                         splashColor: Colors.yellow,
                         // splash color
                         onTap: () {
-
                           _getCurrentLocation();
                           itemcount++;
                         }, // button pressed
@@ -530,56 +300,16 @@ void getlatlong() {
                   ),
                 ),
               ),
-
-              /*    Padding(
-                padding: const EdgeInsets.only(left: 225 ),
-                child: FloatingActionButton(   // const EdgeInsets.only(right: 20 ,top: 15),
-                  heroTag: "syed",
-                  tooltip: 'map',
-                  child: Icon(Icons.add_location),
-                  onPressed: () {
-                    _getCurrentLocation();
-                    itemcount ++;
-                    //  _onMapTypeButtonPressed();
-                    //_goToPosition1();
-                    // _onMapTypeButtonPressed();
-
-                    print('setlite test prssed');
-                    setState(() {
-                      //   _showMapStyle = !_showMapStyle;
-                    });
-                    //_toggleMapStyle();
-                  },
-                ),
-              ),*/
               SizedBox(
                 height: 10,
               ),
-
-              /*  FloatingActionButton(
-                heroTag: "imran",
-                tooltip: 'setlite',
-                child: Icon(Icons.add_location),
-                onPressed: () {
-                  // _onMapTypeButtonPressed();
-                  print('map test prssed');
-                  // setState(() {
-                  //  _getCurrentLocation();
-                  //     _showMapStyle = !_showMapStyle;
-                  // });
-
-                  // _toggleMapStyle();
-                },
-              ),*/
             ],
           )
-
           //expended end here
         ],
       ),
     );
   }
-
   /* Widget landscape(){
 
   } */
@@ -617,6 +347,7 @@ void getlatlong() {
   }
 
   _getCurrentLocation() {
+    
     final Geolocator geolocator = Geolocator()..forceAndroidLocationManager;
     geolocator
         .getCurrentPosition(desiredAccuracy: LocationAccuracy.bestForNavigation)
@@ -631,24 +362,9 @@ void getlatlong() {
     });
   }
 
-  // _getAddressFromLatLng() async {
-  //   try {
-  //     List<Placemark> p = await geolocator.placemarkFromCoordinates(
-  //         _currentPosition.latitude, _currentPosition.longitude);
-  //
-  //     Placemark place = p[0];
-  //
-  //     setState(() {
-  //       _currentAddress =
-  //           "${place.locality}, ${place.postalCode}, ${place.country}";
-  //     });
-  //   } catch (e) {
-  //     print(e);
-  //   }
-  // }
 
   void _sendDataToSubmitCoordinate(BuildContext context) {
-//    print();?
+
     Navigator.push(
         context,
         MaterialPageRoute(
@@ -706,7 +422,7 @@ void getlatlong() {
     Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => MapsDemo(
+          builder: (context) => Geo_map(
               latAndLong:
                   listOfCoordinates) // collectedList: listOfCoordinates
         ));

@@ -13,10 +13,13 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/rendering.dart';
 import 'server_response.dart';
-import 'package:geo_app_final/Main/main.dart';
+import 'file:///C:/Users/imran%20sayed/AndroidStudioProjects/geo_app_final/lib/main.dart';
 import 'package:http/http.dart' as http;
 
 class ImageScreen extends StatefulWidget {
+
+  static  const  String id2 = "image_screen";
+
   String selectedCoordinat, department, secondname;
   var collectcor = new List();
   int id, secondid;
@@ -338,6 +341,7 @@ class _MainPageState extends State<ImageScreen> {
   }
 
   void _sendDataToServer(BuildContext context) {
+    //Navigator.pushNamed(context, ServerResponse.id2);
     Navigator.push(
         context,
         MaterialPageRoute(

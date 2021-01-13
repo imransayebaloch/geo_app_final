@@ -7,7 +7,7 @@ import 'Login_Screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../Email Model/email_model.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import '../Main/main.dart';
+import '../main.dart';
 //import 'dart:html';
 
 
@@ -22,6 +22,7 @@ import '../Main/main.dart';
 // );
 
 class LoginPage extends StatefulWidget {
+  static  const  String id = "login_screen";
   @override
   _LoginPageState createState() => _LoginPageState();
 }

@@ -1,40 +1,54 @@
 // import 'dart:html' as html;
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
+//import 'dart:js';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geo_app_final/Email%20Model/email_model.dart';
+import 'package:geo_app_final/Map/map.dart';
 import 'package:geo_app_final/collect_lat_long.dart' as select;
 import 'package:geo_app_final/collect_lat_long.dart';
+import 'package:geo_app_final/image_screen.dart';
+import 'package:geo_app_final/questions.dart';
 //import 'package:geo_app_final/secoundDbManager.dart';
 import 'package:geo_app_final/server_response.dart';
 //import 'package:geo_app_final/your_location.dart' as location;
 import 'package:sqflite/sqflite.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import '../DropDown Model/Dropdown_model.dart';
-import '../DBmanager/dbmanager.dart';
+import 'DropDown Model/Dropdown_model.dart';
+import 'DBmanager/dbmanager.dart';
 import 'package:connectivity/connectivity.dart';
-import '../DropDown Model/DropDown_Project_Model.dart';
-import '../Login Form/Login_Form.dart';
-import '../Login form/Login_Screen.dart';
+import 'DropDown Model/DropDown_Project_Model.dart';
+import 'Login Form/Login_Form.dart';
+import 'Login form/Login_Screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../Login form/login_page.dart';
+import 'Login form/login_page.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import '../Mytest/item_test.dart';
-import '../Mytest/Mytest.dart';
+import 'Mytest/item_test.dart';
+import 'Mytest/Mytest.dart';
 import 'package:geo_app_final/DropDownClass/DropDowClass.dart';
 import 'package:geo_app_final/menu_item.dart';
 import 'package:hexcolor/hexcolor.dart';
 
 
 void main() => runApp(
-    DropDown());
-
+// MaterialApp(
+// initialRoute: '/',
+// routes: {
+// // When navigating to the "/" route, build the FirstScreen widget.
+// '/': (context) => FirstScreen(),
+// // When navigating to the "/second" route, build the SecondScreen widget.
+// '/second': (context) => SecondScreen(),
+//
+//    );
+DropDown()
+);
 class DropDown extends StatefulWidget {
   DropDown() : super();
-  final String title = "DropDown Demo";
+  static  const  String id = "main_screen";
 
   @override
   DropDownState createState() => DropDownState();
@@ -50,6 +64,16 @@ class DropDownState extends State<DropDown> {
     return new MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Location(),
+     initialRoute: DropDown.id,
+      routes: {
+        LoginPage.id: ( context ) => LoginPage(),
+        HomePage.id2: (context)  =>   HomePage(),
+      //  DropDown.id: (context)  =>   DropDown(),
+        Geo_map.id: (context)  =>  Geo_map(),
+        SubmitCoordinat.id2: (context)  => SubmitCoordinat(),
+        ImageScreen.id2: (context)  => ImageScreen(),
+        ServerResponse.id2: (context) => ServerResponse(),
+     },
     );
   }
 }
@@ -57,6 +81,7 @@ class DropDownState extends State<DropDown> {
 class Location extends StatefulWidget {
   @override
   _LocationState createState() => _LocationState();
+
 }
 
 class _LocationState extends State<Location> {
@@ -66,11 +91,11 @@ class _LocationState extends State<Location> {
   Target target;
   ProjectTarget ptarget;
 //  Project project, dbProjectValue;
-  List<Target> targetlist;
-  List<ProjectTarget> projlist;
+  List<Target> targetlist=[];
+  List<ProjectTarget> projlist =[];
   int updateIndex, updateIndexPro;
-  List<Users> listOfUsers;
-  List<Users> secoundlistOfUsers;
+  List<Users> listOfUsers = [];
+  List<Users> secoundlistOfUsers = [];
   Target dbvalue;
   ProjectTarget dbvalueproj;
   SharedPreferences sharedPreferences;
@@ -87,11 +112,47 @@ class _LocationState extends State<Location> {
     super.initState();
     // _senToLogincreen(context);
     checkLoginStatus();
+    EmailAddress();
+
+    // if(dbmanager.getStudentList()==null&&dbmanager.getProjectList()==null) {
+    //  sleep();
+    //   print('sync button pressed');
+      for(int i=0;i<3;i++){
+      _submitTarget(context);
+      //_submitProject(context);
+         }
+
+    // else{
+  //  //   sleep();
+  //     print('UFFFF condition is  not working');
+  //     for(int i=0;i<3;i++) {
+  //    //   sleep();
+  //       _submitTarget(context);
+  //       _submitProject(context);
+  //     }
+  //   }
+  //  }
+
+   /* setState(() {
+      if(dbmanager.getStudentList()==null&&dbmanager.getProjectList()==null) {
+        _submitTarget(context);
+        _submitProject(context);
+      }
+    });*/
 
     // initConnectivity();
     // _connectivitySubscription =
     //     _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
     // this.getJsonData();
+  }
+
+
+  // Future sleep() {
+  //   return new Future.delayed(Duration.);
+  // }
+
+  Future Sleep() {
+    return new Future.delayed(const Duration(milliseconds: 120), () => "1");
   }
 
   checkLoginStatus() async {
@@ -116,12 +177,14 @@ class _LocationState extends State<Location> {
           //   _isLoading = false;
         });
         print('email address ${jsonResponse['email_address']}');
-        email_address = jsonResponse['email_address'];
-
+      //  email_address = jsonResponse['email_address'];
+        setState(() {
+          email_address = jsonResponse['email_address'];
+        });
+       // email_address = jsonResponse['email_address'];
       }
     }
   }
-
 
   final uri =
       'https://raw.githubusercontent.com/imransayebaloch/QDA-question/main/qda%20project'; //by jawad https://raw.githubusercontent.com/iamjawad/sample_data/main/qda.json
@@ -147,7 +210,6 @@ class _LocationState extends State<Location> {
   Users _secondcurrentUser;
   Future<List<Users>> _secondfetchUsers() async {
     var response = await http.get(seconduri);
-
     if (response.statusCode == 200) {
       final items = json.decode(response.body).cast<Map<String, dynamic>>();
       secoundlistOfUsers = items.map<Users>((json) {
@@ -160,8 +222,18 @@ class _LocationState extends State<Location> {
     }
   }
 
-
   Widget potrate() {
+
+   // for(int i =0; i<3; i++){
+     // sleep(duration)
+         Sleep();
+    // int id = 24;
+    // dbmanager.deleteStudent(id);
+    // dbmanager.deleteProject(id);
+
+          _submitTarget(context);
+         _submitProject(context);
+  //  }
     return Container(
       child: Center(
         child: Column(
@@ -169,6 +241,9 @@ class _LocationState extends State<Location> {
            //mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             SizedBox(height: 5.0),
+
+
+
 
             //==========================================================================================
             // Container(
@@ -184,15 +259,17 @@ class _LocationState extends State<Location> {
             //   ),
             //
          Expanded(
+
            child: Container(
-             width: 350,
+          //   height: 300,
+             width: 340,
              decoration: BoxDecoration(
                border: Border.all(color: Colors.grey , width: 1),
                borderRadius: BorderRadius.circular(15),
              ),
              child:
              Padding(
-               padding: const EdgeInsets.only(left: 10, right: 10),
+               padding: const EdgeInsets.only(left: 30, right: 30),
                child: FutureBuilder<List<ProjectTarget>>(
                  //This one for first dropdown
                    future: dbmanager.getProjectList(),
@@ -214,12 +291,10 @@ class _LocationState extends State<Location> {
                        // icon: Icon(Icons.arrow_drop_down),
                        iconSize: 36,
                        isExpanded: true,
-                       dropdownColor: Colors.blue,
-                       style: TextStyle(color: Colors.white ),
+                       dropdownColor: Colors.white,
+                       style: TextStyle(color: Colors.black ),
                        underline: SizedBox(),
-
                        //value: _currentUser,
-
                        hint: dbvalueproj != null
                            ? Text("    " + dbvalueproj.name+" ")
                            : Text(
@@ -227,30 +302,20 @@ class _LocationState extends State<Location> {
                      );
                    }),
              ),
-
-
            )
-
-
          ),
-
-
-            SizedBox(
-              height: 10,
-            ),
-
+            SizedBox(height: 10,),
        Expanded(
-
          child: Container(
-
-           width: 350,
+           width: 340,
+          // height: 10,
            decoration: BoxDecoration(
              border: Border.all(color: Colors.grey , width: 1),
              borderRadius: BorderRadius.circular(15),
            ),
            child:
             Padding(
-             padding: const EdgeInsets.only(right: 10, left: 10),
+             padding: const EdgeInsets.only(right: 30, left: 30),
              child: FutureBuilder<List<Target>>(
                //This one for first dropdown
                  future: dbmanager.getStudentList(),
@@ -266,6 +331,7 @@ class _LocationState extends State<Location> {
                          .toList(),
                      onChanged: (Target value) {
                        setState(() {
+
                          dbvalue = value;
                        });
                      },
@@ -273,9 +339,9 @@ class _LocationState extends State<Location> {
                      // icon: Icon(Icons.arrow_drop_down),
                      iconSize: 36,
                      isExpanded: true,
-                     dropdownColor: Colors.blue,
+                     dropdownColor: Colors.white,
                      underline: SizedBox(),
-                     style: TextStyle(color: Colors.white ),
+                     style: TextStyle(color: Colors.black ),
                      //value: _currentUser,
 
                      hint: dbvalue != null
@@ -291,7 +357,7 @@ class _LocationState extends State<Location> {
 
 
             SizedBox(
-              height: 60,
+              height: 100,
             ),
 
             Image.asset(
@@ -416,7 +482,7 @@ class _LocationState extends State<Location> {
             //     }
             //       ),
             SizedBox(
-              height: 50,
+              height: 10,
             ),
 
             // Divider(
@@ -664,7 +730,9 @@ class _LocationState extends State<Location> {
       body: OrientationBuilder(
         builder: (context, orientation) {
           if (orientation == Orientation.portrait) {
-            return potrate(); // for ortrate screen
+            return potrate();
+
+            // for ortrate screen
 
           } else {
             return landscape(); // for land scafe screen
@@ -692,54 +760,40 @@ class _LocationState extends State<Location> {
                         )
                     ),*/
 
-                padding: const EdgeInsets.symmetric(horizontal: 20),
+               // padding: const EdgeInsets.symmetric(horizontal: 20),
                 //  color: const Color ()//(0xFF64B5F6),
                 // color: Color(CColors.blue),
-                color: HexColor('#0277BD'),
+                color: HexColor('#448AFF'),
                 child: Column(
                   children: <Widget>[
                     SizedBox(
-                      height: 50,
+                      height: 100,
                     ),
-                    ListTile(
-                      title: Text(
-                        '$email_address',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 20,
-                            fontWeight: FontWeight.w800),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(80.0),
+                      child: Image.asset(
+                        'images/imran.jpg',
+                        width: 90,
+                        height: 90,
+                        fit: BoxFit.cover,
                       ),
-                      // subtitle: Text(
-                      //   "www..com",
-                      //   style: TextStyle(
-                      //     color: Color(0xFF1BB5FD),
-                      //     fontSize: 18,
-                      //   ),
-                      // ),
-
-                      leading: CircleAvatar(
-                        // radius: 70,
-                        //  child:
-                        //  Image.asset(
-                        //    'images/imran.jpg',
-                        //    width: 45.0,
-                        //    height: 45.0,
-                        //    fit: BoxFit.cover,
-                        //  ),
-                        child: Icon(
-                          Icons.perm_identity,
+                    ),
+                    SizedBox(height: 5),
+                    Text(
+                      '$email_address',
+                      style: TextStyle(
                           color: Colors.white,
-                        ),
-                        radius: 50,
-                      ),
+                          fontSize: 14,
+                          fontWeight: FontWeight.w800),
                     ),
                     Divider(
-                      height: 64,
+                      height: 20,
                       thickness: 0.5,
                       color: Colors.white.withOpacity(0.3),
                       indent: 32,
                       endIndent: 32,
                     ),
+                    SizedBox(height: 95),
                     MenuItem(
                       icon: Icons.home,
                       title: "Home",
@@ -875,9 +929,9 @@ class _LocationState extends State<Location> {
         ));
   }
 
-  // this tis the link of github   ===https://github.com/mayuriruparel/flutter_demo_apps/blob/master/flutter_sqlite_demo/lib/main.dart
 
   void _submitTarget(BuildContext context) {
+    print('initial state in working fine');
     _fetchUsers();
     //if(_formKey.currentState.validate()){
     if (target == null) {

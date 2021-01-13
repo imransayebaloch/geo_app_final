@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
-import 'Main/main.dart';
+import 'main.dart';
 import 'dart:async';
 import 'package:circle_list/circle_list.dart';
 import 'collect_lat_long.dart';
@@ -16,32 +16,11 @@ import 'package:dio/dio.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
-/* class ServerResponse extends StatelessWidget {
-   String value;
-   int id;
-   ServerResponse({Key key,this.id, this.value}):super(key: key );
-
-
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: HomePage(),
-    );
-  }
-
-  @override
-  State<StatefulWidget> createState() {
-    // TODO: implement createState
-    throw UnimplementedError();
-  }
-}  */
 
 class ServerResponse extends StatefulWidget {
+
+  static const String id2 = 'server_response';
+
   String value, secondname;
   int id, secondid;
   var listOFCor = new List();
@@ -313,16 +292,29 @@ class _HomePageState extends State<ServerResponse> {
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20)),
                       onPressed: () {
-                        // _sendDataToServer(context);
-                        //Navigator.pop(context);
-                        // Navigator.of(context).pop();
-                        // //  Navigator.push(context, MaterialPageRoute(builder: (_)=>  DropDown(),));
-                        Navigator.push(
+    // _sendDataToServer(context);
+    //Navigator.pop(context);
+    // Navigator.of(context).pop();
+    // //  Navigator.push(context, MaterialPageRoute(builder: (_)=>  DropDown(),));
+    /*Navigator.removeRoute(
                             context,
                             MaterialPageRoute(
                                 builder: (context) => DropDown()));
                         //_getCurrentLocation();
-                      },
+                      },*/
+    // Navigator.pushReplacementNamed(
+    // context,
+    // MaterialPageRoute(builder: ( context) => Login()),
+    // ModalRoute.withName('/')
+    // Navigator.pushReplacement(
+    // context, MaterialPageRoute(builder: (BuildContext context) => DropDown()));
+    Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => DropDown()), (Route<dynamic> route) => false);
+    },
+    // Navigator.pushAndRemoveUntil(
+    //     context, MaterialPageRoute(builder: (BuildContext context) => Login()));
+
+
+
                       child: Text(
                         "Back",
                         style: TextStyle(color: Colors.white),

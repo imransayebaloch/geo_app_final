@@ -4,10 +4,13 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'dart:collection';
 
-class MapsDemo extends StatefulWidget {
+import 'package:path/path.dart';
+
+class Geo_map extends StatefulWidget {
+  static  const  String id = "map_screen";
  // List<LatLng> latAndLong = new List();
   List<Position> latAndLong = new List();
-  MapsDemo({Key key, this.latAndLong}) : super(key: key);
+  Geo_map({Key key, this.latAndLong}) : super(key: key);
 //  LatLng imran = latAndLong;
   final String title = "Location ";
 
@@ -17,7 +20,7 @@ class MapsDemo extends StatefulWidget {
   MapsDemoState createState() => MapsDemoState();
 }
 
-class MapsDemoState extends State<MapsDemo> {
+class MapsDemoState extends State<Geo_map> {
   Completer<GoogleMapController> _controller = Completer();
   static const LatLng _center =
       const LatLng(30.1909521, 66.9714362); //85.521563, -122.677433
@@ -71,20 +74,6 @@ class MapsDemoState extends State<MapsDemo> {
     });
   }
 
-  // Widget button(Function function, IconData icon) {
-  //
-  //   return FloatingActionButton(
-  //     heroTag: 'u',
-  //   //  tooltip: 'map12',
-  //     onPressed: function,
-  //     materialTapTargetSize: MaterialTapTargetSize.padded,
-  //     backgroundColor: Colors.blue,
-  //     child: Icon(
-  //       icon,
-  //       size: 36.0,
-  //     ),
-  //   );
-  // }
   Position _currentPosition;
 
   MapType _currentMapType = MapType.normal;
@@ -106,8 +95,10 @@ class MapsDemoState extends State<MapsDemo> {
     _setPolygons();
     _setPolylines();
     _setCircles();
-   // getPoints();
+    getPoints();
     getPoint1();
+    getTapped();
+    print('your new list $myNewList');
   }
 
   void _setMarkerIcon() async {
@@ -115,7 +106,7 @@ class MapsDemoState extends State<MapsDemo> {
         ImageConfiguration(), 'assets/noodle_icon.png');
   }
 
-  void _toggleMapStyle() async {
+/*  void _toggleMapStyle() async {
     String style = await DefaultAssetBundle.of(context)
         .loadString('assets/map_style.json');
 
@@ -124,7 +115,7 @@ class MapsDemoState extends State<MapsDemo> {
     } else {
       _mapController.setMapStyle(null);
     }
-  }
+  }*/
 
  void  _setPolygons() {
 
@@ -271,18 +262,59 @@ class MapsDemoState extends State<MapsDemo> {
    return polygonLatLongs;
   }
 
-/*  getPoints() {
-    return [
-    for(int i = 0; i < widget.latAndLong.length; i++){
-        LatLng(widget.latAndLong[i].latitude , widget.latAndLong[i].longitude ),
-      }
+  getTapped(){
+     List<LatLng> newTapped = List<LatLng>();
+     if(myNewList.isEmpty){
+      // getPoint1();
+       newTapped.add(LatLng( 36.78493, -128.42932 ));
+       for(int i = 0; i < myPolygonOnmap.length; i++){
+         newTapped.add(LatLng(myPolygonOnmap[i].latitude, myPolygonOnmap[i].longitude));
+       }
+     }else{
+       for(int i = 0; i < myNewList.length; i++){
+         newTapped.add(LatLng(myNewList[i].latitude, myNewList[i].longitude));
+       }
 
-       LatLng(36.78493, -128.42932),
-       LatLng(39.88257, -128.42582),
-      LatLng(39.78693, -122.41942),
-      LatLng(36.78923, -122.66985),
-    ];
-  }*/
+     }
+     // for(int i = 0; i < newTapped.length; i++){
+     //   newTapped.add(LatLng(newTapped[i].latitude, newTapped[i].longitude));
+     // }
+     return newTapped;
+  }
+
+  getPoints() {
+    List<LatLng> newTapped = List<LatLng>();
+    if(myNewList.isEmpty & myMarker.isEmpty & myPolygonOnmap.isEmpty){
+      // getPoint1();
+      newTapped.add(LatLng( 36.78493, -128.42932 ));
+      // for(int i = 0; i < myPolygonOnmap.length; i++){
+      //   newTapped.add(LatLng(myPolygonOnmap[i].latitude, myPolygonOnmap[i].longitude));
+     // }
+
+    } else if (myNewList.isNotEmpty){
+      for(int i = 0; i < myNewList.length; i++){
+        newTapped.add(LatLng(myNewList[i].latitude, myNewList[i].longitude));
+      }
+    }else if (myPolygonOnmap.isNotEmpty){
+      for(int i = 0; i < myPolygonOnmap.length; i++){
+        newTapped.add(LatLng(myPolygonOnmap[i].latitude, myPolygonOnmap[i].longitude));
+      }
+    }else if (widget.latAndLong.isNotEmpty){
+      for(int i = 0; i < widget.latAndLong.length; i++){
+        newTapped.add(LatLng(widget.latAndLong[i].latitude, widget.latAndLong[i].longitude));
+      }
+    }
+
+    // for(int i = 0; i < newTapped.length; i++){
+    //   newTapped.add(LatLng(newTapped[i].latitude, newTapped[i].longitude));
+    // }
+
+    return newTapped;
+
+  }
+  List<Marker> myMarker = [];
+  List<LatLng> myNewList = new List();
+  List<Position> myPolygonOnmap = new List();
 
   @override
   Widget build(BuildContext context) {
@@ -295,21 +327,6 @@ class MapsDemoState extends State<MapsDemo> {
         ),
         body: Stack(
           children: <Widget>[
-            // GoogleMap(
-            //   onMapCreated: _onMapCreated,
-            //   initialCameraPosition: CameraPosition(
-            //     target: _center,
-            //     zoom: 11.0,
-            //   ),
-            //   polygons: _polygons,
-            //   polylines: _polylines,
-            //   circles: _circles,
-            //   mapType: _currentMapType,
-            //   markers: _markers,
-            //   onCameraMove: _onCameraMove,
-            //   myLocationEnabled: true,
-            // ),
-
             GoogleMap(
               // onLongPress: _getCurrentLocation,
               onMapCreated: _onMapCreated,
@@ -319,23 +336,40 @@ class MapsDemoState extends State<MapsDemo> {
               ),
              // gestureRecognizers: _onAddMarkerButtonPressed(),
              // onLongPress: ,
-              markers: _markers,
+             // markers: _markers,
+              markers: Set.from(myMarker),
               polylines: _polylines,
               circles: _circles,
               myLocationEnabled: true,
               myLocationButtonEnabled: true,
               compassEnabled: true,
+
               mapType: _currentMapType,
+              onTap: _handleTap,
               polygons: Set<Polygon>.of(<Polygon>[
                 Polygon(
                     polygonId: PolygonId('area'),
-                    points:   getPoint1(),
+                    points:  getPoints(), //getTapped(), //getPoint1(),
                     geodesic: true,
+
                     strokeColor: Colors.red.withOpacity(0.6),
                     strokeWidth: 5,
                     fillColor: Colors.redAccent.withOpacity(0.1),
                     visible: true),
               ]),
+
+
+      //     ...
+      //       gestureRecognizers:
+      //     Set()
+      // ..add(Factory<DragGestureRecognizer>(() => Test(() {
+      //         // if (_focusEnabled) {
+      //         //   setState(() {
+      //         //     _focusEnabled = false;
+      //         //   });
+      //         }
+      //       })),
+
             ),
 
             Padding(
@@ -376,7 +410,10 @@ class MapsDemoState extends State<MapsDemo> {
                       tooltip: 'marker',
                       onPressed: () {
                         //   print('my list ${widget.latAndLong}');
-                         _onAddMarkerButtonPressed();
+                        // _onAddMarkerButtonPressed();
+
+                        _getCurrentLocation();
+
                         print('latiiii ${widget.latAndLong}');
                       },
                       materialTapTargetSize: MaterialTapTargetSize.padded,
@@ -419,12 +456,14 @@ class MapsDemoState extends State<MapsDemo> {
   }
 
   _getCurrentLocation() {
+    print("wow test $myNewList");
     final Geolocator geolocator = Geolocator()..forceAndroidLocationManager;
     geolocator
         .getCurrentPosition(desiredAccuracy: LocationAccuracy.best)
         .then((Position position) {
+          print(position);
 //if(listOfCoordinates!=null){}
-      //listOfCoordinates.add(position);
+      myPolygonOnmap.add(position);
       setState(() {
         _currentPosition = position;
       });
@@ -432,6 +471,75 @@ class MapsDemoState extends State<MapsDemo> {
       print(e);
     });
   }
+  _handleTap(LatLng tappedPoint){
+    //var a;
+     myNewList.add(tappedPoint);
+    // myNewList.add(a);
+    // myNewList.remove(tappedPoint);
+ print(" my location now $tappedPoint   my list $myNewList");
+    setState(() {
+     // myMarker = [];
+      myMarker.add(
+          Marker(
+            markerId: MarkerId(tappedPoint.toString()),
+            position: tappedPoint,
+            draggable: true,
+            onDragEnd: (DragEndPosition){
+              print('test  $DragEndPosition');
+              print('list$myNewList');
+              // setState(() {
+              //   this.myNewList.removeWhere((contact) => contact.key == Key("index_$index"));
+              // });
+            //  myNewList.removeWhere((item) =>    item . );
+              //List.generate(myNewList.length, (index) {
+                //generating tiles with from list
+              // GestureDetector(
+              //       key: UniqueKey(), //This made all the difference for me
+              //       onTap: () => {
+              //         print('gester detect'),
+              //         setState(() {
+              //           myNewList.removeAt(); // deletes the item from the gridView
+              //           myNewList.add(DragEndPosition);
+              //         })
+              //
+              //       },
+              //   );
+              //}
+             // );
+              // myNewList.removeAt(index);
+             // myNewList.removeLast();
+             // (index){
+             //    myNewList.removeAt(index);
+             //    myNewList.insert(index, DragEndPosition);
+             //  }
+             // myNewList.add(DragEndPosition);
+                  setState(() {
+                   // myNewList.removeWhere((item) => item == tappedPoint);
+                   myNewList.removeLast();
+                   myNewList.add(DragEndPosition);
+                  });
+
+             //a= DragEndPosition;
+              //a=tappedPoint;
+              //for(int i = 0 ; i<myNewList.length; i ++){
+                //myNewList.add(DragEndPosition);
+
+             // }
+            }
+          ),
+      );
+    });
+   // myNewList.add(LatLng(a.latitude, a.longitude));
+  }
+
+  // getmarkerPoint() {
+  //
+  //  List<LatLng> NewList= [];
+  //
+  //       for(int i = 0; i <= myMarker.length; i++)
+  //         NewList.add(LatLng(myNewList[i].latitude, myNewList[i].longitude));
+  //       return NewList;
+  // }
 
   // void _getUserLocation2() async {
   //   var position = await   Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high);     //GeolocatorPlatform.instance
