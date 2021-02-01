@@ -8,8 +8,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:geo_app_final/main.dart';
-import 'package:geo_app_final/collect_deparment.dart';
+import 'file:///C:/Users/imran%20sayed/AndroidStudioProjects/geo_app_final/lib/Main/main.dart';
+import 'package:geo_app_final/collect_lat_long.dart';
 
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
